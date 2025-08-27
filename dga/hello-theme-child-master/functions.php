@@ -5519,7 +5519,7 @@ function modern_login_shortcode_xqz789() {
                 
                 
                 <div class="login-header-xqz789">
-                    <h2><?php esc_html_e('เข้าสู่ระบบ', DGA_TEXT_DOMAIN); ?></h2>
+                    <h2><?php esc_html_e(DGA_LOGIN_TEXT_TH, DGA_TEXT_DOMAIN); ?></h2>
                     <p><?php esc_html_e('ฝ่ายมาตรฐานดิจิทัลภาครัฐ'); ?></p>
                 </div>
                 
@@ -5602,7 +5602,7 @@ function modern_login_shortcode_xqz789() {
                         </div>
                         
                         <button type=DGA_SUBMIT_TYPE class="btn-primary-xqz789 btn-login-xqz789" disabled>
-                            <span class="btn-text"><?php esc_html_e('เข้าสู่ระบบ', DGA_TEXT_DOMAIN); ?></span>
+                            <span class="btn-text"><?php esc_html_e(DGA_LOGIN_TEXT_TH, DGA_TEXT_DOMAIN); ?></span>
                             <span class="spinner-xqz789"></span>
                         </button>
                     </div>
@@ -5751,13 +5751,13 @@ function modern_auth_buttons_shortcode() {
     ob_start();
     ?>
     <div class="modern-auth-buttons">
-        <a href="<?php echo home_url('/login'); ?>" target="_blank" class="auth-button login-button" aria-label="เข้าสู่ระบบ">
+        <a href="<?php echo home_url('/login'); ?>" target="_blank" class="auth-button login-button" aria-label="<?php echo DGA_LOGIN_TEXT_TH; ?>">
             <div class="button-content">
                 <div class="icon-wrapper">
                     <i class="fas fa-sign-in-alt"></i>
                     <div class="icon-ripple"></div>
                 </div>
-                <span class="button-text">เข้าสู่ระบบ</span>
+                <span class="button-text"><?php echo DGA_LOGIN_TEXT_TH; ?></span>
                 <i class="fas fa-external-link-alt external-icon"></i>
             </div>
             <div class="hover-effect"></div>
@@ -35513,7 +35513,7 @@ if (!defined('CKAN_ACTION_TYPES_HJK729')) {
         'Published' => [DGA_LABEL_FIELD => 'เผยแพร่', 'color' => '#8BC34A', 'icon' => 'dashicons-admin-site'],
         'Unpublished' => [DGA_LABEL_FIELD => 'ยกเลิกเผยแพร่', 'color' => '#FFC107', 'icon' => 'dashicons-hidden'],
         // กิจกรรม User
-        'User_Login' => [DGA_LABEL_FIELD => 'เข้าสู่ระบบ', 'color' => '#4CAF50', 'icon' => 'dashicons-unlock'],
+        'User_Login' => [DGA_LABEL_FIELD => DGA_LOGIN_TEXT_TH, 'color' => '#4CAF50', 'icon' => 'dashicons-unlock'],
         'User_Logout' => [DGA_LABEL_FIELD => 'ออกจากระบบ', 'color' => '#9E9E9E', 'icon' => 'dashicons-lock'],
         'Failed_Login' => [DGA_LABEL_FIELD => 'เข้าสู่ระบบไม่สำเร็จ', 'color' => '#F44336', 'icon' => 'dashicons-warning'],
         // กิจกรรมอื่นๆ
@@ -36087,7 +36087,7 @@ function ckan_get_activity_details_hjk729($post_id, $action) {
         case 'User_Login':
             $login_time = get_post_meta($post_id, '_ckan_log_login_time', true);
             $user_role = get_post_meta($post_id, '_ckan_log_user_role', true);
-            $details = $user_role ? 'Role: ' . $user_role : 'เข้าสู่ระบบ';
+            $details = $user_role ? 'Role: ' . $user_role : DGA_LOGIN_TEXT_TH;
             break;
             
         case 'Failed_Login':
@@ -36587,7 +36587,7 @@ function ckan_log_user_login_xyz456($user_login, $user) {
             'user_email' => $user->user_email,
             'user_role' => implode(', ', $user->roles),
             'login_time' => current_time('mysql'),
-            'details' => 'เข้าสู่ระบบ'
+            'details' => DGA_LOGIN_TEXT_TH
         ]
     );
 }
