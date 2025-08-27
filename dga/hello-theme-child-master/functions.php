@@ -109,20 +109,26 @@ define( 'DGA_ERROR_MESSAGE_TH', 'เกิดข้อผิดพลาด' );
 define( 'DGA_ERROR_RETRY_MESSAGE_TH', 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง' );
 define( 'DGA_INVALID_NONCE_MESSAGE', 'Invalid nonce' );
 define( 'DGA_PERMISSION_DENIED_MESSAGE', 'Permission denied' );
-define( 'DGA_POST_NOT_FOUND_MESSAGE', DGA_POST_NOT_FOUND_MESSAGE );
-define( 'DGA_UNAUTHORIZED_ACCESS_MESSAGE', DGA_UNAUTHORIZED_ACCESS_MESSAGE );
+define( 'DGA_POST_NOT_FOUND_MESSAGE', 'Post not found' );
+define( 'DGA_UNAUTHORIZED_ACCESS_MESSAGE', 'Unauthorized access' );
 
 // Date format constants
-define( 'DGA_DATETIME_FORMAT_TH', DGA_DATETIME_FORMAT_TH );
+define( 'DGA_DATETIME_FORMAT_TH', 'j F Y เวลา H:i' );
+define( 'DGA_DATE_FORMAT_SHORT', DGA_DATE_FORMAT_SHORT );
 
 // HTML constants
-define( 'DGA_ALT_EMPTY_ATTRIBUTE', '' . DGA_ALT_EMPTY_ATTRIBUTE' );
+define( 'DGA_ALT_EMPTY_ATTRIBUTE', '" alt=""' );
 
 // WordPress file constants
-define( 'DGA_WP_FILE_INCLUDE_PATH', DGA_WP_FILE_INCLUDE_PATH );
+define( 'DGA_WP_FILE_INCLUDE_PATH', 'wp-admin/includes/file.php' );
 
 // Login related constants
 define( 'DGA_LOGIN_TEXT_TH', 'เข้าสู่ระบบ' );
+define( 'DGA_LOGOUT_TEXT_TH', DGA_LOGOUT_TEXT_TH );
+define( 'DGA_REGISTER_PATH', DGA_REGISTER_PATH );
+
+// HTML attribute constants
+define( 'DGA_ID_EMPTY_ATTRIBUTE', '' . DGA_ID_EMPTY_ATTRIBUTE' );
 
 
 
@@ -4318,7 +4324,7 @@ function postupdate_handle_file_upload() {
     }
     
     // สร้าง metadata สำหรับไฟล์ภาพ
-    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    require_once ABSPATH . 'wp-admin/includes/image.php';
     $attachment_data = wp_generate_attachment_metadata($attachment_id, $upload['file']);
     wp_update_attachment_metadata($attachment_id, $attachment_data);
     
@@ -5088,7 +5094,7 @@ function welcome_user_shortcode_tt25($atts) {
         
         $output .= '<div class="welcome-user-buttons-tt25">';
         $output .= '<a href="/profiles" class="welcome-user-profile-btn-tt25">' . __('โปรไฟล์', DGA_TEXT_DOMAIN) . '</a>';
-        $output .= '<a href="#" id="welcome-user-logout-btn-tt25">' . __('ออกจากระบบ', DGA_TEXT_DOMAIN) . '</a>';
+        $output .= '<a href="#" id="welcome-user-logout-btn-tt25">' . __(DGA_LOGOUT_TEXT_TH, DGA_TEXT_DOMAIN) . '</a>';
         $output .= '</div>';
         
         $output .= '</div>';
@@ -5107,7 +5113,7 @@ function welcome_user_shortcode_tt25($atts) {
         
         // Register button
         $output .= '<div class="register-container-tt25">';
-        $output .= '<a href="' . esc_url(home_url('/register')) . '" class="register-btn-tt25">' . __('สมัครสมาชิก', DGA_TEXT_DOMAIN) . '</a>';
+        $output .= '<a href="' . esc_url(home_url(DGA_REGISTER_PATH)) . '" class="register-btn-tt25">' . __('สมัครสมาชิก', DGA_TEXT_DOMAIN) . '</a>';
         $output .= '</div>';
         
         $output .= '</div>'; // Close guest-user-buttons
@@ -5625,7 +5631,7 @@ function modern_login_shortcode_xqz789() {
                 
                 <div class="login-footer-xqz789">
                     <p><?php esc_html_e('ยังไม่มีบัญชี?', DGA_TEXT_DOMAIN); ?> 
-                        <a href="<?php echo esc_url(home_url('/register')); ?>" class="link-register-xqz789">
+                        <a href="<?php echo esc_url(home_url(DGA_REGISTER_PATH)); ?>" class="link-register-xqz789">
                             <?php esc_html_e('ลงทะเบียนเลย', DGA_TEXT_DOMAIN); ?>
                         </a>
                     </p>
@@ -5775,7 +5781,7 @@ function modern_auth_buttons_shortcode() {
             <div class="hover-effect"></div>
         </a>
 
-        <a href="<?php echo home_url('/register'); ?>" target="_blank" class="auth-button register-button" aria-label="ลงทะเบียน">
+        <a href="<?php echo home_url(DGA_REGISTER_PATH); ?>" target="_blank" class="auth-button register-button" aria-label="ลงทะเบียน">
             <div class="button-content">
                 <div class="icon-wrapper">
                     <i class="fas fa-user-plus"></i>
@@ -7404,9 +7410,9 @@ function at_upload_featured_image_kse749() {
     }
 
     // โหลดไลบรารีที่จำเป็น
-    require_once(ABSPATH . 'wp-admin/includes/image.php');
-    require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
-    require_once(ABSPATH . 'wp-admin/includes/media.php');
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
+    require_once ABSPATH . 'wp-admin/includes/media.php';
 
     // อัพโหลดไฟล์และสร้างเป็น attachment
     $attachment_id = media_handle_upload('file', 0);
@@ -7540,9 +7546,9 @@ function at_handle_article_submission_kse749() {
     // ถ้าไม่มีภาพที่อัพโหลดไว้ล่วงหน้า และมีการอัพโหลดภาพผ่านฟอร์ม ให้ดำเนินการอัพโหลดภาพปกติ
     if ($featured_image_id == 0 && !empty($_FILES['article_images']['name'])) {
         // โหลดไลบรารีการจัดการไฟล์และรูปภาพ
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
-        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+        require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
+        require_once ABSPATH . 'wp-admin/includes/media.php';
         
         // อัพโหลดภาพไปยัง WordPress Media Library โดยยังไม่ผูกกับโพสต์ใด
         $featured_image_id = media_handle_upload('article_images', 0);
@@ -8183,9 +8189,9 @@ function handle_profile_update_pmg728() {
     
     // Handle avatar upload
     if (!empty($_FILES['avatar'])) {
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
-        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+        require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
+        require_once ABSPATH . 'wp-admin/includes/media.php';
         
         // Add custom upload validation
         $upload_overrides = array(
@@ -9017,7 +9023,7 @@ function logout_button_shortcode() {
         // Get the logout URL that redirects to the site URL
         $logout_url = wp_logout_url( site_url() );
         // Create a button link to the logout URL with the CSS class
-        return '<a href="' . esc_url( $logout_url ) . '" class="sign-out-button">' . esc_html__( 'ออกจากระบบ', 'your-textdomain' ) . '</a>';
+        return '<a href="' . esc_url( $logout_url ) . '" class="sign-out-button">' . esc_html__( DGA_LOGOUT_TEXT_TH, 'your-textdomain' ) . '</a>';
     } else {
         // Optionally, return something or nothing if not logged in
         return '';
@@ -9326,26 +9332,30 @@ function generate_complaint_reference($post_id) {
 }
 
 // AJAX handler for form submission - แก้ไขให้ใช้งานได้
-function handle_complaint_submission() {
+/**
+ * Helper function to validate complaint data
+ */
+function complaint_validate_json_data($raw_data) {
+    if (empty($raw_data)) {
+        return array('error' => 'ไม่พบข้อมูลที่ส่งมา', 'data' => null);
+    }
     
-    // Verify nonce
-    check_ajax_referer('complaint_form_nonce', 'nonce');
-    
-    // รับข้อมูลจากการส่งฟอร์ม
-    $raw_data = isset($_POST['data']) ? sanitize_text_field(stripslashes($_POST['data'])) : '';
     $complaint_data = json_decode($raw_data, true);
-    
     if (json_last_error() !== JSON_ERROR_NONE) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'ข้อมูลไม่ถูกต้อง: ' . json_last_error_msg()));
-        return;
+        return array('error' => 'ข้อมูลไม่ถูกต้อง: ' . json_last_error_msg(), 'data' => null);
     }
     
     if (empty($complaint_data)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'ไม่พบข้อมูลที่ส่งมา'));
-        return;
+        return array('error' => 'ไม่พบข้อมูลที่ส่งมา', 'data' => null);
     }
+    
+    return array('error' => null, 'data' => $complaint_data);
+}
 
-    // Validate required fields
+/**
+ * Helper function to validate required fields
+ */
+function complaint_validate_required_fields($complaint_data) {
     $required_fields = array(
         DGA_TYPE_FIELD => 'ประเภทเรื่องร้องเรียน',
         'department' => 'หน่วยงานที่ถูกร้องเรียน',
@@ -9364,51 +9374,58 @@ function handle_complaint_submission() {
         $errors[] = 'กรุณาระบุประเภทเรื่องร้องเรียนอื่นๆ';
     }
 
-    // Validate personal info if not anonymous
-    if (empty($complaint_data['isAnonymous'])) {
-        if (empty($complaint_data['name'])) {
-            $errors[] = 'กรุณากรอกชื่อ-นามสกุล';
-        }
-        if (empty($complaint_data['phone']) && empty($complaint_data['email'])) {
-            $errors[] = 'กรุณากรอกเบอร์โทรศัพท์หรืออีเมลอย่างน้อย 1 ช่องทาง';
-        }
-    }
+    return $errors;
+}
 
-    // Return errors if any
-    if (!empty($errors)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => implode(" ", $errors)));
-        return;
+/**
+ * Helper function to validate personal info for non-anonymous complaints
+ */
+function complaint_validate_personal_info($complaint_data) {
+    $errors = array();
+    
+    if (!empty($complaint_data['isAnonymous'])) {
+        return $errors;
     }
+    
+    if (empty($complaint_data['name'])) {
+        $errors[] = 'กรุณากรอกชื่อ-นามสกุล';
+    }
+    
+    if (empty($complaint_data['phone']) && empty($complaint_data['email'])) {
+        $errors[] = 'กรุณากรอกเบอร์โทรศัพท์หรืออีเมลอย่างน้อย 1 ช่องทาง';
+    }
+    
+    return $errors;
+}
 
-    // Prepare complaint data for saving
+/**
+ * Helper function to prepare complaint post data
+ */
+function complaint_prepare_post_data($complaint_data) {
     $post_title = wp_strip_all_tags($complaint_data['type'] === 'other' ? 
         $complaint_data['typeOther'] : 
         get_complaint_type_label($complaint_data['type']));
         
-    // เพิ่มชื่อหน่วยงานไว้ในชื่อเรื่อง
     $post_title .= ' - ' . wp_strip_all_tags($complaint_data['department']);
 
-    $complaint = array(
+    return array(
         'post_title' => $post_title,
         'post_content' => wp_kses_post($complaint_data['details']),
         DGA_POST_TYPE_FIELD => 'complaint',
         DGA_POST_STATUS_FIELD => 'pending'
     );
+}
 
-    // Insert the complaint
-    $post_id = wp_insert_post($complaint, true);
-
-    if (is_wp_error($post_id)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' . $post_id->get_error_message()));
-        return;
-    }
-
-    // บันทึก meta data
+/**
+ * Helper function to save complaint meta data
+ */
+function complaint_save_meta_data($post_id, $complaint_data) {
+    // Save basic complaint meta
     update_post_meta($post_id, '_complaint_type', sanitize_text_field($complaint_data['type']));
     update_post_meta($post_id, '_complaint_department', sanitize_text_field($complaint_data['department']));
     update_post_meta($post_id, '_is_anonymous', !empty($complaint_data['isAnonymous']) ? 'yes' : 'no');
     
-    // Add personal info if not anonymous
+    // Save personal info if not anonymous
     if (empty($complaint_data['isAnonymous'])) {
         update_post_meta($post_id, '_complainant_name', sanitize_text_field($complaint_data['name']));
         update_post_meta($post_id, '_complainant_address', sanitize_textarea_field($complaint_data['address']));
@@ -9416,22 +9433,61 @@ function handle_complaint_submission() {
         update_post_meta($post_id, '_complainant_email', sanitize_email($complaint_data['email']));
     }
 
-    // สร้างและบันทึกเลขอ้างอิงเรื่องร้องเรียน
+    // Generate and save reference number
     $ref_number = generate_complaint_reference($post_id);
     update_post_meta($post_id, '_complaint_ref', $ref_number);
     
-    // บันทึกวันที่รับเรื่อง
+    // Save dates
     $complaint_date = current_time('mysql');
     update_post_meta($post_id, '_complaint_date', $complaint_date);
     
-    // กำหนดวันที่ครบกำหนดตอบ (30 วัน)
     $due_date = date('Y-m-d H:i:s', strtotime('+30 days'));
     update_post_meta($post_id, '_response_due_date', $due_date);
+    
+    return array($ref_number, $complaint_date);
+}
 
-    // Send notification email to admin
+function handle_complaint_submission() {
+    // Verify nonce
+    check_ajax_referer('complaint_form_nonce', 'nonce');
+    
+    // Validate and parse JSON data
+    $raw_data = isset($_POST['data']) ? sanitize_text_field(stripslashes($_POST['data'])) : '';
+    $validation_result = complaint_validate_json_data($raw_data);
+    
+    if ($validation_result['error']) {
+        wp_send_json_error(array(DGA_MESSAGE_KEY => $validation_result['error']));
+        return;
+    }
+    
+    $complaint_data = $validation_result['data'];
+    
+    // Validate all fields
+    $field_errors = complaint_validate_required_fields($complaint_data);
+    $personal_errors = complaint_validate_personal_info($complaint_data);
+    $all_errors = array_merge($field_errors, $personal_errors);
+    
+    if (!empty($all_errors)) {
+        wp_send_json_error(array(DGA_MESSAGE_KEY => implode(" ", $all_errors)));
+        return;
+    }
+
+    // Create complaint post
+    $complaint_post = complaint_prepare_post_data($complaint_data);
+    $post_id = wp_insert_post($complaint_post, true);
+
+    if (is_wp_error($post_id)) {
+        wp_send_json_error(array(DGA_MESSAGE_KEY => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' . $post_id->get_error_message()));
+        return;
+    }
+
+    // Save meta data and get reference info
+    list($ref_number, $complaint_date) = complaint_save_meta_data($post_id, $complaint_data);
+
+    // Send notification email
     send_complaint_notification($post_id, $complaint_data);
 
-    // Return success response with complete data for modal
+    // Return success response
     wp_send_json_success(array(
         DGA_MESSAGE_KEY => 'บันทึกข้อมูลเรียบร้อยแล้ว',
         DGA_POST_ID_FIELD => $post_id,
@@ -9944,8 +10000,8 @@ function dga_complaint_search_ajax_handler() {
             'complaint_type' => $type_label . $type_other,
             'department' => $department,
             DGA_STATUS_FIELD => $status_label,
-            'complaint_date' => !empty($complaint_date) ? date_i18n('d/m/Y', strtotime($complaint_date)) : date_i18n('d/m/Y', strtotime(get_the_date())),
-            'due_date' => !empty($due_date) ? date_i18n('d/m/Y', strtotime($due_date)) : '',
+            'complaint_date' => !empty($complaint_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_date)) : date_i18n(DGA_DATE_FORMAT_SHORT, strtotime(get_the_date())),
+            'due_date' => !empty($due_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($due_date)) : '',
             'current_step' => $current_step,
             'details' => wp_strip_all_tags(get_the_content())
         );
@@ -10027,8 +10083,8 @@ function dga_complaint_search_ajax_handler() {
                 'complaint_type' => $type_label . $type_other,
                 'department' => $department,
                 DGA_STATUS_FIELD => $status_label,
-                'complaint_date' => !empty($complaint_date) ? date_i18n('d/m/Y', strtotime($complaint_date)) : date_i18n('d/m/Y', strtotime(get_the_date())),
-                'due_date' => !empty($due_date) ? date_i18n('d/m/Y', strtotime($due_date)) : '',
+                'complaint_date' => !empty($complaint_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_date)) : date_i18n(DGA_DATE_FORMAT_SHORT, strtotime(get_the_date())),
+                'due_date' => !empty($due_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($due_date)) : '',
                 'current_step' => $current_step,
                 'details' => wp_strip_all_tags(get_the_content())
             );
@@ -10105,8 +10161,8 @@ function dga_complaint_search_ajax_handler() {
                         'complaint_type' => $type_label . $type_other,
                         'department' => $department,
                         DGA_STATUS_FIELD => $status_label,
-                        'complaint_date' => !empty($complaint_date) ? date_i18n('d/m/Y', strtotime($complaint_date)) : date_i18n('d/m/Y', strtotime($complaint_post->post_date)),
-                        'due_date' => !empty($due_date) ? date_i18n('d/m/Y', strtotime($due_date)) : '',
+                        'complaint_date' => !empty($complaint_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_date)) : date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_post->post_date)),
+                        'due_date' => !empty($due_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($due_date)) : '',
                         'current_step' => $current_step,
                         'details' => wp_strip_all_tags($complaint_post->post_content)
                     );
@@ -15812,7 +15868,7 @@ function enqueue_standard_documents_assets() {
 
 // ฟังก์ชันแปลงวันที่เป็นรูปแบบไทย
 function convert_to_thai_date($date_string) {
-    $date = DateTime::createFromFormat('d/m/Y', $date_string);
+    $date = DateTime::createFromFormat(DGA_DATE_FORMAT_SHORT, $date_string);
     if (!$date) {
         return $date_string;
     }
@@ -16103,7 +16159,7 @@ function tdep_tem_shortcode($atts) {
                                 <div class="tdep-tem-card-meta">
                                     <time datetime="<?php echo esc_attr(get_the_date('c')); ?>" class="tdep-tem-card-date">
                                         <i class="tdep-tem-icon-calendar" aria-hidden="true"></i>
-                                        <?php echo esc_html(get_the_date('d/m/Y')); ?>
+                                        <?php echo esc_html(get_the_date(DGA_DATE_FORMAT_SHORT)); ?>
                                     </time>
                                 </div>
 
@@ -18209,7 +18265,7 @@ function event_post_load_gallery() {
             $response[] = array(
                 'id' => get_the_ID(),
                 DGA_TITLE_FIELD => get_the_title(),
-                'date' => get_the_date('d/m/Y'),
+                'date' => get_the_date(DGA_DATE_FORMAT_SHORT),
                 'featured_image' => $featured_image,
                 'gallery_images' => $gallery_urls,
                 'gallery_count' => count($gallery_urls),
@@ -20070,7 +20126,7 @@ function get_pending_posts() {
                 'ID' => $post_id,
                 DGA_TITLE_FIELD => get_the_title(),
                 DGA_TYPE_FIELD => $post_type,
-                'date' => get_the_date('d/m/Y'),
+                'date' => get_the_date(DGA_DATE_FORMAT_SHORT),
                 'link' => $preview_link,
                 'excerpt' => wp_trim_words(get_the_excerpt(), 20),
                 'author' => get_the_author(),
@@ -20800,7 +20856,7 @@ function fpe_generate_editor_html_vkj785($post_id) {
  */
 function fpe_generate_file_row_vkj785($index, $file) {
     $file_name = isset($file['at_rp_file_name']) ? $file['at_rp_file_name'] : '';
-    $file_date = isset($file['at_rp_file_create']) ? $file['at_rp_file_create'] : current_time('d/m/Y');
+    $file_date = isset($file['at_rp_file_create']) ? $file['at_rp_file_create'] : current_time(DGA_DATE_FORMAT_SHORT);
     $file_link = isset($file['at_rp_file_link']) ? $file['at_rp_file_link'] : '';
     
     ob_start();
@@ -22902,7 +22958,7 @@ function dynamic_post_cards_load_posts_dpc734() {
             }
             
             // จัดการวันที่ในรูปแบบไทย
-            $thai_date = get_thai_date_dpc734(get_the_date('d/m/Y'));
+            $thai_date = get_thai_date_dpc734(get_the_date(DGA_DATE_FORMAT_SHORT));
             
             // Visitor count (ถ้ามี shortcode)
             $visitor_count = '';
@@ -23329,7 +23385,7 @@ class CSV_Excel_Post_Importer {
         }
         
         // โหลดไลบรารี SimpleXLSX
-        require_once($this->simplexlsx_path);
+        require_once $this->simplexlsx_path;
         
         // ใช้ SimpleXLSX อ่านไฟล์
         $xlsx = new \SimpleXLSX($file_path);
@@ -24655,7 +24711,7 @@ function org_links_create_table() {
             PRIMARY KEY  (id)
         ) $charset_collate;";
         
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
 }
@@ -24999,9 +25055,9 @@ function org_links_settings_page() {
         
         // Handle logo upload or URL
         if (!empty($_FILES['logo']['name'])) {
-            require_once(ABSPATH . 'wp-admin/includes/image.php');
-            require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
-            require_once(ABSPATH . 'wp-admin/includes/media.php');
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+            require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
+            require_once ABSPATH . 'wp-admin/includes/media.php';
             
             $attachment_id = media_handle_upload('logo', 0);
             
@@ -28923,13 +28979,13 @@ add_action('wp_ajax_nopriv_ckan_download_file', 'ckan_handle_file_download_xrt25
 // Make sure we have the required WordPress file upload functionality
 function ckan_includes_for_media_upload_xrt259() {
     if (!function_exists('wp_handle_upload')) {
-        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
+        require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
     }
     if (!function_exists('wp_generate_attachment_metadata')) {
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once ABSPATH . 'wp-admin/includes/image.php';
     }
     if (!function_exists('media_handle_upload')) {
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        require_once ABSPATH . 'wp-admin/includes/media.php';
     }
 }
 add_action('init', 'ckan_includes_for_media_upload_xrt259');
@@ -32253,7 +32309,7 @@ function at_load_inactive_news_ajax_handler() {
                 'id'         => $post_id,
                 DGA_POST_TYPE_FIELD  => get_post_type(),
                 'post_type_label' => $post_type_label,
-                'date'       => get_the_date('d/m/Y'),
+                'date'       => get_the_date(DGA_DATE_FORMAT_SHORT),
                 DGA_TITLE_FIELD      => get_the_title(),
                 'permalink'  => get_permalink(),
                 'docnum_1'   => $docnum_1 ?: '-',
@@ -32914,7 +32970,7 @@ function ckan_history_create_table() {
         KEY revision_date (revision_date)
     ) $charset_collate;";
     
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
     
     // สร้าง log เพื่อตรวจสอบ
@@ -34067,7 +34123,7 @@ function egp_save_file() {
         if ($upload_type === 'direct' && isset($_FILES['file_upload']) && !empty($_FILES['file_upload']['name'])) {
             // อัพโหลดไฟล์ใหม่
             if (!function_exists('wp_handle_upload')) {
-                require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
+                require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
             }
             
             $response['debug']['upload_process'] = 'Direct upload started';
@@ -34086,10 +34142,10 @@ function egp_save_file() {
                 
                 // เพิ่มไฟล์ลงใน Media Library
                 if (!function_exists('wp_generate_attachment_metadata')) {
-                    require_once(ABSPATH . 'wp-admin/includes/image.php');
+                    require_once ABSPATH . 'wp-admin/includes/image.php';
                 }
                 if (!function_exists('wp_insert_attachment')) {
-                    require_once(ABSPATH . 'wp-admin/includes/media.php');
+                    require_once ABSPATH . 'wp-admin/includes/media.php';
                 }
                 
                 $filename = $uploadedfile['name'];
@@ -35595,7 +35651,7 @@ if (!defined('CKAN_ACTION_TYPES_HJK729')) {
         'Unpublished' => [DGA_LABEL_FIELD => 'ยกเลิกเผยแพร่', 'color' => '#FFC107', 'icon' => 'dashicons-hidden'],
         // กิจกรรม User
         'User_Login' => [DGA_LABEL_FIELD => DGA_LOGIN_TEXT_TH, 'color' => '#4CAF50', 'icon' => 'dashicons-unlock'],
-        'User_Logout' => [DGA_LABEL_FIELD => 'ออกจากระบบ', 'color' => '#9E9E9E', 'icon' => 'dashicons-lock'],
+        'User_Logout' => [DGA_LABEL_FIELD => DGA_LOGOUT_TEXT_TH, 'color' => '#9E9E9E', 'icon' => 'dashicons-lock'],
         'Failed_Login' => [DGA_LABEL_FIELD => 'เข้าสู่ระบบไม่สำเร็จ', 'color' => '#F44336', 'icon' => 'dashicons-warning'],
         // กิจกรรมอื่นๆ
         'Uploaded' => [DGA_LABEL_FIELD => 'อัพโหลด', 'color' => '#00BCD4', 'icon' => 'dashicons-upload'],
@@ -36687,7 +36743,7 @@ function ckan_log_user_logout_xyz456() {
             [
                 'resource_type' => 'user',
                 'logout_time' => current_time('mysql'),
-                'details' => 'ออกจากระบบ'
+                'details' => DGA_LOGOUT_TEXT_TH
             ]
         );
     }
@@ -37144,9 +37200,9 @@ add_action('wp_ajax_nopriv_normal_post_attfile', 'normal_post_attfile_ajax_handl
 function post_featured_images_set_default($batch_size = 50) {
     // Make sure the required files are included
     if (!function_exists('media_handle_sideload')) {
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
-        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
+        require_once ABSPATH . 'wp-admin/includes/image.php';
     }
     
     // Default image URL
@@ -37230,9 +37286,9 @@ function post_featured_images_set_image($post_id, $image_url) {
     
     // Make sure the required files are included
     if (!function_exists('media_handle_sideload')) {
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
-        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . DGA_WP_FILE_INCLUDE_PATH;
+        require_once ABSPATH . 'wp-admin/includes/image.php';
     }
     
     // First, check if the image already exists in the media library
@@ -38408,7 +38464,7 @@ function create_deleted_posts_table() {
         PRIMARY KEY  (id)
     ) $charset_collate;";
     
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
 }
 // คอมเม้นต์บรรทัดด้านล่างและรันฟังก์ชันนี้เมื่อติดตั้งแรกครั้งเดียว
@@ -38613,7 +38669,7 @@ function news_posts_table_shortcode($atts) {
                 <?php if (!empty($date_filter)) : ?>
                     <input type="hidden" name="date" value="<?php echo esc_attr($date_filter); ?>">
                     <div class="date-filter-badge">
-                        <span>กรองตามวันที่: <?php echo esc_html(date_i18n('d/m/Y', strtotime($date_filter))); ?></span>
+                        <span>กรองตามวันที่: <?php echo esc_html(date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($date_filter))); ?></span>
                         <a href="<?php echo esc_url(remove_query_arg('date')); ?>" class="clear-date-filter" title="ล้างตัวกรองวันที่">×</a>
                     </div>
                 <?php endif; ?>
@@ -38660,8 +38716,8 @@ function news_posts_table_shortcode($atts) {
                                         <span class="dashicons dashicons-visibility"></span> <?php echo $post_views; ?>
                                     </span>
                                 </td>
-                                <td class="col-date"><?php echo get_the_date('d/m/Y'); ?></td>
-                                <td class="col-modified"><?php echo get_the_modified_date('d/m/Y'); ?></td>
+                                <td class="col-date"><?php echo get_the_date(DGA_DATE_FORMAT_SHORT); ?></td>
+                                <td class="col-modified"><?php echo get_the_modified_date(DGA_DATE_FORMAT_SHORT); ?></td>
                                 <td class="col-category"><?php echo implode(', ', $term_names); ?></td>
                                 <td class="col-actions">
                                     <div class="action-buttons-container">
@@ -43971,7 +44027,7 @@ function dga_create_glossary_table() {
         INDEX idx_english (english_term)
     ) $charset_collate;";
     
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
 }
 
