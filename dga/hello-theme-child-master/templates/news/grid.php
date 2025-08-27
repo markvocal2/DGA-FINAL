@@ -40,8 +40,8 @@ if (!isset($posts) || !isset($taxonomy)) {
             <div class="grid-filter-bar">
                 <?php if (!empty($attributes['show_filter']) && $taxonomy) : 
                     $categories = get_terms([
-                        'taxonomy' => $taxonomy,
-                        'hide_empty' => true
+                        DGA_TAXONOMY_FIELD => $taxonomy,
+                        DGA_HIDE_EMPTY_FIELD => true
                     ]);
                 ?>
                     <div class="filter-wrapper" role="navigation" aria-label="Category filter">

@@ -24,7 +24,7 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title><?php echo esc_html__('รีเซ็ทรหัสผ่าน', 'my-custom-textdomain'); ?> - <?php echo esc_html($site_name); ?></title>
+    <title><?php echo esc_html__('รีเซ็ทรหัสผ่าน', DGA_TEXT_DOMAIN); ?> - <?php echo esc_html($site_name); ?></title>
     <!--[if mso]>
     <noscript>
         <xml>
@@ -73,7 +73,7 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
     
     <!-- Preheader Text -->
     <div style="display: none; font-size: 1px; color: #f8fafc; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-        <?php echo esc_html__('คำขอรีเซ็ทรหัสผ่านสำหรับบัญชีของคุณ', 'my-custom-textdomain'); ?> - <?php echo esc_html($site_name); ?>
+        <?php echo esc_html__('คำขอรีเซ็ทรหัสผ่านสำหรับบัญชีของคุณ', DGA_TEXT_DOMAIN); ?> - <?php echo esc_html($site_name); ?>
     </div>
     
     <!-- Email Wrapper -->
@@ -106,26 +106,26 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                             
                             <!-- Greeting -->
                             <h2 style="margin: 0 0 20px 0; color: #1e293b; font-size: 24px; font-weight: 600; text-align: center;">
-                                <?php echo esc_html__('คำขอรีเซ็ทรหัสผ่าน', 'my-custom-textdomain'); ?>
+                                <?php echo esc_html__('คำขอรีเซ็ทรหัสผ่าน', DGA_TEXT_DOMAIN); ?>
                             </h2>
                             
                             <p style="margin: 0 0 25px 0; color: #475569; font-size: 16px; line-height: 1.6;">
-                                <?php echo sprintf(esc_html__('เรียน %s', 'my-custom-textdomain'), esc_html($user_name)); ?>,
+                                <?php echo sprintf(esc_html__('เรียน %s', DGA_TEXT_DOMAIN), esc_html($user_name)); ?>,
                             </p>
                             
                             <p style="margin: 0 0 25px 0; color: #475569; font-size: 16px; line-height: 1.6;">
-                                <?php echo esc_html__('เราได้รับคำขอรีเซ็ทรหัสผ่านสำหรับบัญชีของคุณ หากคุณไม่ได้ทำการร้องขอนี้ กรุณาเพิกเฉยอีเมลฉบับนี้ได้เลย', 'my-custom-textdomain'); ?>
+                                <?php echo esc_html__('เราได้รับคำขอรีเซ็ทรหัสผ่านสำหรับบัญชีของคุณ หากคุณไม่ได้ทำการร้องขอนี้ กรุณาเพิกเฉยอีเมลฉบับนี้ได้เลย', DGA_TEXT_DOMAIN); ?>
                             </p>
                             
                             <!-- Request Info Box -->
                             <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px; margin: 0 0 30px 0;">
                                 <h3 style="margin: 0 0 15px 0; color: #1e293b; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
-                                    <?php echo esc_html__('รายละเอียดคำขอ', 'my-custom-textdomain'); ?>
+                                    <?php echo esc_html__('รายละเอียดคำขอ', DGA_TEXT_DOMAIN); ?>
                                 </h3>
                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                     <tr>
                                         <td style="padding: 5px 0; color: #64748b; font-size: 14px;">
-                                            <strong><?php echo esc_html__('อีเมล:', 'my-custom-textdomain'); ?></strong>
+                                            <strong><?php echo esc_html__('อีเมล:', DGA_TEXT_DOMAIN); ?></strong>
                                         </td>
                                         <td style="padding: 5px 0 5px 20px; color: #1e293b; font-size: 14px;">
                                             <?php echo esc_html($user_email); ?>
@@ -133,7 +133,7 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                                     </tr>
                                     <tr>
                                         <td style="padding: 5px 0; color: #64748b; font-size: 14px;">
-                                            <strong><?php echo esc_html__('วันที่:', 'my-custom-textdomain'); ?></strong>
+                                            <strong><?php echo esc_html__('วันที่:', DGA_TEXT_DOMAIN); ?></strong>
                                         </td>
                                         <td style="padding: 5px 0 5px 20px; color: #1e293b; font-size: 14px;">
                                             <?php echo esc_html(date_i18n('j F Y เวลา H:i น.', strtotime($request_time))); ?>
@@ -152,7 +152,7 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                             <!-- CTA Section -->
                             <div style="text-align: center; margin: 0 0 30px 0;">
                                 <p style="margin: 0 0 20px 0; color: #475569; font-size: 16px; line-height: 1.6;">
-                                    <?php echo esc_html__('คลิกปุ่มด้านล่างเพื่อตั้งค่ารหัสผ่านใหม่:', 'my-custom-textdomain'); ?>
+                                    <?php echo esc_html__('คลิกปุ่มด้านล่างเพื่อตั้งค่ารหัสผ่านใหม่:', DGA_TEXT_DOMAIN); ?>
                                 </p>
                                 
                                 <!-- Button -->
@@ -161,7 +161,7 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                                     <tr>
                                         <td align="center" bgcolor="#2563eb" style="background-color: #2563eb; border-radius: 6px; padding: 0;">
                                             <a href="<?php echo esc_url($reset_link); ?>" target="_blank" style="display: inline-block; padding: 16px 40px; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 6px; font-family: 'Inter', Arial, sans-serif;">
-                                                <?php echo esc_html__('ตั้งค่ารหัสผ่านใหม่', 'my-custom-textdomain'); ?>
+                                                <?php echo esc_html__('ตั้งค่ารหัสผ่านใหม่', DGA_TEXT_DOMAIN); ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -172,7 +172,7 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                                     <tr>
                                         <td align="center" style="background: #2563eb; background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); border-radius: 6px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);">
                                             <a href="<?php echo esc_url($reset_link); ?>" target="_blank" class="button-link" style="display: inline-block; padding: 16px 40px; color: #ffffff !important; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 6px; text-align: center; font-family: 'Inter', Arial, sans-serif;">
-                                                <?php echo esc_html__('ตั้งค่ารหัสผ่านใหม่', 'my-custom-textdomain'); ?>
+                                                <?php echo esc_html__('ตั้งค่ารหัสผ่านใหม่', DGA_TEXT_DOMAIN); ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -183,10 +183,10 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                             <!-- Alternative Link -->
                             <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 15px; margin: 0 0 25px 0;">
                                 <p style="margin: 0 0 8px 0; color: #92400e; font-size: 13px; font-weight: 600;">
-                                    <?php echo esc_html__('หากปุ่มด้านบนไม่ทำงาน:', 'my-custom-textdomain'); ?>
+                                    <?php echo esc_html__('หากปุ่มด้านบนไม่ทำงาน:', DGA_TEXT_DOMAIN); ?>
                                 </p>
                                 <p style="margin: 0; color: #78350f; font-size: 13px; line-height: 1.5; word-break: break-all;">
-                                    <?php echo esc_html__('คัดลอกและวางลิงก์นี้ในเบราว์เซอร์ของคุณ:', 'my-custom-textdomain'); ?><br>
+                                    <?php echo esc_html__('คัดลอกและวางลิงก์นี้ในเบราว์เซอร์ของคุณ:', DGA_TEXT_DOMAIN); ?><br>
                                     <a href="<?php echo esc_url($reset_link); ?>" style="color: #ea580c; text-decoration: underline; font-size: 12px;">
                                         <?php echo esc_html($reset_link); ?>
                                     </a>
@@ -196,12 +196,12 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                             <!-- Security Notice -->
                             <div style="border-top: 1px solid #e2e8f0; padding-top: 20px;">
                                 <p style="margin: 0 0 10px 0; color: #64748b; font-size: 13px; line-height: 1.5;">
-                                    <strong><?php echo esc_html__('หมายเหตุด้านความปลอดภัย:', 'my-custom-textdomain'); ?></strong>
+                                    <strong><?php echo esc_html__('หมายเหตุด้านความปลอดภัย:', DGA_TEXT_DOMAIN); ?></strong>
                                 </p>
                                 <ul style="margin: 0; padding: 0 0 0 20px; color: #64748b; font-size: 13px; line-height: 1.6;">
-                                    <li><?php echo esc_html__('ลิงก์นี้จะหมดอายุภายใน 24 ชั่วโมง', 'my-custom-textdomain'); ?></li>
-                                    <li><?php echo esc_html__('ลิงก์นี้สามารถใช้ได้เพียงครั้งเดียวเท่านั้น', 'my-custom-textdomain'); ?></li>
-                                    <li><?php echo esc_html__('หากคุณไม่ได้ขอรีเซ็ทรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบทันที', 'my-custom-textdomain'); ?></li>
+                                    <li><?php echo esc_html__('ลิงก์นี้จะหมดอายุภายใน 24 ชั่วโมง', DGA_TEXT_DOMAIN); ?></li>
+                                    <li><?php echo esc_html__('ลิงก์นี้สามารถใช้ได้เพียงครั้งเดียวเท่านั้น', DGA_TEXT_DOMAIN); ?></li>
+                                    <li><?php echo esc_html__('หากคุณไม่ได้ขอรีเซ็ทรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบทันที', DGA_TEXT_DOMAIN); ?></li>
                                 </ul>
                             </div>
                             
@@ -212,14 +212,14 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                     <tr>
                         <td style="background-color: #f8fafc; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
                             <p style="margin: 0 0 8px 0; color: #64748b; font-size: 12px;">
-                                <?php echo esc_html__('อีเมลนี้ส่งมาจาก', 'my-custom-textdomain'); ?> 
+                                <?php echo esc_html__('อีเมลนี้ส่งมาจาก', DGA_TEXT_DOMAIN); ?> 
                                 <a href="<?php echo esc_url($site_url); ?>" style="color: #2563eb; text-decoration: none;">
                                     <?php echo esc_html($site_name); ?>
                                 </a>
                             </p>
                             <p style="margin: 0; color: #94a3b8; font-size: 11px;">
                                 © <?php echo date('Y'); ?> <?php echo esc_html($site_name); ?>. 
-                                <?php echo esc_html__('สงวนลิขสิทธิ์', 'my-custom-textdomain'); ?>
+                                <?php echo esc_html__('สงวนลิขสิทธิ์', DGA_TEXT_DOMAIN); ?>
                             </p>
                         </td>
                     </tr>

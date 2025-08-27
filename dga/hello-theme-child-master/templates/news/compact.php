@@ -37,8 +37,8 @@ if (!isset($posts) || !isset($taxonomy)) {
             <!-- Optional Category Filter -->
             <?php if (!empty($attributes['show_filter']) && $taxonomy) : 
                 $categories = get_terms([
-                    'taxonomy' => $taxonomy,
-                    'hide_empty' => true
+                    DGA_TAXONOMY_FIELD => $taxonomy,
+                    DGA_HIDE_EMPTY_FIELD => true
                 ]);
             ?>
                 <div class="compact-filter-section" role="navigation" aria-label="Category filter">
