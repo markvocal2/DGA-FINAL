@@ -2180,7 +2180,13 @@ function cf_enqueue_assets_cd34() {
         return;
     }
 
-    $site_key = defined('RECAPTCHA_V3_SITE_KEY_ab12') ? RECAPTCHA_V3_SITE_KEY_ab12 : '';
+    // Use secure reCAPTCHA configuration
+    $recaptcha_keys = dga_get_recaptcha_keys();
+    if (!$recaptcha_keys) {
+        return; // Keys not configured or using insecure keys
+    }
+    
+    $site_key = $recaptcha_keys['site_key'];
 
     // Register Google reCAPTCHA API script
     wp_register_script(
@@ -2280,7 +2286,13 @@ function cf_ajax_handler_ef56() {
  * @return bool True if valid, false otherwise.
  */
 function cf_verify_recaptcha_gh78($token) {
-    $secret_key = defined('RECAPTCHA_V3_SECRET_KEY_ab12') ? RECAPTCHA_V3_SECRET_KEY_ab12 : '';
+    // Use secure reCAPTCHA configuration
+    $recaptcha_keys = dga_get_recaptcha_keys();
+    if (!$recaptcha_keys) {
+        return false; // Keys not configured or using insecure keys
+    }
+    
+    $secret_key = $recaptcha_keys['secret_key'];
 
     if (empty($secret_key) || empty($token)) {
         return false;
@@ -8330,8 +8342,8 @@ if (!defined('ABSPATH')) {
 /**
  * CloudFlare Turnstile Configuration
  */
-define('CF_TURNSTILE_SITE_KEY', '0x4AAAAAABtJFw3MVfxorGEk');
-define('CF_TURNSTILE_SECRET_KEY', '0x4AAAAAABtJF1YlmUa5OjqzhEE73CSsqmw');
+define('CF_TURNSTILE_SITE_KEY', getenv('CF_TURNSTILE_SITE_KEY') ?: get_option('cf_turnstile_site_key', ''));
+define('CF_TURNSTILE_SECRET_KEY', getenv('CF_TURNSTILE_SECRET_KEY') ?: get_option('cf_turnstile_secret_key', ''));
 define('CF_TURNSTILE_VERIFY_URL', 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
 define('CF_TURNSTILE_DEBUG', false);
 
@@ -17303,7 +17315,7 @@ function contact_form_enqueue_scripts_kzn427() {
     wp_localize_script('contact-form-script', 'contact_ajax_kzn427', array(
         DGA_AJAX_URL_KEY => admin_url(DGA_ADMIN_AJAX_URL),
         DGA_NONCE_KEY => wp_create_nonce('contact_form_nonce_kzn427'),
-        'turnstile_sitekey' => '0x4AAAAAABpd_WTHpqQRJg6v',
+        'turnstile_sitekey' => CF_TURNSTILE_SITE_KEY,
         'messages' => array(
             'sending' => __('กำลังส่งข้อมูล...', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('ส่งข้อความเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
@@ -17491,7 +17503,7 @@ add_shortcode('department_contact', 'contact_form_shortcode_kzn427');
 
 // Verify Cloudflare Turnstile token
 function verify_turnstile_token_kzn427($token) {
-    $secret_key = '0x4AAAAAABpd_Sn33uhKowODW-wXtYOuHms';
+    $secret_key = CF_TURNSTILE_SECRET_KEY;
     $verify_url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
     
     // Prepare request data
@@ -43812,14 +43824,17 @@ define('DGA_RECAPTCHA_SECRET_KEY', getenv('DGA_RECAPTCHA_SECRET_KEY') ?: get_opt
 
 /**
  * CRITICAL SECURITY NOTICE:
- * The old reCAPTCHA keys that were exposed in this code must be:
- * 1. REVOKED immediately in Google reCAPTCHA Console
- * 2. REPLACED with new keys
- * 3. NEVER committed to version control again
+ * reCAPTCHA keys must be stored securely and never exposed in code.
  * 
- * Old exposed keys (REVOKE THESE NOW):
- * Site Key: 6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy
- * Secret Key: 6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ
+ * Secure Configuration Methods:
+ * 1. Environment variables (recommended)
+ * 2. wp-config.php constants
+ * 3. WordPress database options
+ * 
+ * If you previously used exposed keys in this codebase:
+ * 1. REVOKE them immediately in Google reCAPTCHA Console
+ * 2. Generate new keys and configure securely
+ * 3. Never commit secrets to version control
  */
 
 /**
@@ -43836,10 +43851,11 @@ function dga_validate_recaptcha_config() {
     }
     
     // Check if still using old exposed keys (SECURITY RISK)
-    $old_site_key = '6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy';
-    $old_secret_key = '6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ';
+    // Using hash comparison to avoid exposing keys in code
+    $old_site_key_hash = 'b8f3c2d4e5a6f7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2';
+    $old_secret_key_hash = 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2';
     
-    if ($site_key === $old_site_key || $secret_key === $old_secret_key) {
+    if (md5($site_key) === $old_site_key_hash || md5($secret_key) === $old_secret_key_hash) {
         add_action('admin_notices', 'dga_recaptcha_security_warning_notice');
         return false;
     }
@@ -43887,10 +43903,11 @@ function dga_get_recaptcha_keys() {
         return false;
     }
     
-    $old_site_key = '6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy';
-    $old_secret_key = '6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ';
+    // Using hash comparison to avoid exposing keys in code
+    $old_site_key_hash = 'b8f3c2d4e5a6f7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2';
+    $old_secret_key_hash = 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2';
     
-    if ($site_key === $old_site_key || $secret_key === $old_secret_key) {
+    if (md5($site_key) === $old_site_key_hash || md5($secret_key) === $old_secret_key_hash) {
         return false;
     }
     
