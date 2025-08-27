@@ -1,0 +1,747 @@
+/**
+ * Profile Management Styles - Improved Version
+ * Theme: Blue & Orange (Consistent with Password Reset)
+ * Version: 2.0.0
+ */
+
+:root {
+    --primary-blue: #2563eb;
+    --primary-blue-hover: #3b82f6;
+    --primary-blue-dark: #1d4ed8;
+    --secondary-orange: #f97316;
+    --secondary-orange-hover: #fb923c;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --background: #ffffff;
+    --background-gray: #f8fafc;
+    --border-color: #e2e8f0;
+    --border-focus: #2563eb;
+    --error-color: #dc2626;
+    --success-color: #16a34a;
+    --warning-color: #eab308;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Container Styles */
+.profile-container-pmg728 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.profile-box-pmg728 {
+    background: var(--background);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Top gradient bar - matches password reset */
+.profile-box-pmg728::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-orange) 100%);
+    animation: gradientSlide 3s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradientSlide {
+    0%, 100% {
+        background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-orange) 100%);
+    }
+    50% {
+        background: linear-gradient(90deg, var(--secondary-orange) 0%, var(--primary-blue) 100%);
+    }
+}
+
+/* Profile Header */
+.profile-header-pmg728 {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+/* Avatar Styles */
+.profile-avatar-wrapper-pmg728 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-avatar-pmg728 {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--primary-blue);
+    background: var(--background-gray);
+    transition: transform 0.3s ease;
+}
+
+.profile-avatar-pmg728:hover {
+    transform: scale(1.05);
+}
+
+.profile-avatar-pmg728 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.avatar-upload-overlay-pmg728 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(37, 99, 235, 0.9), transparent);
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.profile-avatar-pmg728:hover .avatar-upload-overlay-pmg728 {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.upload-button-pmg728 {
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.upload-button-pmg728:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.upload-button-pmg728 svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Profile Info */
+.profile-avatar-info-pmg728 {
+    text-align: center;
+}
+
+.profile-avatar-info-pmg728 h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    line-height: 1.2;
+}
+
+.profile-avatar-info-pmg728 p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Form Styles */
+.profile-form-pmg728 {
+    margin-bottom: 20px;
+}
+
+.form-row-pmg728 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group-pmg728 {
+    margin-bottom: 20px;
+}
+
+.form-group-pmg728:last-child {
+    margin-bottom: 0;
+}
+
+.form-group-pmg728 label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.form-input-pmg728 {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background);
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-input-pmg728:hover {
+    border-color: var(--primary-blue);
+}
+
+.form-input-pmg728:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input-pmg728::placeholder {
+    color: var(--text-muted);
+}
+
+/* Password Wrapper */
+.password-wrapper-pmg728 {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.password-wrapper-pmg728 input {
+    padding-right: 48px;
+}
+
+.toggle-password-pmg728 {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.toggle-password-pmg728:hover {
+    color: var(--primary-blue);
+}
+
+.toggle-password-pmg728 svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+/* Password Requirements */
+.password-requirements-pmg728 {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Password Strength */
+.password-strength-pmg728 {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.password-strength-pmg728.weak {
+    background: #fee2e2;
+    color: var(--error-color);
+}
+
+.password-strength-pmg728.medium {
+    background: #fed7aa;
+    color: #ea580c;
+}
+
+.password-strength-pmg728.strong {
+    background: #bbf7d0;
+    color: var(--success-color);
+}
+
+/* Buttons */
+.profile-btn-primary-pmg728 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-hover) 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-btn-primary-pmg728:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.profile-btn-primary-pmg728:active {
+    transform: translateY(0);
+}
+
+.profile-btn-primary-pmg728:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.profile-btn-block-pmg728 {
+    width: 100%;
+}
+
+/* Secondary Button */
+.profile-btn-secondary-pmg728 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--primary-blue);
+    background: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.profile-btn-secondary-pmg728:hover {
+    color: var(--secondary-orange);
+    border-color: var(--secondary-orange);
+    background: rgba(249, 115, 22, 0.05);
+}
+
+/* Profile Actions */
+.profile-actions-pmg728 {
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+}
+
+/* Button Loading State */
+.profile-spinner-pmg728 {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Modal Styles */
+.profile-modal-pmg728 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.profile-modal-pmg728.show {
+    display: flex;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.profile-modal-overlay-pmg728 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.3s ease;
+}
+
+.profile-modal-container-pmg728 {
+    position: relative;
+    background: var(--background);
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+    z-index: 1;
+    box-shadow: var(--shadow-lg);
+}
+
+.profile-modal-header-pmg728 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.profile-modal-title-pmg728 {
+    margin: 0;
+    font-size: 22px;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.profile-modal-close-pmg728 {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.profile-modal-close-pmg728:hover {
+    background: var(--background-gray);
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+.profile-modal-content-pmg728 {
+    margin-bottom: 0;
+}
+
+.modal-actions-pmg728 {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-actions-pmg728 button {
+    flex: 1;
+}
+
+.text-muted-pmg728 {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+/* Icons for warning/error states */
+.profile-icon-warning-pmg728 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-radius: 50%;
+    margin-bottom: 24px;
+    animation: iconFadeIn 0.6s ease-out;
+}
+
+.profile-icon-warning-pmg728 svg {
+    color: white;
+}
+
+@keyframes iconFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Toast Notification */
+.profile-toast-pmg728 {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    background: rgba(37, 99, 235, 0.95);
+    color: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all 0.3s ease;
+    z-index: 1100;
+    box-shadow: var(--shadow-lg);
+    max-width: 320px;
+}
+
+.profile-toast-pmg728.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.profile-toast-pmg728.error {
+    background: rgba(220, 38, 38, 0.95);
+}
+
+.profile-toast-pmg728.success {
+    background: rgba(22, 163, 74, 0.95);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Orange Accent Element - Similar to password reset */
+.profile-btn-primary-pmg728::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.profile-btn-primary-pmg728:hover::before {
+    left: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .profile-container-pmg728 {
+        padding: 15px;
+        min-height: 100vh;
+    }
+    
+    .profile-box-pmg728 {
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+    
+    .form-row-pmg728 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .profile-avatar-pmg728 {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile-avatar-info-pmg728 h2 {
+        font-size: 20px;
+    }
+    
+    .profile-modal-container-pmg728 {
+        padding: 24px 20px;
+        border-radius: 12px;
+    }
+    
+    .modal-actions-pmg728 {
+        flex-direction: column;
+    }
+    
+    .profile-toast-pmg728 {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+        text-align: center;
+    }
+    
+    /* Ensure inputs don't zoom on iOS */
+    .form-input-pmg728 {
+        font-size: 16px;
+        padding: 14px 16px;
+    }
+    
+    .password-wrapper-pmg728 input {
+        padding-right: 48px;
+    }
+    
+    .toggle-password-pmg728 {
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        right: 0;
+        top: 0;
+        transform: none;
+    }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 360px) {
+    .profile-box-pmg728 {
+        padding: 24px 16px;
+    }
+    
+    .profile-modal-container-pmg728 {
+        padding: 20px 16px;
+    }
+}
+
+/* Accessibility */
+.profile-container-pmg728 *:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+}
+
+.toggle-password-pmg728:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .profile-box-pmg728 {
+        border: 2px solid var(--text-primary);
+    }
+    
+    .form-input-pmg728 {
+        border-width: 2px;
+    }
+    
+    .profile-btn-primary-pmg728,
+    .profile-btn-secondary-pmg728 {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #1e293b;
+        --background-gray: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #334155;
+    }
+    
+    .profile-container-pmg728 {
+        background: var(--background-gray);
+    }
+    
+    .profile-box-pmg728 {
+        background: var(--background);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-input-pmg728 {
+        background: #334155;
+        border-color: #475569;
+        color: var(--text-primary);
+    }
+    
+    .form-input-pmg728:focus {
+        border-color: var(--primary-blue-hover);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .toggle-password-pmg728 {
+        color: var(--text-muted);
+    }
+    
+    .profile-modal-container-pmg728 {
+        background: var(--background);
+    }
+}
+
+/* Prevent layout shift on password toggle */
+.password-wrapper-pmg728 input {
+    -webkit-text-security: none;
+    text-security: none;
+}
+
+.password-wrapper-pmg728 input[type="password"] {
+    -webkit-text-security: disc;
+    text-security: disc;
+}
+
+/* Safari/iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .form-input-pmg728 {
+        -webkit-appearance: none;
+        -webkit-border-radius: 8px;
+    }
+    
+    .password-wrapper-pmg728 {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}

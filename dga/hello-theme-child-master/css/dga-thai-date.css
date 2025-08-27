@@ -1,0 +1,226 @@
+/**
+ * File: /css/dga-thai-date.css
+ * Description: สไตล์ชีทสำหรับ Shortcode [dga_thai_date] พร้อมฟีเจอร์แก้ไขสำหรับ Admin
+ */
+
+/* การเลือกใช้สีตามมาตรฐาน WCAG 2.1 AAA */
+.dga-container-sc19 {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    font-family: sans-serif;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    color: #004080;
+    margin: 1em 0;
+}
+
+.dga-date-sc19,
+.dga-views-sc19 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dga-container-sc19 svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    color: #005A9C;
+}
+
+.dga-view-count-sc19 {
+    font-weight: bold;
+    color: #C65E00;
+    font-size: 1.05em;
+}
+
+/* สไตล์สำหรับ Administrator - ตัวเลขจะดูเหมือนปุ่มที่คลิกได้ */
+.dga-editable-sc19 {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.dga-editable-sc19:hover {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.dga-editable-sc19:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 1px;
+    background-color: #fff3cd;
+}
+
+.dga-editable-sc19:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* สไตล์สำหรับ edit mode */
+.dga-edit-input-sc19 {
+    width: 80px;
+    padding: 4px 6px;
+    border: 2px solid #0073aa;
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #C65E00;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dga-edit-input-sc19:focus {
+    outline: none;
+    border-color: #005a87;
+    box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+}
+
+/* ปุ่ม Save และ Cancel */
+.dga-edit-buttons-sc19 {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 8px;
+    align-items: center;
+}
+
+.dga-save-btn-sc19,
+.dga-cancel-btn-sc19 {
+    padding: 2px 8px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.dga-save-btn-sc19 {
+    background-color: #00a32a;
+    color: white;
+}
+
+.dga-save-btn-sc19:hover {
+    background-color: #008a20;
+}
+
+.dga-save-btn-sc19:disabled {
+    background-color: #7ad03a;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.dga-cancel-btn-sc19 {
+    background-color: #646970;
+    color: white;
+}
+
+.dga-cancel-btn-sc19:hover {
+    background-color: #50575e;
+}
+
+/* ข้อความแจ้งเตือน */
+.dga-message-sc19 {
+    position: fixed;
+    top: 32px;
+    right: 20px;
+    z-index: 9999;
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: dga-slide-in-sc19 0.3s ease-out;
+}
+
+.dga-message-success-sc19 {
+    background-color: #00a32a;
+    color: white;
+    border-left: 4px solid #008a20;
+}
+
+.dga-message-error-sc19 {
+    background-color: #cc1818;
+    color: white;
+    border-left: 4px solid #a01515;
+}
+
+/* Animation สำหรับข้อความแจ้งเตือน */
+@keyframes dga-slide-in-sc19 {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ข้อความปกติ */
+.dga-view-text-sc19 {
+    color: #004080;
+    font-weight: normal;
+}
+
+/* Responsive design สำหรับ mobile */
+@media (max-width: 480px) {
+    .dga-container-sc19 {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+        padding: 10px;
+    }
+    
+    .dga-edit-input-sc19 {
+        width: 70px;
+        font-size: 0.9em;
+    }
+    
+    .dga-edit-buttons-sc19 {
+        margin-left: 0;
+        margin-top: 4px;
+    }
+    
+    .dga-message-sc19 {
+        right: 10px;
+        left: 10px;
+        font-size: 13px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .dga-editable-sc19:hover {
+        background-color: #000000;
+        color: #ffffff;
+    }
+    
+    .dga-edit-input-sc19 {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .dga-editable-sc19,
+    .dga-save-btn-sc19,
+    .dga-cancel-btn-sc19 {
+        transition: none;
+    }
+    
+    .dga-message-sc19 {
+        animation: none;
+    }
+}

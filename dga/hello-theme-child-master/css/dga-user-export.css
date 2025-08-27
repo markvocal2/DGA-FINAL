@@ -1,0 +1,336 @@
+/* DGA User Export - Professional UI Style */
+.dga-user-export-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    background-color: #fff;
+    color: #333;
+    margin: 30px 0;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.dga-user-export-header {
+    background-color: #002868;
+    color: white;
+    padding: 20px 25px;
+    position: relative;
+}
+
+.dga-user-export-header h2 {
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+    text-align: left;
+}
+
+.dga-user-export-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.dga-search-filter {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    max-width: 500px;
+}
+
+#dga-search-input {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    width: 60%;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#dga-role-filter {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    width: 40%;
+    font-size: 14px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dga-export-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.dga-button {
+    background-color: #ffffff;
+    color: #002868;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.dga-button:hover {
+    background-color: #f1f5ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.dga-button .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Table styles */
+.dga-user-export-table-container {
+    max-height: 650px;
+    overflow-y: auto;
+    margin: 0;
+}
+
+.dga-user-export-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background-color: #fff;
+}
+
+.dga-user-export-table th {
+    background-color: #f5f7fa;
+    color: #495057;
+    padding: 12px 16px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.dga-user-export-table th:first-child {
+    width: 60px;
+}
+
+.dga-user-export-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    font-size: 14px;
+}
+
+.dga-user-export-table tr:hover {
+    background-color: #f8f9ff;
+}
+
+/* Permission styling */
+.permissions-cell {
+    font-size: 14px;
+}
+
+.permission-role {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border-left: 3px solid #002868;
+}
+
+.permission-yes {
+    color: #2e7d32;
+    font-weight: 600;
+    background-color: #e8f5e9;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 2px;
+}
+
+.permission-no {
+    color: #777;
+    background-color: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 2px;
+}
+
+.toggle-details {
+    background-color: #e9ecef;
+    color: #495057;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: background-color 0.2s;
+}
+
+.toggle-details:hover {
+    background-color: #dee2e6;
+}
+
+.permission-details {
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+    font-size: 13px;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 8px 8px 8px 25px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+}
+
+.permission-details li {
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+/* Pagination */
+.dga-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+}
+
+.dga-pagination-button {
+    background-color: #ffffff;
+    color: #002868;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.dga-pagination-button:hover:not(:disabled) {
+    background-color: #f1f5ff;
+    border-color: #b8c7e0;
+}
+
+.dga-pagination-button:disabled {
+    background-color: #f5f5f5;
+    color: #aaa;
+    cursor: not-allowed;
+    border-color: #ddd;
+}
+
+#dga-page-info {
+    font-weight: 500;
+    color: #555;
+}
+
+/* Messages */
+.dga-loading, .dga-error, .dga-no-results {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    font-size: 15px;
+}
+
+.dga-error {
+    color: #d32f2f;
+}
+
+/* Loading overlay */
+.dga-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.dga-loading-message {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dga-loading-message:before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #eee;
+    border-radius: 50%;
+    border-top-color: #002868;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .dga-user-export-header {
+        padding: 15px;
+    }
+    
+    .dga-user-export-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .dga-search-filter {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .dga-export-buttons {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* รายละเอียด Button Styling */
+.รายละเอียด-link {
+    display: inline-block;
+    color: #007bff;
+    background-color: #e3f0ff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #cce5ff;
+}
+
+.รายละเอียด-link:hover {
+    background-color: #cce5ff;
+    text-decoration: none;
+}

@@ -1,0 +1,26 @@
+/* DGA Console Enhancement Styles */
+.dga-security-notice-dg23 {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 999999;
+    box-shadow: 0 4px 12px rgba(255,107,107,0.4);
+    animation: dgaFadeIn 0.5s ease-in-out;
+}
+
+@keyframes dgaFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hide on mobile devices */
+@media (max-width: 768px) {
+    .dga-security-notice-dg23 {
+        display: none;
+    }
+}

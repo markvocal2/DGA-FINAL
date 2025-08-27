@@ -1,0 +1,869 @@
+/**
+ * Enhanced Template Importer CSS
+ * รองรับ Floating Button และ Slide-in Modal
+ * Version: 1.0.1
+ */
+
+/* ===============================
+   1. Reset & Global Styles
+   =============================== */
+   .template-gallery-container *,
+   .template-gallery-container *::before,
+   .template-gallery-container *::after,
+   .template-modal-container *,
+   .template-modal-container *::before,
+   .template-modal-container *::after,
+   .template-floating-button *,
+   .template-floating-button *::before,
+   .template-floating-button *::after,
+   .template-notification *,
+   .template-lightbox * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+   }
+   
+   body.template-modal-open {
+       overflow: hidden;
+   }
+   
+   /* ===============================
+      2. Floating Button
+      =============================== */
+   .template-floating-button {
+       position: fixed;
+       right: 0;
+       top: 50%;
+       transform: translateY(-50%);
+       z-index: 9998;
+       transition: all 0.3s ease;
+       margin-right: 0;
+   }
+   
+   .template-floating-button button {
+       width: 60px;
+       height: 60px;
+       border: none;
+       background-color: #F05123;
+       color: white;
+       font-size: 24px;
+       cursor: pointer;
+       border-radius: 8px 0 0 8px;
+       box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+       transition: all 0.3s ease;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       padding: 0;
+   }
+   
+   .template-floating-button button:hover {
+       width: 65px;
+       background-color: #d83e0f;
+   }
+   
+   .template-floating-button button i {
+       transition: transform 0.3s ease;
+   }
+   
+   .template-floating-button button:hover i {
+       transform: scale(1.1);
+   }
+   
+   /* Fixed position version (ไม่เลื่อนตามการสครอลล์) */
+   .template-floating-button.fixed-position {
+       right: 0;
+       top: 50%;
+   }
+   
+   /* ===============================
+      3. Modal Container
+      =============================== */
+   .template-modal-container {
+       position: fixed;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       z-index: 9999;
+       visibility: hidden;
+       display: block !important;
+   }
+   
+   .template-modal-container.active {
+       visibility: visible;
+   }
+   
+   .template-modal-overlay {
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background-color: rgba(0, 0, 0, 0.5);
+       opacity: 0;
+       transition: opacity 0.3s ease;
+   }
+   
+   .template-modal-container.active .template-modal-overlay {
+       opacity: 1;
+   }
+   
+   .template-modal-content {
+       position: absolute;
+       top: 0;
+       right: -100%;
+       bottom: 0;
+       width: 90%;
+       max-width: 1200px;
+       background-color: white;
+       transform: none;
+       left: auto;
+       overflow-y: auto;
+       transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+       display: flex;
+       flex-direction: column;
+   }
+   
+   .template-modal-container.active .template-modal-content {
+       right: 0;
+   }
+   
+   .template-modal-header {
+       position: sticky;
+       top: 0;
+       background: white;
+       z-index: 10;
+       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+       padding: 15px 20px;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       border-bottom: 1px solid #eee;
+   }
+   
+   .template-modal-header h3 {
+       margin: 0;
+       font-size: 20px;
+       color: #333;
+   }
+   
+   .template-modal-close {
+       background: none;
+       border: none;
+       color: #999;
+       font-size: 20px;
+       cursor: pointer;
+       transition: color 0.2s ease;
+   }
+   
+   .template-modal-close:hover {
+       color: #F05123;
+   }
+   
+   .template-modal-body {
+       flex: 1;
+       overflow-y: auto;
+       padding: 20px;
+   }
+   
+   .template-modal-loading {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       height: 200px;
+       color: #666;
+       font-size: 16px;
+   }
+   
+   .template-modal-loading i {
+       margin-right: 10px;
+       color: #F05123;
+   }
+   
+   /* ===============================
+      4. Template Gallery Container
+      =============================== */
+   .template-gallery-container {
+       margin: 20px 0;
+       border: 1px solid #e0e0e0;
+       border-radius: 8px;
+       overflow: hidden;
+       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+       background-color: #fff;
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+   }
+   
+   .template-gallery-toggle {
+       background-color: #F05123;
+       color: white;
+       padding: 15px 20px;
+       width: 100%;
+       text-align: left;
+       font-weight: 600;
+       font-size: 16px;
+       border: none;
+       cursor: pointer;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       transition: all 0.3s ease;
+   }
+   
+   .template-gallery-toggle:hover {
+       background-color: #d83e0f;
+   }
+   
+   .template-gallery-toggle i {
+       transition: transform 0.3s ease;
+   }
+   
+   .template-gallery-toggle.active i {
+       transform: rotate(180deg);
+   }
+   
+   .template-gallery-content {
+       display: none;
+       padding: 20px;
+       background-color: #f9f9f9;
+   }
+   
+   .template-gallery-content.active {
+       display: block;
+       animation: fadeIn 0.3s ease;
+   }
+   
+   @keyframes fadeIn {
+       from { opacity: 0; }
+       to { opacity: 1; }
+   }
+   
+   /* ===============================
+      5. Search & Filters
+      =============================== */
+   .template-toolbar {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       margin-bottom: 20px;
+       flex-wrap: wrap;
+       gap: 10px;
+   }
+   
+   .template-search-box {
+       position: relative;
+       flex: 1;
+       min-width: 200px;
+       max-width: 350px;
+   }
+   
+   .template-search-box input {
+       width: 100%;
+       padding: 10px 15px 10px 40px;
+       border: 1px solid #ddd;
+       border-radius: 4px;
+       font-size: 14px;
+   }
+   
+   .template-search-box i {
+       position: absolute;
+       left: 15px;
+       top: 50%;
+       transform: translateY(-50%);
+       color: #999;
+   }
+   
+   .template-sort-box {
+       min-width: 150px;
+   }
+   
+   .template-sort-box select {
+       width: 100%;
+       padding: 10px;
+       border: 1px solid #ddd;
+       border-radius: 4px;
+       background-color: white;
+       font-size: 14px;
+   }
+   
+   .template-categories {
+       display: flex;
+       flex-wrap: wrap;
+       border-bottom: 1px solid #ddd;
+       margin-bottom: 20px;
+       background-color: #fff;
+       border-radius: 4px;
+       overflow-x: auto;
+       scrollbar-width: thin;
+       -webkit-overflow-scrolling: touch;
+   }
+   
+   .template-category {
+       padding: 12px 20px;
+       cursor: pointer;
+       font-weight: 500;
+       transition: all 0.3s ease;
+       white-space: nowrap;
+       color: #555;
+   }
+   
+   .template-category:hover {
+       background-color: #f1f1f1;
+       color: #F05123;
+   }
+   
+   .template-category.active {
+       border-bottom: 3px solid #F05123;
+       color: #F05123;
+       font-weight: 600;
+       background-color: rgba(240, 81, 35, 0.05);
+   }
+   
+   .template-filter-container {
+       display: flex;
+       flex-wrap: wrap;
+       gap: 10px;
+       margin-bottom: 20px;
+   }
+   
+   .template-filter-button {
+       padding: 6px 12px;
+       border: 1px solid #ddd;
+       border-radius: 30px;
+       background-color: #fff;
+       font-size: 13px;
+       cursor: pointer;
+       transition: all 0.2s ease;
+   }
+   
+   .template-filter-button:hover {
+       border-color: #F05123;
+       color: #F05123;
+   }
+   
+   .template-filter-button.active {
+       background-color: #F05123;
+       color: white;
+       border-color: #F05123;
+   }
+   
+   /* ===============================
+      6. Templates Grid
+      =============================== */
+   .templates-grid {
+       display: none;
+       grid-template-columns: repeat(3, 1fr);
+       gap: 25px;
+       animation: fadeIn 0.4s ease;
+   }
+   
+   .templates-grid.active {
+       display: grid;
+   }
+   
+   .no-results-message {
+       grid-column: 1 / -1;
+       text-align: center;
+       padding: 30px;
+       background-color: #f5f5f5;
+       border-radius: 5px;
+       color: #666;
+       font-style: italic;
+   }
+   
+   /* ===============================
+      7. Template Item
+      =============================== */
+   .template-item {
+       border: 1px solid #eaeaea;
+       border-radius: 8px;
+       overflow: hidden;
+       transition: all 0.3s ease;
+       background-color: white;
+       position: relative;
+   }
+   
+   .template-item:hover {
+       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+       transform: translateY(-5px);
+       border-color: #ccc;
+   }
+   
+   /* Category Color Indicators */
+   .template-item::before {
+       content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 100%;
+       width: 4px;
+       background-color: #607D8B; /* Default color */
+   }
+   
+   .template-category-homepage::before { background-color: #4CAF50; }
+   .template-category-landing::before { background-color: #FF9800; }
+   .template-category-blog::before { background-color: #2196F3; }
+   .template-category-contact::before { background-color: #9C27B0; }
+   .template-category-about::before { background-color: #E91E63; }
+   .template-category-service::before { background-color: #FF5722; }
+   .template-category-portfolio::before { background-color: #009688; }
+   .template-category-gallery::before { background-color: #673AB7; }
+   .template-category-team::before { background-color: #3F51B5; }
+   
+   .template-preview {
+       position: relative;
+       overflow: hidden;
+       height: 200px;
+   }
+   
+   .template-preview img {
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+       transition: transform 0.5s ease;
+   }
+   
+   .template-item:hover .template-preview img {
+       transform: scale(1.05);
+   }
+   
+   .template-preview-overlay {
+       position: absolute;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background: rgba(0, 0, 0, 0.5);
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       opacity: 0;
+       transition: opacity 0.3s ease;
+   }
+   
+   .template-item:hover .template-preview-overlay {
+       opacity: 1;
+   }
+   
+   .template-preview-button {
+       background-color: white;
+       color: #333;
+       border: none;
+       border-radius: 50%;
+       width: 50px;
+       height: 50px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       cursor: pointer;
+       font-size: 18px;
+       transition: all 0.2s ease;
+       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+   }
+   
+   .template-preview-button:hover {
+       transform: scale(1.1);
+       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+   }
+   
+   .template-info {
+       padding: 20px;
+       background-color: white;
+   }
+   
+   .template-title {
+       font-weight: 600;
+       margin-bottom: 10px;
+       color: #333;
+       font-size: 16px;
+   }
+   
+   .template-description {
+       font-size: 14px;
+       color: #666;
+       margin-bottom: 15px;
+       height: 40px;
+       overflow: hidden;
+       display: -webkit-box;
+       -webkit-line-clamp: 2;
+       -webkit-box-orient: vertical;
+   }
+   
+   .template-tags {
+       display: flex;
+       flex-wrap: wrap;
+       gap: 5px;
+       margin-bottom: 15px;
+   }
+   
+   .template-tag {
+       font-size: 12px;
+       background-color: #f1f1f1;
+       padding: 3px 8px;
+       border-radius: 3px;
+       color: #666;
+   }
+   
+   /* ===============================
+      8. Buttons
+      =============================== */
+   .template-import-button {
+       display: inline-block;
+       background-color: #F05123;
+       color: white;
+       padding: 10px 15px;
+       border-radius: 4px;
+       text-decoration: none;
+       font-weight: 600;
+       cursor: pointer;
+       border: none;
+       transition: all 0.3s ease;
+       width: 100%;
+       text-align: center;
+       font-size: 14px;
+   }
+   
+   .template-import-button:hover {
+       background-color: #d83e0f;
+   }
+   
+   .template-import-success {
+       background-color: #4CAF50;
+       color: white;
+       padding: 10px 15px;
+       border-radius: 4px;
+       font-weight: 600;
+       width: 100%;
+       text-align: center;
+       font-size: 14px;
+   }
+   
+   /* ===============================
+      9. Single Template Support
+      =============================== */
+   .template-import-container {
+       margin: 20px 0;
+       padding: 20px;
+       background-color: #f9f9f9;
+       border-radius: 5px;
+       border: 1px solid #ddd;
+   }
+   
+   .single-template-preview {
+       margin-bottom: 15px;
+       text-align: center;
+   }
+   
+   .single-template-preview img {
+       max-width: 100%;
+       height: auto;
+       border: 1px solid #eee;
+       border-radius: 5px;
+   }
+   
+   .single-template-import-button {
+       display: inline-block;
+       background-color: #F05123;
+       color: white;
+       padding: 10px 20px;
+       border-radius: 5px;
+       text-decoration: none;
+       font-weight: bold;
+       cursor: pointer;
+       border: none;
+       transition: background-color 0.3s;
+   }
+   
+   .single-template-import-button:hover {
+       background-color: #d83e0f;
+   }
+   
+   /* ===============================
+      10. Template Icon
+      =============================== */
+   .template-icon-container {
+       position: fixed;
+       z-index: 9998;
+   }
+   
+   .template-icon-bottom-right {
+       right: 20px;
+       bottom: 20px;
+   }
+   
+   .template-icon-bottom-left {
+       left: 20px;
+       bottom: 20px;
+   }
+   
+   .template-icon-top-right {
+       right: 20px;
+       top: 20px;
+   }
+   
+   .template-icon-top-left {
+       left: 20px;
+       top: 20px;
+   }
+   
+   .template-icon-button {
+       width: 60px;
+       height: 60px;
+       border-radius: 50%;
+       background-color: #F05123;
+       color: white;
+       border: none;
+       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+       cursor: pointer;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       font-size: 24px;
+       transition: all 0.3s ease;
+   }
+   
+   .template-icon-button:hover {
+       transform: scale(1.1);
+       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+   }
+   
+   /* ===============================
+      11. Lightbox
+      =============================== */
+   .template-lightbox {
+       position: fixed;
+       top: 0;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       background-color: rgba(0, 0, 0, 0.8);
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       z-index: 10000;
+       opacity: 0;
+       transition: opacity 0.3s ease;
+   }
+   
+   .template-lightbox.active {
+       opacity: 1;
+   }
+   
+   .template-lightbox-content {
+       background-color: white;
+       border-radius: 8px;
+       overflow: hidden;
+       max-width: 90%;
+       max-height: 90%;
+       display: flex;
+       flex-direction: column;
+       box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+   }
+   
+   .template-lightbox-header {
+       padding: 15px 20px;
+       border-bottom: 1px solid #eee;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+   }
+   
+   .template-lightbox-header h3 {
+       margin: 0;
+       font-size: 18px;
+       color: #333;
+   }
+   
+   .template-lightbox-close {
+       background: none;
+       border: none;
+       font-size: 20px;
+       cursor: pointer;
+       color: #999;
+       transition: color 0.2s ease;
+   }
+   
+   .template-lightbox-close:hover {
+       color: #F05123;
+   }
+   
+   .template-lightbox-body {
+       overflow: auto;
+       padding: 20px;
+   }
+   
+   .template-lightbox-body img {
+       max-width: 100%;
+       height: auto;
+       display: block;
+   }
+   
+   /* ===============================
+      12. Notification System
+      =============================== */
+   .template-notification {
+       position: fixed;
+       bottom: 20px;
+       right: 20px;
+       max-width: 350px;
+       background-color: white;
+       border-radius: 5px;
+       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+       overflow: hidden;
+       z-index: 9999;
+       transform: translateY(100px);
+       opacity: 0;
+       transition: all 0.3s ease;
+   }
+   
+   .template-notification.active {
+       transform: translateY(0);
+       opacity: 1;
+   }
+   
+   .template-notification.success {
+       border-left: 4px solid #4CAF50;
+   }
+   
+   .template-notification.error {
+       border-left: 4px solid #F44336;
+   }
+   
+   .template-notification-content {
+       display: flex;
+       align-items: center;
+       padding: 15px 20px;
+   }
+   
+   .template-notification-content i {
+       margin-right: 15px;
+       font-size: 24px;
+   }
+   
+   .template-notification.success i {
+       color: #4CAF50;
+   }
+   
+   .template-notification.error i {
+       color: #F44336;
+   }
+   
+   .template-notification-content span {
+       flex: 1;
+       font-size: 14px;
+       color: #333;
+   }
+   
+   .template-notification-close {
+       background: none;
+       border: none;
+       color: #999;
+       cursor: pointer;
+       padding: 0 10px;
+       font-size: 16px;
+       transition: color 0.2s ease;
+   }
+   
+   .template-notification-close:hover {
+       color: #333;
+   }
+   
+   /* ===============================
+      13. Responsive Design
+      =============================== */
+   @media (max-width: 1200px) {
+       .templates-grid {
+           grid-template-columns: repeat(3, 1fr);
+       }
+   }
+   
+   @media (max-width: 992px) {
+       .templates-grid {
+           grid-template-columns: repeat(2, 1fr);
+       }
+       
+       .template-toolbar {
+           flex-direction: column;
+           align-items: flex-start;
+       }
+       
+       .template-search-box, 
+       .template-sort-box {
+           width: 100%;
+           max-width: none;
+       }
+       
+       .template-categories {
+           margin-bottom: 15px;
+       }
+       
+       .template-category {
+           padding: 10px 15px;
+       }
+       
+       .template-modal-content {
+           width: 95%;
+       }
+   }
+   
+   @media (max-width: 768px) {
+       .template-gallery-content {
+           padding: 15px;
+       }
+       
+       .templates-grid {
+           gap: 15px;
+       }
+       
+       .template-title {
+           font-size: 15px;
+       }
+       
+       .template-description {
+           font-size: 13px;
+       }
+       
+       .template-lightbox-content {
+           width: 95%;
+       }
+       
+       .template-modal-content {
+           width: 100%;
+       }
+       
+       .template-floating-button button {
+           width: 50px;
+           height: 50px;
+           font-size: 20px;
+       }
+   }
+   
+   @media (max-width: 576px) {
+       .templates-grid {
+           grid-template-columns: 1fr;
+       }
+       
+       .template-category {
+           padding: 8px 12px;
+           font-size: 13px;
+       }
+       
+       .template-preview {
+           height: 180px;
+       }
+       
+       .template-gallery-toggle {
+           padding: 12px 15px;
+           font-size: 15px;
+       }
+       
+       .template-info {
+           padding: 15px;
+       }
+       
+       .template-notification {
+           max-width: 90%;
+           left: 5%;
+           right: 5%;
+       }
+   }

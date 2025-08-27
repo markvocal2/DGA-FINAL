@@ -1,0 +1,361 @@
+/* Post Social Widget Styles - WCAG 2.1 AA + W3C Compliant - แก้ไข F77 */
+
+/* Main widget container - ใช้ unique class naming เพื่อป้องกัน conflict */
+.post-social-widget-ps34 {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 15px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #1e5aa8;
+    white-space: nowrap;
+    overflow-x: auto;
+    position: relative;
+    isolation: isolate; /* Creates new stacking context */
+}
+
+/* Loading state */
+.post-social-loading-ps34 {
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    color: #6c757d;
+    transition: opacity 0.3s ease;
+}
+
+/* Content container */
+.post-social-content-ps34 {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    transition: opacity 0.3s ease;
+}
+
+/* Date and views styling */
+.post-social-date-ps34, 
+.post-social-views-ps34 {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #333;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+/* Icon colors */
+.post-social-date-ps34 svg, 
+.post-social-views-ps34 svg {
+    color: #1e5aa8;
+    flex-shrink: 0;
+}
+
+/* Share section */
+.post-social-share-ps34 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.share-label-ps34 {
+    color: #333;
+    font-weight: 500;
+}
+
+/* Share buttons - WCAG 2.1 AA compliant colors */
+.share-line-ps34, 
+.share-facebook-ps34, 
+.share-twitter-ps34 {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+/* High contrast colors for accessibility */
+.share-line-ps34 {
+    background-color: #008938; /* Green with 4.5:1+ contrast ratio */
+    color: white;
+}
+
+.share-facebook-ps34 {
+    background-color: #1372ed; /* Blue with 4.5:1+ contrast ratio */
+    color: white;
+}
+
+.share-twitter-ps34 {
+    background-color: #c75300; /* Orange with 4.5:1+ contrast ratio */
+    color: white;
+}
+
+/* Hover states */
+.share-line-ps34:hover, 
+.share-facebook-ps34:hover, 
+.share-twitter-ps34:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Focus states for keyboard navigation */
+.share-line-ps34:focus, 
+.share-facebook-ps34:focus, 
+.share-twitter-ps34:focus {
+    outline: 2px solid #1e5aa8;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(30, 90, 168, 0.2);
+}
+
+/* Text highlighting */
+.post-social-date-ps34 .date-text-ps34,
+.post-social-views-ps34 .views-text-ps34 {
+    font-weight: 600;
+    color: #1e5aa8;
+}
+
+/* Icon specific styles */
+.icon-calendar-ps34, 
+.icon-eye-ps34 {
+    stroke: #1e5aa8;
+}
+
+.icon-line-ps34, 
+.icon-facebook-ps34, 
+.icon-twitter-ps34 {
+    fill: #fff;
+}
+
+/* No-style variant */
+.post-social-widget-ps34.no-style-ps34 {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 10px 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    border-left: none !important;
+    border-radius: 0 !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-content-ps34 {
+    gap: 10px !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-date-ps34,
+.post-social-widget-ps34.no-style-ps34 .post-social-views-ps34 {
+    color: inherit !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-date-ps34 .date-text-ps34,
+.post-social-widget-ps34.no-style-ps34 .post-social-views-ps34 .views-text-ps34 {
+    color: inherit !important;
+    font-weight: inherit !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .icon-calendar-ps34,
+.post-social-widget-ps34.no-style-ps34 .icon-eye-ps34 {
+    stroke: currentColor !important;
+    color: inherit !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-share-ps34 {
+    margin-left: auto !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .share-label-ps34 {
+    color: inherit !important;
+    font-weight: inherit !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-share-ps34 a {
+    text-decoration: underline !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    margin-right: 10px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-share-ps34 a:hover {
+    opacity: 0.7 !important;
+    transform: none !important;
+    background-color: transparent !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .post-social-share-ps34 a svg {
+    color: inherit !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+.post-social-widget-ps34.no-style-ps34 .icon-line-ps34,
+.post-social-widget-ps34.no-style-ps34 .icon-facebook-ps34,
+.post-social-widget-ps34.no-style-ps34 .icon-twitter-ps34 {
+    fill: currentColor !important;
+}
+
+/* State management through data attributes - ป้องกัน duplicate ID issues */
+.post-social-widget-ps34[data-show-social="false"] .post-social-share-ps34 {
+    display: none !important;
+}
+
+.post-social-widget-ps34[data-show-date="false"] .post-social-date-ps34 {
+    display: none !important;
+}
+
+.post-social-widget-ps34[data-show-count="false"] .post-social-views-ps34 {
+    display: none !important;
+}
+
+/* Multiple widget support */
+.post-social-widget-ps34 + .post-social-widget-ps34 {
+    margin-top: 20px;
+}
+
+.post-social-widget-ps34:first-of-type {
+    margin-top: 15px;
+}
+
+.post-social-widget-ps34:last-of-type {
+    margin-bottom: 15px;
+}
+
+/* Responsive design for tablets */
+@media (max-width: 768px) {
+    .post-social-widget-ps34 {
+        padding: 8px 12px;
+    }
+    
+    .post-social-widget-ps34.no-style-ps34 {
+        padding: 0 !important;
+    }
+    
+    .post-social-content-ps34 {
+        gap: 10px;
+    }
+    
+    .share-line-ps34, 
+    .share-facebook-ps34, 
+    .share-twitter-ps34 {
+        padding: 3px 6px;
+        font-size: 12px;
+    }
+    
+    .post-social-widget-ps34.no-style-ps34 .post-social-share-ps34 a {
+        padding: 0 !important;
+        margin-right: 8px !important;
+    }
+}
+
+/* Responsive design for small screens */
+@media (max-width: 480px) {
+    .share-line-ps34 span, 
+    .share-facebook-ps34 span, 
+    .share-twitter-ps34 span {
+        display: none;
+    }
+    
+    .share-line-ps34, 
+    .share-facebook-ps34, 
+    .share-twitter-ps34 {
+        padding: 5px;
+    }
+    
+    .post-social-widget-ps34.no-style-ps34 .post-social-share-ps34 a {
+        margin-right: 5px !important;
+    }
+    
+    .post-social-widget-ps34 + .post-social-widget-ps34 {
+        margin-top: 15px;
+    }
+}
+
+/* Accessibility improvements */
+.post-social-widget-ps34:focus-within {
+    outline: 2px solid #1e5aa8;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .post-social-widget-ps34 {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .post-social-share-ps34 {
+        display: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .post-social-widget-ps34 {
+        border: 2px solid;
+    }
+    
+    .share-line-ps34,
+    .share-facebook-ps34,
+    .share-twitter-ps34 {
+        border: 1px solid;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .post-social-widget-ps34 *,
+    .post-social-widget-ps34 *::before,
+    .post-social-widget-ps34 *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .post-social-widget-ps34:not(.no-style-ps34) {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        border-left-color: #4299e1;
+    }
+    
+    .post-social-widget-ps34:not(.no-style-ps34) .post-social-date-ps34,
+    .post-social-widget-ps34:not(.no-style-ps34) .post-social-views-ps34 {
+        color: #e2e8f0;
+    }
+    
+    .post-social-widget-ps34:not(.no-style-ps34) .post-social-date-ps34 .date-text-ps34,
+    .post-social-widget-ps34:not(.no-style-ps34) .post-social-views-ps34 .views-text-ps34 {
+        color: #4299e1;
+    }
+    
+    .post-social-widget-ps34:not(.no-style-ps34) .icon-calendar-ps34,
+    .post-social-widget-ps34:not(.no-style-ps34) .icon-eye-ps34 {
+        stroke: #4299e1;
+    }
+}
+
+/* Error state styling */
+.post-social-loading-ps34.error {
+    color: #dc3545;
+    font-weight: 600;
+}

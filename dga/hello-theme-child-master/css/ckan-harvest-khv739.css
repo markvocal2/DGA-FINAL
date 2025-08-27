@@ -1,0 +1,595 @@
+/**
+ * CKAN Harvest Modal Styles
+ * Consistent with ACF Modern Manager design
+ */
+
+/* CKAN Harvest Button */
+.ckan-harvest-btn-khv739 {
+    margin-left: 0.5rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.ckan-harvest-btn-khv739:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+}
+
+/* Modal Container */
+.ckan-modal-khv739 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    display: none;
+}
+
+.ckan-modal-khv739.active {
+    display: block;
+}
+
+.ckan-modal-backdrop-khv739 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.ckan-modal-content-khv739 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: var(--acf-radius);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.ckan-modal-header-khv739 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.ckan-modal-title-khv739 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.ckan-modal-close-khv739 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    color: white;
+    border-radius: var(--acf-radius);
+    transition: var(--acf-transition);
+}
+
+.ckan-modal-close-khv739:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.ckan-modal-close-khv739 svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Modal Body */
+.ckan-modal-body-khv739 {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: #f8fafc;
+}
+
+/* Stats Grid */
+.ckan-stats-grid-khv739 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ckan-stat-card-khv739 {
+    background: white;
+    border-radius: var(--acf-radius);
+    border: 1px solid var(--acf-border);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ckan-stat-icon-khv739 {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: var(--acf-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.ckan-stat-icon-khv739 svg {
+    width: 24px;
+    height: 24px;
+}
+
+.ckan-stat-info-khv739 {
+    flex: 1;
+}
+
+.ckan-stat-label-khv739 {
+    font-size: 0.75rem;
+    color: var(--acf-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ckan-stat-value-khv739 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--acf-text);
+}
+
+/* Run Now Button */
+.ckan-run-now-btn-khv739 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--acf-primary) 0%, var(--acf-primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--acf-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--acf-transition);
+}
+
+.ckan-run-now-btn-khv739:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.ckan-run-now-btn-khv739:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.ckan-run-now-btn-khv739 svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Sections */
+.ckan-section-khv739 {
+    background: white;
+    border-radius: var(--acf-radius);
+    border: 1px solid var(--acf-border);
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.ckan-section-header-khv739 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(to right, #f8fafc, #f1f5f9);
+    border-bottom: 1px solid var(--acf-border);
+}
+
+.ckan-section-header-khv739 h3 {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--acf-text);
+}
+
+/* Endpoints List */
+.ckan-endpoints-list-khv739 {
+    padding: 1rem;
+}
+
+.ckan-endpoint-card-khv739 {
+    background: var(--acf-bg);
+    border: 1px solid var(--acf-border);
+    border-radius: calc(var(--acf-radius) - 1px);
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.ckan-endpoint-card-khv739:last-child {
+    margin-bottom: 0;
+}
+
+.ckan-endpoint-header-khv739 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.ckan-endpoint-url-khv739 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--acf-text);
+    word-break: break-all;
+}
+
+.ckan-endpoint-status-khv739 {
+    font-size: 0.625rem;
+    font-weight: 500;
+    padding: 0.125rem 0.375rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+
+.ckan-endpoint-status-khv739.active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.ckan-endpoint-status-khv739.inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ckan-endpoint-body-khv739 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ckan-endpoint-info-khv739 {
+    font-size: 0.75rem;
+}
+
+.ckan-info-label-khv739 {
+    color: var(--acf-text-muted);
+}
+
+.ckan-info-value-khv739 {
+    color: var(--acf-text);
+    font-weight: 500;
+}
+
+.ckan-endpoint-actions-khv739 {
+    display: flex;
+    gap: 0.25rem;
+}
+
+/* Buttons */
+.ckan-btn-add-khv739,
+.ckan-btn-automap-khv739 {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: var(--acf-primary);
+    color: white;
+    border: none;
+    border-radius: calc(var(--acf-radius) - 1px);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--acf-transition);
+}
+
+.ckan-btn-add-khv739:hover,
+.ckan-btn-automap-khv739:hover {
+    background: var(--acf-primary-dark);
+}
+
+.ckan-btn-test-khv739 {
+    padding: 0.25rem 0.5rem;
+    background: white;
+    border: 1px solid var(--acf-border);
+    border-radius: calc(var(--acf-radius) - 1px);
+    font-size: 0.6875rem;
+    cursor: pointer;
+    transition: var(--acf-transition);
+}
+
+.ckan-btn-test-khv739:hover {
+    background: var(--acf-bg);
+}
+
+.ckan-btn-edit-khv739,
+.ckan-btn-delete-khv739 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--acf-border);
+    border-radius: calc(var(--acf-radius) - 1px);
+    background: white;
+    cursor: pointer;
+    transition: var(--acf-transition);
+}
+
+.ckan-btn-edit-khv739:hover {
+    background: var(--acf-primary);
+    border-color: var(--acf-primary);
+    color: white;
+}
+
+.ckan-btn-delete-khv739:hover {
+    background: var(--acf-danger);
+    border-color: var(--acf-danger);
+    color: white;
+}
+
+/* Field Mapping */
+.ckan-mapping-container-khv739 {
+    padding: 1rem;
+}
+
+.ckan-mapping-table-khv739 {
+    display: table;
+    width: 100%;
+}
+
+.ckan-mapping-header-khv739 {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: var(--acf-bg);
+    border-radius: calc(var(--acf-radius) - 1px);
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--acf-text-muted);
+    text-transform: uppercase;
+}
+
+.ckan-mapping-row-khv739 {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--acf-border);
+}
+
+.ckan-mapping-row-khv739:last-child {
+    border-bottom: none;
+}
+
+.ckan-field-name-khv739 {
+    font-family: monospace;
+    font-size: 0.8125rem;
+    background: var(--acf-bg);
+    padding: 0.25rem 0.5rem;
+    border-radius: calc(var(--acf-radius) - 1px);
+}
+
+.ckan-acf-select-khv739 {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+    border: 1px solid var(--acf-border);
+    border-radius: calc(var(--acf-radius) - 1px);
+    background: white;
+}
+
+.ckan-btn-save-mapping-khv739 {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--acf-success);
+    color: white;
+    border: none;
+    border-radius: calc(var(--acf-radius) - 1px);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--acf-transition);
+}
+
+.ckan-btn-save-mapping-khv739:hover {
+    background: #059669;
+}
+
+/* Harvest Log */
+.ckan-log-container-khv739 {
+    padding: 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #1e293b;
+    border-radius: 0 0 calc(var(--acf-radius) - 1px) calc(var(--acf-radius) - 1px);
+}
+
+.ckan-log-entry-khv739 {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.375rem 0.5rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    border-radius: calc(var(--acf-radius) - 2px);
+    margin-bottom: 0.25rem;
+}
+
+.ckan-log-time-khv739 {
+    color: #64748b;
+}
+
+.ckan-log-message-khv739 {
+    flex: 1;
+}
+
+.ckan-log-info-khv739 {
+    color: #94a3b8;
+}
+
+.ckan-log-success-khv739 {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.ckan-log-error-khv739 {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State */
+.ckan-empty-state-khv739 {
+    text-align: center;
+    padding: 2rem;
+    color: var(--acf-text-muted);
+}
+
+.ckan-empty-state-khv739 svg {
+    opacity: 0.3;
+    margin-bottom: 0.75rem;
+}
+
+.ckan-empty-state-khv739 p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Endpoint Form */
+.ckan-endpoint-form-khv739 {
+    padding: 1rem;
+}
+
+.ckan-endpoint-form-khv739 h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--acf-text);
+}
+
+.ckan-form-group-khv739 {
+    margin-bottom: 1rem;
+}
+
+.ckan-form-group-khv739 label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--acf-text);
+}
+
+.ckan-form-group-khv739 input[type="url"],
+.ckan-form-group-khv739 select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--acf-border);
+    border-radius: calc(var(--acf-radius) - 1px);
+    background: white;
+}
+
+.ckan-form-group-khv739 input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.ckan-form-actions-khv739 {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.ckan-btn-cancel-khv739,
+.ckan-btn-save-khv739 {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: calc(var(--acf-radius) - 1px);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--acf-transition);
+}
+
+.ckan-btn-cancel-khv739 {
+    background: white;
+    border: 1px solid var(--acf-border);
+    color: var(--acf-text);
+}
+
+.ckan-btn-cancel-khv739:hover {
+    background: var(--acf-bg);
+}
+
+.ckan-btn-save-khv739 {
+    background: var(--acf-primary);
+    color: white;
+}
+
+.ckan-btn-save-khv739:hover {
+    background: var(--acf-primary-dark);
+}
+
+/* Spinner */
+.ckan-spinner-khv739 {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.5s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ckan-modal-content-khv739 {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .ckan-stats-grid-khv739 {
+        grid-template-columns: 1fr;
+    }
+    
+    .ckan-mapping-header-khv739,
+    .ckan-mapping-row-khv739 {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .ckan-endpoint-header-khv739 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .ckan-endpoint-body-khv739 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

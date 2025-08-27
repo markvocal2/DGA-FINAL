@@ -1,0 +1,198 @@
+/**
+ * DGA Google Translate Switcher Styles
+ * Version: 2.0.0
+ * ID: kzp487
+ */
+
+/* Container Styles */
+.dga-translator-container-kzp487 {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding: 8px;
+    background: transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Horizontal Layout */
+.dga-translator-container-kzp487[data-layout="horizontal"] {
+    flex-direction: row;
+}
+
+/* Vertical Layout */
+.dga-translator-container-kzp487[data-layout="vertical"] {
+    flex-direction: column;
+}
+
+/* Language Switcher Button */
+.dga-lang-switcher-kzp487 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Remove button default styles */
+button.dga-lang-switcher-kzp487 {
+    outline: none;
+    font-family: inherit;
+}
+
+/* Hover Effect */
+.dga-lang-switcher-kzp487:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #0066cc;
+    background: #f8f9fa;
+}
+
+/* Active State */
+.dga-lang-switcher-kzp487.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: #ffffff;
+    pointer-events: none;
+}
+
+.dga-lang-switcher-kzp487.active .dga-lang-text-kzp487 {
+    color: #ffffff;
+}
+
+/* Focus State for Accessibility */
+.dga-lang-switcher-kzp487:focus {
+    outline: 3px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+/* Flag Image Styles */
+.dga-lang-switcher-kzp487 img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Language Text */
+.dga-lang-text-kzp487 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Loading Indicator */
+.dga-loading-kzp487 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+}
+
+/* Spinner */
+.dga-spinner-kzp487 {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: dga-spin-kzp487 0.8s linear infinite;
+}
+
+@keyframes dga-spin-kzp487 {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Style Variations */
+
+/* Rounded Style */
+.dga-translator-container-kzp487[data-style="rounded"] .dga-lang-switcher-kzp487 {
+    border-radius: 50px;
+    padding: 10px 16px;
+}
+
+/* Square Style */
+.dga-translator-container-kzp487[data-style="square"] .dga-lang-switcher-kzp487 {
+    border-radius: 0;
+}
+
+/* Hide Google Translate Element */
+#google_translate_element_kzp487,
+.goog-te-banner-frame,
+.goog-te-gadget {
+    display: none !important;
+}
+
+/* Remove Google Translate Top Bar */
+body {
+    top: 0 !important;
+}
+
+.skiptranslate {
+    display: none !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dga-translator-container-kzp487 {
+        gap: 8px;
+        padding: 4px;
+    }
+    
+    .dga-lang-switcher-kzp487 {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .dga-translator-container-kzp487[data-layout="horizontal"] {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .dga-lang-switcher-kzp487 {
+        background: #2a2a2a;
+        border-color: #444444;
+        color: #e0e0e0;
+    }
+    
+    .dga-lang-switcher-kzp487:hover {
+        background: #333333;
+        border-color: #5a9fd4;
+    }
+    
+    .dga-lang-switcher-kzp487.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+    }
+    
+    .dga-loading-kzp487 {
+        background: rgba(42, 42, 42, 0.95);
+    }
+}

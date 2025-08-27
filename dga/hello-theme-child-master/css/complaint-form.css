@@ -1,0 +1,683 @@
+/* ===== Reset และ Variables - WCAG 2.1 AAA Compliant ===== */
+:root {
+  /* Colors with AAA contrast ratios */
+  --primary-color: #1e40af; /* Darker blue for better contrast */
+  --primary-hover: #1e3a8a;
+  --error-color: #b91c1c; /* Darker red for AAA contrast */
+  --success-color: #15803d; /* Darker green for AAA contrast */
+  --info-color: #0e7490; /* Darker cyan for AAA contrast */
+  --border-color: #d1d5db;
+  --text-color: #111827; /* Very dark gray for maximum contrast */
+  --text-secondary: #374151; /* Dark gray with AAA contrast */
+  --bg-color: #ffffff;
+  --bg-secondary: #f9fafb;
+  --radius: 8px;
+  --transition: all 0.2s ease-in-out;
+  
+  /* Focus styles */
+  --focus-color: #1e40af;
+  --focus-outline-width: 3px;
+  --focus-outline-offset: 2px;
+}
+
+/* ===== High Contrast Mode Support ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #0000ff;
+    --error-color: #ff0000;
+    --success-color: #008000;
+    --text-color: #000000;
+    --border-color: #000000;
+  }
+}
+
+/* ===== Screen Reader Only Content ===== */
+.screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Skip Link ===== */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius) 0;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ===== Container หลัก ===== */
+.complaint-form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  --form-prefix: true;
+}
+
+/* ===== แบบฟอร์ม ===== */
+.complaint-form {
+  background: var(--bg-color);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.complaint-form-container .loading,
+.complaint-form-container .field-hint,
+.complaint-form-container .error-message,
+.complaint-form-container .message,
+.complaint-form-container .form-group {
+  /* ให้แน่ใจว่า CSS เหล่านี้ใช้เฉพาะกับฟอร์ม */
+  font-family: inherit;
+}
+
+.complaint-form h2 {
+  color: var(--text-color);
+  font-size: 1.75rem; /* Larger size for better readability */
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.complaint-form h3,
+.complaint-form legend {
+  color: var(--text-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+  line-height: 1.3;
+}
+
+/* ===== Fieldset Styling ===== */
+.complaint-form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+/* ===== กลุ่มฟอร์ม ===== */
+.complaint-form .form-group {
+  margin-bottom: 1.5rem; /* Increased spacing for better readability */
+}
+
+.complaint-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.complaint-form .required {
+  color: var(--error-color);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* ===== Input Fields with Enhanced Focus ===== */
+.complaint-form input[type="text"],
+.complaint-form input[type="email"],
+.complaint-form input[type="tel"],
+.complaint-form select,
+.complaint-form textarea {
+  width: 100%;
+  padding: 0.875rem; /* Increased padding for better touch targets */
+  border: 2px solid var(--border-color); /* Thicker border for visibility */
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--bg-color);
+  font-size: 1.1rem; /* Larger text for readability */
+  color: var(--text-color);
+  transition: var(--transition);
+  line-height: 1.5;
+}
+
+/* Enhanced focus styles */
+.complaint-form input:focus,
+.complaint-form select:focus,
+.complaint-form textarea:focus,
+.complaint-form button:focus,
+.has-visible-focus {
+  outline: var(--focus-outline-width) solid var(--focus-color);
+  outline-offset: var(--focus-outline-offset);
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+}
+
+/* High contrast mode focus */
+@media (prefers-contrast: high) {
+  .complaint-form input:focus,
+  .complaint-form select:focus,
+  .complaint-form textarea:focus,
+  .complaint-form button:focus {
+    outline: 4px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+/* Invalid field styling */
+.complaint-form input[aria-invalid="true"],
+.complaint-form select[aria-invalid="true"],
+.complaint-form textarea[aria-invalid="true"] {
+  border-color: var(--error-color);
+  background-color: #fef2f2;
+}
+
+.complaint-form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+/* ===== Character Count ===== */
+.complaint-form .char-count {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-align: right;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* ===== Checkbox & Radio with Larger Hit Area ===== */
+.complaint-form .anonymous-section {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.complaint-form .anonymous-section:hover {
+  border-color: var(--border-color);
+}
+
+.complaint-form .anonymous-section label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.complaint-form .anonymous-section input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+/* ===== Personal Info Section ===== */
+.complaint-form .personal-info {
+  background: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin: 1.5rem 0;
+  border: 2px solid var(--border-color);
+}
+
+.complaint-form .note {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+  line-height: 1.5;
+}
+
+.complaint-form .note strong {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+/* ===== Helper Text / Field Hints ===== */
+.complaint-form .field-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+  display: block;
+}
+
+/* ===== Error Messages with Strong Contrast ===== */
+.complaint-form .error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: 0.375rem;
+  display: block;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.complaint-form .error-message[aria-hidden="true"] {
+  display: none;
+}
+
+/* ===== Message Boxes with Icons ===== */
+.complaint-form .message {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  border: 2px solid;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.complaint-form .message.success {
+  background-color: #dcfce7;
+  color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.complaint-form .message.error {
+  background-color: #fee2e2;
+  color: var(--error-color);
+  border-color: var(--error-color);
+}
+
+.complaint-form .message.info {
+  background-color: #e0f2fe;
+  color: var(--info-color);
+  border-color: var(--info-color);
+}
+
+/* ===== Submit Button with Minimum Size ===== */
+.complaint-form .btn-submit {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 1rem 2rem; /* Larger padding for better touch target */
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: var(--transition);
+  margin-top: 2rem;
+  min-height: 48px; /* Minimum touch target size */
+  letter-spacing: 0.025em;
+  position: relative;
+}
+
+.complaint-form .btn-submit:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+}
+
+.complaint-form .btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.complaint-form .btn-submit:disabled,
+.complaint-form .btn-submit[aria-busy="true"] {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ===== Loading State with Animation ===== */
+.complaint-form .loading {
+  display: none;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 1.125rem;
+  position: relative;
+  padding-left: 28px;
+}
+
+.complaint-form .loading:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  border: 3px solid var(--primary-color);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.complaint-form .loading[aria-hidden="true"] {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Type Other Field Animation ===== */
+.complaint-form .type-other-field {
+  margin-top: -0.5rem;
+  padding-top: 0;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.complaint-form .type-other-field[aria-hidden="true"] {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* ===== Modal Popup with Enhanced Accessibility ===== */
+.complaint-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75); /* Darker overlay for better contrast */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.complaint-modal[aria-hidden="true"] {
+    display: none;
+}
+
+.complaint-modal .modal-container {
+    background: white;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2.5rem;
+    position: relative;
+    margin: auto;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.complaint-modal .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: 2px solid transparent;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+}
+
+.complaint-modal .modal-close:hover {
+    color: var(--text-color);
+    background-color: var(--bg-secondary);
+}
+
+.complaint-modal .modal-close:focus {
+    outline: var(--focus-outline-width) solid var(--focus-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+.complaint-modal h3 {
+    color: var(--success-color);
+    margin-bottom: 1.75rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.complaint-modal .modal-details {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    border: 2px solid var(--border-color);
+}
+
+.complaint-modal .detail-row {
+    display: flex;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    align-items: flex-start;
+}
+
+.complaint-modal .detail-row:last-child {
+    border-bottom: none;
+}
+
+.complaint-modal .detail-label {
+    font-weight: 700;
+    color: var(--text-color);
+    width: 160px;
+    flex-shrink: 0;
+    line-height: 1.5;
+}
+
+.complaint-modal .detail-value {
+    color: var(--text-secondary);
+    flex: 1;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.complaint-modal .btn-close-modal {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: var(--transition);
+    min-height: 48px;
+}
+
+.complaint-modal .btn-close-modal:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+}
+
+.complaint-modal .btn-close-modal:focus {
+    outline: var(--focus-outline-width) solid var(--focus-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateY(-50px) scale(0.95); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0) scale(1); 
+        opacity: 1; 
+    }
+}
+
+/* ===== Responsive Design with Larger Touch Targets ===== */
+@media (max-width: 640px) {
+    .complaint-form {
+        padding: 1.5rem;
+    }
+    
+    .complaint-form h2 {
+        font-size: 1.5rem;
+    }
+    
+    .complaint-form .personal-info {
+        padding: 1.25rem;
+    }
+    
+    .complaint-form input[type="text"],
+    .complaint-form input[type="email"],
+    .complaint-form input[type="tel"],
+    .complaint-form select,
+    .complaint-form textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 1rem;
+    }
+    
+    /* Modal Responsive */
+    .complaint-modal .modal-container {
+        width: 95%;
+        padding: 2rem;
+        margin: 1rem auto;
+    }
+    
+    .complaint-modal .modal-close {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .complaint-modal .detail-row {
+        flex-direction: column;
+    }
+    
+    .complaint-modal .detail-label {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    .complaint-form {
+        box-shadow: none;
+        border: 1px solid black;
+    }
+    
+    .complaint-form .btn-submit,
+    .complaint-form .loading,
+    .skip-link {
+        display: none;
+    }
+    
+    .complaint-form input,
+    .complaint-form select,
+    .complaint-form textarea {
+        border: 1px solid black;
+    }
+}
+
+/* ===== Reduced Motion Support ===== */
+@media (prefers-reduced-motion: reduce) {
+    .complaint-form *,
+    .complaint-modal * {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+    }
+}
+
+/* ===== Dark Mode Support ===== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1f2937;
+        --bg-secondary: #374151;
+        --text-color: #f9fafb;
+        --text-secondary: #e5e7eb;
+        --border-color: #4b5563;
+        --primary-color: #60a5fa;
+        --primary-hover: #3b82f6;
+        --error-color: #f87171;
+        --success-color: #86efac;
+        --info-color: #67e8f9;
+    }
+    
+    .complaint-form,
+    .complaint-modal .modal-container {
+        background: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    .complaint-form input,
+    .complaint-form select,
+    .complaint-form textarea {
+        background: var(--bg-secondary);
+        color: var(--text-color);
+    }
+    
+    .complaint-form .message.success {
+        background-color: #064e3b;
+        color: #86efac;
+    }
+    
+    .complaint-form .message.error {
+        background-color: #7f1d1d;
+        color: #fca5a5;
+    }
+    
+    .complaint-form .message.info {
+        background-color: #164e63;
+        color: #67e8f9;
+    }
+    
+    .complaint-modal .modal-close {
+        color: var(--text-secondary);
+    }
+    
+    .complaint-modal .modal-close:hover {
+        color: var(--text-color);
+        background-color: var(--bg-secondary);
+    }
+}
+
+/* ===== Custom Focus Indicator for Keyboard Users ===== */
+.complaint-form *:focus-visible {
+    outline: var(--focus-outline-width) solid var(--focus-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+/* Remove outline for mouse users */
+.complaint-form *:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ===== Loading overlay for form submission ===== */
+.complaint-form[aria-busy="true"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}

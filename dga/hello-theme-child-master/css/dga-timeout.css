@@ -1,0 +1,162 @@
+/**
+ * DGA Timeout Admin Styles
+ * ไฟล์: /css/dga-timeout.css
+ */
+
+/* Admin page styles */
+.wrap h1 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#dga-timeout-form {
+    max-width: 800px;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+}
+
+#dga-timeout-form .form-table {
+    margin-top: 0;
+}
+
+#dga-timeout-form .form-table th {
+    width: 200px;
+    font-weight: 600;
+}
+
+#dga-timeout-form input[type="number"] {
+    width: 100px;
+}
+
+#dga-timeout-form .description {
+    color: #666;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+#dga-timeout-form input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Submit button area */
+#dga-timeout-form .submit {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+#dga-timeout-form .submit button {
+    height: 36px;
+    padding: 0 20px;
+    font-size: 14px;
+}
+
+/* Message display */
+#dga-timeout-message {
+    display: inline-block;
+    margin-left: 20px;
+    padding: 5px 10px;
+    vertical-align: middle;
+}
+
+#dga-timeout-message.notice-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+
+#dga-timeout-message.notice-error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+    #dga-timeout-form .form-table th {
+        width: auto;
+        display: block;
+        padding-bottom: 5px;
+    }
+    
+    #dga-timeout-form .form-table td {
+        padding-left: 0;
+    }
+    
+    #dga-timeout-message {
+        display: block;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+/* เพิ่ม dashicon สำหรับ menu */
+#adminmenu .toplevel_page_dga-session-timeout .wp-menu-image:before {
+    content: "\f469";
+}
+
+/* Hover effect สำหรับ form elements */
+#dga-timeout-form input[type="number"]:focus,
+#dga-timeout-form input[type="checkbox"]:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 2px rgba(0,115,170,0.8);
+}
+
+/* Animation สำหรับ message */
+#dga-timeout-message {
+    transition: all 0.3s ease-in-out;
+}
+
+/* เพิ่ม tooltip style */
+.dga-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+    color: #0073aa;
+    margin-left: 5px;
+}
+
+.dga-tooltip:before {
+    content: "?";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #0073aa;
+    color: #fff;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+}
+
+.dga-tooltip .dga-tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.dga-tooltip:hover .dga-tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

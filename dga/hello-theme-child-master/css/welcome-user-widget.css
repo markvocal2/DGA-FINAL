@@ -1,0 +1,685 @@
+/**
+ * Enhanced CSS for Welcome User Widget with Dark Text Theme
+ * Updated for WCAG 2.1 AAA compliance and modern design
+ * All buttons and text using black color scheme
+ */
+
+/* =================== GENERAL WIDGET STYLES =================== */
+
+/* Modal body lock for tooltips style */
+body.modal-open-tt25 {
+    overflow: hidden;
+}
+
+/* General Widget Styles */
+.welcome-user-widget-tt25 {
+    display: inline-flex;
+    align-items: center;
+    color: #000000; /* Changed to black */
+    font-family: 'Arial', sans-serif;
+    margin-right: 15px;
+    position: relative;
+}
+
+/* Screen reader text - WCAG compliant */
+.screen-reader-text,
+.login-field-label-tt25.screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Form field wrapper for WCAG compliance */
+.form-field-wrapper-tt25 {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+/* =================== LOGGED-IN USER STYLES =================== */
+
+/* Logged-in user content */
+.welcome-user-widget-tt25.logged-in .welcome-user-content-tt25 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Avatar styles */
+.welcome-user-avatar-container-tt25 {
+    line-height: 0;
+}
+
+.welcome-user-avatar-tt25 {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    border: 2px solid rgba(0, 0, 0, 0.3) !important; /* Changed to black with opacity */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* User info styles */
+.welcome-user-info-tt25 {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-user-name-tt25 {
+    font-size: 1em;
+    font-weight: 500;
+    color: #000000; /* Black text */
+}
+
+.welcome-user-role-tt25 {
+    font-size: 0.8em;
+    color: #333333; /* Dark gray for secondary text */
+}
+
+/* User action buttons */
+.welcome-user-buttons-tt25 {
+    display: flex;
+    gap: 8px;
+}
+
+.welcome-user-buttons-tt25 a {
+    display: inline-block;
+    color: #000000 !important; /* Black text */
+    text-decoration: none;
+    font-size: 0.9em;
+    padding: 6px 12px;
+    border: 1px solid #000000 !important; /* Black border */
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background-color: #ffffff !important; /* White background */
+}
+
+.welcome-user-buttons-tt25 a:hover,
+.welcome-user-buttons-tt25 a:focus {
+    background-color: #f5f5f5 !important; /* Light gray on hover */
+    border-color: #333333 !important; /* Darker border on hover */
+    transform: translateY(-1px);
+    color: #000000 !important;
+}
+
+.welcome-user-profile-btn-tt25 {
+    background-color: #e5e5e5 !important; /* Light gray background */
+}
+
+/* =================== NOT LOGGED-IN USER STYLES =================== */
+
+.welcome-user-widget-tt25.not-logged-in {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Guest user buttons */
+.guest-user-buttons-tt25 {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.login-trigger-container-tt25,
+.register-container-tt25 {
+    display: inline-block !important;
+    margin: 0 !important;
+}
+
+/* Login and register button styles */
+.login-trigger-container-tt25 a,
+.register-container-tt25 a {
+    display: inline-block !important;
+    color: #000000 !important; /* Black text */
+    text-decoration: none !important;
+    font-size: 0.9em !important;
+    padding: 6px 12px !important;
+    border: 1px solid #000000 !important; /* Black border */
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+    background-color: #ffffff !important; /* White background */
+    cursor: pointer !important;
+}
+
+.login-trigger-container-tt25 a:hover,
+.login-trigger-container-tt25 a:focus,
+.register-container-tt25 a:hover,
+.register-container-tt25 a:focus {
+    background-color: #f5f5f5 !important; /* Light gray on hover */
+    border-color: #333333 !important; /* Darker border on hover */
+    transform: translateY(-1px) !important;
+    color: #000000 !important;
+}
+
+.register-container-tt25 a {
+    background-color: #e5e5e5 !important; /* Light gray background for register */
+}
+
+/* =================== INLINE FORM STYLES =================== */
+
+.welcome-user-widget-tt25.inline-style .login-form-container-tt25 {
+    margin-left: 10px;
+}
+
+.welcome-user-widget-tt25.inline-style #ajax-login-form-tt25 {
+    display: flex;
+    align-items: center;
+}
+
+.welcome-user-widget-tt25.inline-style .login-form-fields-tt25 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+}
+
+.welcome-user-widget-tt25.inline-style .form-field-wrapper-tt25 {
+    display: inline-flex !important;
+    position: relative !important;
+    margin-bottom: 0 !important;
+}
+
+.welcome-user-widget-tt25.inline-style .login-field-label-tt25 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.welcome-user-widget-tt25.inline-style input[type="text"],
+.welcome-user-widget-tt25.inline-style input[type="password"] {
+    padding: 7px 10px !important;
+    border: 1px solid #000000 !important; /* Black border */
+    border-radius: 6px !important;
+    font-size: 0.9em !important;
+    width: 150px !important;
+    margin: 0 !important;
+    transition: all 0.3s ease !important;
+    background-color: #ffffff !important; /* White background */
+    color: #000000 !important; /* Black text */
+}
+
+.welcome-user-widget-tt25.inline-style input[type="text"]:focus,
+.welcome-user-widget-tt25.inline-style input[type="password"]:focus {
+    border-color: #333333 !important;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.welcome-user-widget-tt25.inline-style .login-form-actions-tt25 {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.welcome-user-widget-tt25.inline-style button[type="submit"] {
+    background-color: #000000 !important; /* Black background */
+    color: #ffffff !important; /* White text for contrast */
+    border: 1px solid #000000 !important; /* Black border */
+    border-radius: 6px !important;
+    padding: 7px 12px !important;
+    font-size: 0.9em !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+}
+
+.welcome-user-widget-tt25.inline-style button[type="submit"]:hover,
+.welcome-user-widget-tt25.inline-style button[type="submit"]:focus {
+    background-color: #333333 !important; /* Dark gray on hover */
+    border-color: #333333 !important;
+    transform: translateY(-1px) !important;
+    color: #ffffff !important;
+}
+
+.welcome-user-widget-tt25.inline-style .forgot-password-link-tt25 {
+    color: #000000 !important; /* Black text */
+    text-decoration: none !important;
+    font-size: 0.85em !important;
+    padding: 7px 10px !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+}
+
+.welcome-user-widget-tt25.inline-style .forgot-password-link-tt25:hover,
+.welcome-user-widget-tt25.inline-style .forgot-password-link-tt25:focus {
+    text-decoration: underline !important;
+    color: #333333 !important; /* Dark gray on hover */
+}
+
+/* =================== TOOLTIPS FORM STYLES =================== */
+
+.welcome-user-widget-tt25.tooltips-style {
+    position: relative !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25 {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+    z-index: 9999 !important;
+    min-width: 280px !important;
+    max-width: 320px !important;
+    background: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 
+                0 6px 15px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+    animation: tooltipsFadeIn_tt25 0.3s ease-out !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.above-trigger-tt25 {
+    top: auto !important;
+    bottom: calc(100% + 8px) !important;
+    animation: tooltipsFadeInUp_tt25 0.3s ease-out !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.center-align-tt25 {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.right-align-tt25 {
+    left: auto !important;
+    right: 0 !important;
+}
+
+/* Tooltips arrow */
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.above-trigger-tt25::before {
+    top: auto;
+    bottom: -8px;
+    border-bottom: none;
+    border-top: 8px solid white;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.center-align-tt25::before {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.right-align-tt25::before {
+    left: auto;
+    right: 20px;
+}
+
+/* Tooltips form header */
+.login-form-header-tt25 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.login-form-title-tt25 {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #000000; /* Black text */
+    display: block;
+    line-height: 1.4;
+}
+
+.login-form-close-tt25 {
+    background: none;
+    border: none;
+    font-size: 1.4em;
+    color: #000000; /* Black text */
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    line-height: 1;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form-close-tt25:hover,
+.login-form-close-tt25:focus {
+    background-color: #f3f4f6;
+    color: #333333; /* Dark gray on hover */
+}
+
+/* Tooltips form fields */
+.welcome-user-widget-tt25.tooltips-style .login-form-fields-tt25 {
+    padding: 20px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .form-field-wrapper-tt25 {
+    margin-bottom: 16px;
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-field-label-tt25 {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 0 6px 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    border: 0;
+    font-size: 0.875em;
+    font-weight: 500;
+    color: #000000; /* Black text */
+}
+
+.welcome-user-widget-tt25.tooltips-style input[type="text"],
+.welcome-user-widget-tt25.tooltips-style input[type="password"] {
+    width: 100% !important;
+    padding: 12px 14px !important;
+    border: 2px solid #000000 !important; /* Black border */
+    border-radius: 8px !important;
+    font-size: 0.95em !important;
+    color: #000000 !important; /* Black text */
+    background-color: white !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style input[type="text"]:focus,
+.welcome-user-widget-tt25.tooltips-style input[type="password"]:focus {
+    border-color: #333333 !important; /* Dark gray focus */
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+    outline: none !important;
+}
+
+/* Tooltips form actions */
+.welcome-user-widget-tt25.tooltips-style .login-form-actions-tt25 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-top: 8px !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style button[type="submit"] {
+    width: 100% !important;
+    background: #000000 !important; /* Black background */
+    color: white !important; /* White text for contrast */
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    font-size: 0.95em !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style button[type="submit"]:hover,
+.welcome-user-widget-tt25.tooltips-style button[type="submit"]:focus {
+    background: #333333 !important; /* Dark gray on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style button[type="submit"]:disabled {
+    background: #9ca3af !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .forgot-password-link-tt25 {
+    color: #000000 !important; /* Black text */
+    text-decoration: none !important;
+    font-size: 0.875em !important;
+    text-align: center !important;
+    padding: 8px !important;
+    transition: all 0.3s ease !important;
+    border-radius: 6px !important;
+}
+
+.welcome-user-widget-tt25.tooltips-style .forgot-password-link-tt25:hover,
+.welcome-user-widget-tt25.tooltips-style .forgot-password-link-tt25:focus {
+    color: #333333 !important; /* Dark gray on hover */
+    text-decoration: underline !important;
+    background-color: #f8fafc !important;
+}
+
+/* =================== MESSAGE STYLES =================== */
+
+.login-message-tt25 {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.875em;
+    text-align: center;
+    transition: all 0.3s ease;
+    color: #000000; /* Black text */
+}
+
+.welcome-user-widget-tt25.inline-style .login-message-tt25 {
+    margin-left: 10px;
+    margin-top: 0;
+    color: #000000; /* Black text */
+    background: rgba(255, 255, 255, 0.9); /* White background with transparency */
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+.welcome-user-widget-tt25.tooltips-style .login-message-tt25 {
+    color: #000000; /* Black text */
+}
+
+.login-message-tt25.error-tt25 {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.welcome-user-widget-tt25.inline-style .login-message-tt25.error-tt25 {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.login-message-tt25.success-tt25 {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.welcome-user-widget-tt25.inline-style .login-message-tt25.success-tt25 {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.login-message-tt25.loading-tt25 {
+    background-color: #f8fafc;
+    color: #000000; /* Black text */
+    border: 1px solid #e2e8f0;
+}
+
+.welcome-user-widget-tt25.inline-style .login-message-tt25.loading-tt25 {
+    background-color: #f8fafc;
+    color: #000000; /* Black text */
+    border: 1px solid #e2e8f0;
+}
+
+/* =================== ANIMATIONS =================== */
+
+@keyframes tooltipsFadeIn_tt25 {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes tooltipsFadeInUp_tt25 {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =================== FOCUS STYLES (WCAG COMPLIANCE) =================== */
+
+.welcome-user-buttons-tt25 a:focus,
+.login-trigger-container-tt25 a:focus,
+.register-container-tt25 a:focus,
+.welcome-user-widget-tt25.inline-style input[type="text"]:focus,
+.welcome-user-widget-tt25.inline-style input[type="password"]:focus,
+.welcome-user-widget-tt25.inline-style button[type="submit"]:focus,
+.welcome-user-widget-tt25.inline-style .forgot-password-link-tt25:focus,
+.login-form-close-tt25:focus {
+    outline: 3px solid #fbbf24 !important;
+    outline-offset: 2px !important;
+}
+
+/* =================== RESPONSIVE DESIGN =================== */
+
+@media (max-width: 768px) {
+    .welcome-user-widget-tt25.inline-style .login-form-fields-tt25 {
+        flex-direction: column !important;
+        gap: 8px !important;
+        align-items: stretch !important;
+    }
+    
+    .welcome-user-widget-tt25.inline-style input[type="text"],
+    .welcome-user-widget-tt25.inline-style input[type="password"] {
+        width: 200px !important;
+    }
+    
+    .welcome-user-widget-tt25.inline-style .login-form-actions-tt25 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25 {
+        min-width: 260px;
+        max-width: 90vw;
+        left: 10px;
+        right: 10px;
+        transform: none;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25::before {
+        left: 30px;
+        transform: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .guest-user-buttons-tt25 {
+        flex-direction: column !important;
+        gap: 6px !important;
+    }
+    
+    .welcome-user-widget-tt25.inline-style {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .welcome-user-widget-tt25.inline-style .login-form-container-tt25 {
+        margin-left: 0 !important;
+        margin-top: 8px !important;
+        width: 100% !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25 {
+        left: 5px !important;
+        right: 5px !important;
+        width: calc(100vw - 10px) !important;
+        min-width: auto !important;
+        max-width: none !important;
+        transform: none !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.center-align-tt25 {
+        left: 5px !important;
+        right: 5px !important;
+        transform: none !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25.right-align-tt25 {
+        left: 5px !important;
+        right: 5px !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25::before {
+        display: none !important;
+    }
+}
+
+/* =================== HIGH CONTRAST MODE SUPPORT =================== */
+
+@media (prefers-contrast: high) {
+    .welcome-user-buttons-tt25 a,
+    .login-trigger-container-tt25 a,
+    .register-container-tt25 a,
+    .welcome-user-widget-tt25.inline-style button[type="submit"],
+    .welcome-user-widget-tt25.tooltips-style button[type="submit"] {
+        border-width: 2px !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style .login-form-container-tt25.tooltips-form-tt25 {
+        border-width: 2px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    .welcome-user-widget-tt25.tooltips-style input[type="text"]:focus,
+    .welcome-user-widget-tt25.tooltips-style input[type="password"]:focus {
+        outline-width: 4px !important;
+    }
+}
+
+/* =================== REDUCED MOTION SUPPORT =================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .welcome-user-widget-tt25 *,
+    .login-form-container-tt25.tooltips-form-tt25 {
+        animation: none !important;
+        transition: none !important;
+    }
+}

@@ -1,0 +1,339 @@
+/* widget-post-count-stats.css */
+
+/* Widget Styles */
+.post-count-widget-xrt923 {
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    line-height: 1.4;
+}
+
+.post-count-loading-xrt923 {
+    color: #888;
+    font-style: italic;
+}
+
+.post-count-number-xrt923 {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.post-count-error-xrt923 {
+    color: #d63638;
+    font-style: italic;
+}
+
+/* Stats Button */
+.post-stats-btn-xrt923 {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.post-stats-btn-xrt923:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #2196F3;
+    transform: scale(1.1);
+}
+
+.post-stats-btn-xrt923:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: 2px;
+}
+
+.post-stats-btn-xrt923 svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Modal Styles */
+.post-stats-modal-xrt923 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.post-stats-modal-content-xrt923 {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Modal Header */
+.post-stats-modal-header-xrt923 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.post-stats-modal-header-xrt923 h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1f2937;
+}
+
+.post-stats-close-xrt923 {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #6b7280;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.post-stats-close-xrt923:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.post-stats-close-xrt923:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: 2px;
+}
+
+/* Controls Section */
+.post-stats-controls-xrt923 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.stats-year-select-xrt923 {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.stats-year-select-xrt923:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+/* View Toggle Buttons */
+.stats-view-toggle-xrt923 {
+    display: flex;
+    gap: 0;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.view-btn-xrt923 {
+    padding: 8px 16px;
+    background: white;
+    border: none;
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-btn-xrt923:first-child {
+    border-right: 1px solid #d1d5db;
+}
+
+.view-btn-xrt923:hover {
+    background: #f3f4f6;
+}
+
+.view-btn-xrt923.active {
+    background: #2196F3;
+    color: white;
+}
+
+.view-btn-xrt923:focus {
+    outline: none;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 0 2px #2196F3;
+}
+
+/* Chart Container */
+.post-stats-chart-container-xrt923 {
+    padding: 20px;
+    flex: 1;
+    position: relative;
+    min-height: 300px;
+    display: none;
+}
+
+.post-stats-chart-container-xrt923 canvas {
+    max-height: 400px;
+}
+
+/* Loading State */
+.post-stats-loading-xrt923 {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .post-stats-modal-content-xrt923 {
+        width: 95%;
+        max-height: 90vh;
+        margin: 10px;
+    }
+    
+    .post-stats-modal-header-xrt923 {
+        padding: 15px;
+    }
+    
+    .post-stats-controls-xrt923 {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .stats-year-select-xrt923 {
+        width: 100%;
+    }
+    
+    .stats-view-toggle-xrt923 {
+        width: 100%;
+    }
+    
+    .view-btn-xrt923 {
+        flex: 1;
+    }
+    
+    .post-stats-chart-container-xrt923 {
+        padding: 15px;
+        min-height: 250px;
+    }
+}
+
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+    .post-stats-btn-xrt923:focus,
+    .post-stats-close-xrt923:focus,
+    .stats-year-select-xrt923:focus,
+    .view-btn-xrt923:focus {
+        outline-width: 3px;
+    }
+    
+    .post-stats-modal-content-xrt923 {
+        border: 2px solid #000;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .post-stats-modal-content-xrt923 {
+        background: #1f2937;
+        color: #f3f4f6;
+    }
+    
+    .post-stats-modal-header-xrt923 {
+        border-bottom-color: #374151;
+    }
+    
+    .post-stats-modal-header-xrt923 h3 {
+        color: #f3f4f6;
+    }
+    
+    .post-stats-close-xrt923 {
+        color: #9ca3af;
+    }
+    
+    .post-stats-close-xrt923:hover {
+        background: #374151;
+        color: #f3f4f6;
+    }
+    
+    .post-stats-controls-xrt923 {
+        background: #111827;
+        border-bottom-color: #374151;
+    }
+    
+    .stats-year-select-xrt923 {
+        background: #1f2937;
+        color: #f3f4f6;
+        border-color: #374151;
+    }
+    
+    .stats-view-toggle-xrt923 {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    
+    .view-btn-xrt923 {
+        background: #1f2937;
+        color: #9ca3af;
+    }
+    
+    .view-btn-xrt923:first-child {
+        border-right-color: #374151;
+    }
+    
+    .view-btn-xrt923:hover {
+        background: #374151;
+    }
+    
+    .post-stats-loading-xrt923 {
+        color: #9ca3af;
+    }
+}

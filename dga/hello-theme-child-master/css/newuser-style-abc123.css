@@ -1,0 +1,438 @@
+/**
+ * WordPress New User System Styles
+ * Version: 2.0.0
+ */
+
+/* ==================== Variables ==================== */
+:root {
+    --newuser-primary: #0073aa;
+    --newuser-primary-dark: #005177;
+    --newuser-success: #46b450;
+    --newuser-error: #dc3232;
+    --newuser-warning: #ffb900;
+    --newuser-border: #ddd;
+    --newuser-bg-light: #f8f9fa;
+    --newuser-text: #333;
+    --newuser-text-light: #666;
+    --newuser-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --newuser-radius: 4px;
+}
+
+/* ==================== Container ==================== */
+.newuser-container-abc123 {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ==================== Forms ==================== */
+.newuser-form-abc123 {
+    background: #fff;
+    padding: 30px;
+    border-radius: var(--newuser-radius);
+    box-shadow: var(--newuser-shadow);
+}
+
+.newuser-field-abc123 {
+    margin-bottom: 20px;
+}
+
+.newuser-field-abc123 label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--newuser-text);
+}
+
+.newuser-field-abc123 .required {
+    color: var(--newuser-error);
+}
+
+.newuser-field-abc123 input[type="email"],
+.newuser-field-abc123 input[type="password"],
+.newuser-field-abc123 select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--newuser-border);
+    border-radius: var(--newuser-radius);
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.newuser-field-abc123 input:focus,
+.newuser-field-abc123 select:focus {
+    outline: none;
+    border-color: var(--newuser-primary);
+    box-shadow: 0 0 0 3px rgba(0,115,170,0.1);
+}
+
+/* Checkbox field */
+.newuser-field-abc123 input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Field error state */
+.newuser-field-error-abc123 input {
+    border-color: var(--newuser-error) !important;
+}
+
+.newuser-field-error-message-abc123 {
+    color: var(--newuser-error);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* ==================== Buttons ==================== */
+.newuser-button-abc123 {
+    background-color: var(--newuser-primary);
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--newuser-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    text-decoration: none;
+}
+
+.newuser-button-abc123:hover {
+    background-color: var(--newuser-primary-dark);
+    transform: translateY(-1px);
+}
+
+.newuser-button-abc123:active {
+    transform: translateY(0);
+}
+
+.newuser-button-abc123:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.newuser-submit-abc123 {
+    margin-top: 25px;
+}
+
+/* ==================== Spinner ==================== */
+.newuser-spinner-abc123 {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: newuser-spin-abc123 0.8s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes newuser-spin-abc123 {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==================== Messages ==================== */
+#newuser-messages-abc123,
+#newuser-form-messages-abc123 {
+    margin-bottom: 20px;
+}
+
+.newuser-success-abc123,
+.newuser-error-abc123,
+.newuser-warning-abc123 {
+    padding: 15px 20px;
+    border-radius: var(--newuser-radius);
+    margin-bottom: 20px;
+    font-weight: 500;
+    animation: newuser-fade-in-abc123 0.3s ease-out;
+}
+
+.newuser-success-abc123 {
+    background-color: #edfaef;
+    color: #1e4620;
+    border-left: 4px solid var(--newuser-success);
+}
+
+.newuser-error-abc123 {
+    background-color: #fef1f1;
+    color: #8a1f1f;
+    border-left: 4px solid var(--newuser-error);
+}
+
+.newuser-warning-abc123 {
+    background-color: #fffbf0;
+    color: #7a5a00;
+    border-left: 4px solid var(--newuser-warning);
+}
+
+@keyframes newuser-fade-in-abc123 {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Created user details */
+.newuser-created-details-abc123 {
+    background-color: var(--newuser-bg-light);
+    padding: 15px;
+    border-radius: var(--newuser-radius);
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+/* ==================== Modal ==================== */
+.newuser-modal-abc123 {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.newuser-modal-abc123.active {
+    display: flex;
+    animation: newuser-fade-in-abc123 0.3s ease-out;
+}
+
+.newuser-modal-content-abc123 {
+    background: #fff;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    animation: newuser-slide-up-abc123 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes newuser-slide-up-abc123 {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.newuser-modal-header-abc123 {
+    background-color: var(--newuser-primary);
+    color: #fff;
+    padding: 20px 25px;
+    border-radius: 8px 8px 0 0;
+}
+
+.newuser-modal-header-abc123 h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.newuser-modal-body-abc123 {
+    padding: 25px;
+}
+
+/* Modal open state */
+body.newuser-modal-open-abc123 {
+    overflow: hidden;
+}
+
+/* ==================== User Info Box ==================== */
+.newuser-user-info-abc123 {
+    background-color: var(--newuser-bg-light);
+    padding: 20px;
+    border-radius: var(--newuser-radius);
+    margin-bottom: 25px;
+    border-left: 3px solid var(--newuser-primary);
+}
+
+.newuser-user-info-abc123 p {
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    color: var(--newuser-primary);
+}
+
+.newuser-info-box-abc123 {
+    background-color: #fff;
+    padding: 12px 15px;
+    border-radius: var(--newuser-radius);
+    border: 1px solid #e0e0e0;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+/* ==================== Password Strength ==================== */
+.newuser-password-strength-abc123 {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: var(--newuser-radius);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.newuser-password-strength-abc123:empty {
+    display: none;
+}
+
+.newuser-password-strength-abc123.weak {
+    background-color: #fef1f1;
+    color: #8a1f1f;
+}
+
+.newuser-password-strength-abc123.medium {
+    background-color: #fffbf0;
+    color: #7a5a00;
+}
+
+.newuser-password-strength-abc123.strong {
+    background-color: #edfaef;
+    color: #1e4620;
+}
+
+/* ==================== Hints ==================== */
+.newuser-hint-abc123 {
+    font-size: 14px;
+    color: var(--newuser-text-light);
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--newuser-bg-light);
+    border-radius: var(--newuser-radius);
+    line-height: 1.5;
+}
+
+/* ==================== Redirecting Message ==================== */
+.newuser-redirecting-abc123 {
+    text-align: center;
+    font-size: 16px;
+    color: var(--newuser-primary);
+    margin-top: 20px;
+    animation: newuser-pulse-abc123 1.5s infinite;
+}
+
+@keyframes newuser-pulse-abc123 {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ==================== Responsive Design ==================== */
+@media (max-width: 768px) {
+    .newuser-container-abc123 {
+        padding: 15px;
+    }
+    
+    .newuser-form-abc123 {
+        padding: 20px;
+    }
+    
+    .newuser-modal-content-abc123 {
+        margin: 10px;
+        max-height: calc(100vh - 40px);
+    }
+    
+    .newuser-modal-header-abc123 {
+        padding: 15px 20px;
+    }
+    
+    .newuser-modal-header-abc123 h2 {
+        font-size: 20px;
+    }
+    
+    .newuser-modal-body-abc123 {
+        padding: 20px;
+    }
+    
+    .newuser-field-abc123 input,
+    .newuser-field-abc123 select {
+        padding: 10px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .newuser-button-abc123 {
+        width: 100%;
+        padding: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .newuser-container-abc123 {
+        padding: 10px;
+    }
+    
+    .newuser-form-abc123 {
+        padding: 15px;
+    }
+    
+    .newuser-modal-body-abc123 {
+        padding: 15px;
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+    .newuser-modal-abc123 {
+        display: none !important;
+    }
+}
+
+/* ==================== Accessibility ==================== */
+.newuser-form-abc123 *:focus {
+    outline: 2px solid var(--newuser-primary);
+    outline-offset: 2px;
+}
+
+/* Screen reader only */
+.screen-reader-text {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .newuser-button-abc123 {
+        border: 2px solid currentColor;
+    }
+    
+    .newuser-field-abc123 input,
+    .newuser-field-abc123 select {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

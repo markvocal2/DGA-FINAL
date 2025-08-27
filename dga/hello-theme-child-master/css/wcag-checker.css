@@ -1,0 +1,447 @@
+/**
+ * WCAG Checker Improved Styles
+ * ปรับปรุงคอนทราสต์ให้ผ่านมาตรฐาน WCAG AA/AAA
+ */
+
+/* Container */
+.wcag-checker-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Results section */
+.wcag-results {
+    text-align: center;
+    position: relative;
+    min-height: 100px;
+}
+
+/* Logo container */
+.wcag-logo-container {
+    display: inline-block;
+    position: relative;
+    margin: 20px 0;
+}
+
+.wcag-logo {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.wcag-score {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* No grade display */
+.wcag-no-grade {
+    padding: 20px;
+    background: #F5F5F5;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.wcag-no-grade p {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #666666;
+}
+
+/* ปุ่มหลักที่ปรับปรุงคอนทราสต์แล้ว */
+.wcag-check-now,
+.wcag-details-toggle {
+    /* ใช้สีน้ำเงินเข้มขึ้นเพื่อให้คอนทราสต์ดีขึ้น (7.5:1 ratio) */
+    background: #0066CC;
+    color: #FFFFFF;
+    border: 2px solid transparent;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.wcag-check-now:hover,
+.wcag-details-toggle:hover {
+    /* สีเมื่อ hover ที่ยังคงคอนทราสต์ดี */
+    background: #004C99;
+    box-shadow: 0 2px 8px rgba(0, 76, 153, 0.3);
+    transform: translateY(-1px);
+}
+
+.wcag-check-now:focus,
+.wcag-details-toggle:focus {
+    /* เพิ่ม focus state สำหรับ accessibility */
+    outline: 3px solid #0066CC;
+    outline-offset: 2px;
+}
+
+.wcag-check-now:active,
+.wcag-details-toggle:active {
+    background: #003D7A;
+    transform: translateY(0);
+}
+
+.wcag-check-now:disabled {
+    background: #CCCCCC;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* ปุ่มรอง - ใช้สไตล์ outlined */
+.wcag-details-toggle {
+    background: transparent;
+    color: #0066CC;
+    border: 2px solid #0066CC;
+}
+
+.wcag-details-toggle:hover {
+    background: #0066CC;
+    color: #FFFFFF;
+}
+
+/* Grade display พร้อมคอนทราสต์ที่ดี */
+.wcag-grade {
+    margin-bottom: 20px;
+}
+
+/* Old grade circle styles - kept for backward compatibility */
+.grade-circle {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+    background: #F5F5F5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 3px solid #FFFFFF;
+}
+
+.grade-letter {
+    display: block;
+    font-size: 48px;
+    font-weight: bold;
+    line-height: 1;
+    margin-top: 40px;
+    color: #333333;
+}
+
+.grade-score {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #666666;
+    margin-top: 10px;
+}
+
+/* Grade colors ที่ปรับปรุงคอนทราสต์ */
+.grade-AAA {
+    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+}
+
+.grade-AAA .grade-letter,
+.grade-AAA .grade-score {
+    color: #FFFFFF;
+}
+
+.grade-AA {
+    background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+}
+
+.grade-AA .grade-letter,
+.grade-AA .grade-score {
+    color: #FFFFFF;
+}
+
+.grade-A {
+    background: linear-gradient(135deg, #E65100 0%, #BF360C 100%);
+}
+
+.grade-A .grade-letter,
+.grade-A .grade-score {
+    color: #FFFFFF;
+}
+
+.grade-fail {
+    background: linear-gradient(135deg, #C62828 0%, #8B0000 100%);
+}
+
+.grade-fail .grade-letter,
+.grade-fail .grade-score {
+    color: #FFFFFF;
+}
+
+/* Loading indicator */
+.wcag-loading {
+    text-align: center;
+    padding: 40px 0;
+    display: none;
+}
+
+.wcag-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 20px;
+    border: 4px solid #E0E0E0;
+    border-top: 4px solid #0066CC;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wcag-loading-text {
+    font-size: 18px;
+    color: #333333;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.wcag-loading-details {
+    font-size: 14px;
+    color: #666666;
+}
+
+/* Check items ที่มีคอนทราสต์ดี */
+.wcag-check-item {
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.check-header {
+    padding: 15px;
+    background: #F8F9FA;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.check-icon {
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.wcag-check-item.passed .check-icon {
+    color: #2E7D32;
+}
+
+.wcag-check-item.failed .check-icon {
+    color: #C62828;
+}
+
+.check-name {
+    flex: 1;
+    font-weight: 600;
+    color: #333333;
+}
+
+.check-stats {
+    color: #666666;
+    font-size: 14px;
+}
+
+/* Violations list */
+.violations-list {
+    padding: 15px;
+    background: #FAFAFA;
+}
+
+.violation-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+
+.violation-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Impact badges ที่มีคอนทราสต์ดี */
+.violation-impact {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 3px;
+    margin-right: 10px;
+    text-transform: uppercase;
+}
+
+.impact-critical {
+    background: #C62828;
+    color: #FFFFFF;
+}
+
+.impact-serious {
+    background: #D84315;
+    color: #FFFFFF;
+}
+
+.impact-moderate {
+    background: #F57C00;
+    color: #FFFFFF;
+}
+
+.impact-minor {
+    background: #FFA000;
+    color: #000000;
+}
+
+.violation-message {
+    color: #333333;
+    font-weight: 500;
+}
+
+.violation-line {
+    float: right;
+    color: #666666;
+    font-size: 12px;
+}
+
+/* Error messages */
+.wcag-error {
+    background: #FFEBEE;
+    color: #B71C1C;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #EF5350;
+    font-weight: 500;
+}
+
+/* Processing info */
+.wcag-processing-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #E3F2FD;
+    border-radius: 4px;
+    color: #0D47A1;
+    font-weight: 500;
+}
+
+/* Modal improvements */
+.wcag-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.wcag-modal-content {
+    background-color: #FFFFFF;
+    margin: 5% auto;
+    padding: 24px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.wcag-modal-close {
+    color: #666666;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.wcag-modal-close:hover,
+.wcag-modal-close:focus {
+    color: #333333;
+}
+
+.modal-section {
+    margin-bottom: 20px;
+}
+
+.modal-section h4 {
+    margin-bottom: 10px;
+    color: #333333;
+}
+
+.element-code {
+    background: #F5F5F5;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+/* Debug panel */
+.wcag-debug {
+    display: none;
+}
+
+/* Hide loading by default */
+.wcag-results.loading .wcag-grade,
+.wcag-results.loading .wcag-check-now,
+.wcag-results.loading .wcag-details-toggle {
+    opacity: 0.5;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .wcag-checker-container {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    .wcag-check-now,
+    .wcag-details-toggle {
+        padding: 10px 20px;
+        font-size: 15px;
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .grade-circle {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .grade-letter {
+        font-size: 36px;
+        margin-top: 30px;
+    }
+    
+    .grade-score {
+        font-size: 16px;
+    }
+    
+    .wcag-logo {
+        max-width: 100%;
+        height: auto;
+    }
+}

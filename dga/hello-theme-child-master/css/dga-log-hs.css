@@ -1,0 +1,255 @@
+/**
+ * DGA Log History System CSS
+ * ธีมสีน้ำเงินและสีส้ม
+ */
+
+/* สีหลัก */
+:root {
+    --dga-primary: #0056b3;       /* สีน้ำเงินหลัก */
+    --dga-primary-dark: #003d82;  /* สีน้ำเงินเข้ม */
+    --dga-primary-light: #e6f0ff; /* สีน้ำเงินอ่อน */
+    --dga-secondary: #ff6b00;     /* สีส้มหลัก */
+    --dga-secondary-dark: #cc5500; /* สีส้มเข้ม */
+    --dga-secondary-light: #fff0e6; /* สีส้มอ่อน */
+    --dga-text: #333333;          /* สีข้อความ */
+    --dga-text-light: #666666;    /* สีข้อความอ่อน */
+    --dga-border: #dddddd;        /* สีเส้นขอบ */
+    --dga-success: #28a745;       /* สีสำเร็จ */
+    --dga-info: #17a2b8;          /* สีข้อมูล */
+    --dga-warning: #ffc107;       /* สีเตือน */
+    --dga-danger: #dc3545;        /* สีอันตราย */
+    --dga-background: #f8f9fa;    /* สีพื้นหลัง */
+    --dga-white: #ffffff;         /* สีขาว */
+    --dga-gray: #f0f0f0;          /* สีเทา */
+    --dga-radius: 4px;            /* รัศมีมุม */
+    --dga-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* เงา */
+}
+
+/* คอนเทนเนอร์หลัก */
+.dga-log-container {
+    background-color: var(--dga-white);
+    border-radius: var(--dga-radius);
+    box-shadow: var(--dga-shadow);
+    margin: 20px 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+/* หัวข้อ */
+.dga-log-title {
+    color: var(--dga-primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--dga-primary);
+    padding-bottom: 10px;
+}
+
+/* ส่วนกรอง */
+.dga-log-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: var(--dga-primary-light);
+    padding: 15px;
+    border-radius: var(--dga-radius);
+}
+
+.dga-log-filter select,
+.dga-log-filter input {
+    padding: 8px 12px;
+    border: 1px solid var(--dga-border);
+    border-radius: var(--dga-radius);
+    min-width: 150px;
+    font-size: 14px;
+}
+
+.dga-log-filter select:focus,
+.dga-log-filter input:focus {
+    border-color: var(--dga-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.25);
+}
+
+/* ปุ่ม */
+.dga-log-button {
+    background-color: var(--dga-primary);
+    color: var(--dga-white);
+    border: none;
+    border-radius: var(--dga-radius);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.dga-log-button:hover {
+    background-color: var(--dga-primary-dark);
+}
+
+.dga-log-button:disabled {
+    background-color: var(--dga-text-light);
+    cursor: not-allowed;
+}
+
+.dga-log-export-button {
+    background-color: var(--dga-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dga-log-export-button:hover {
+    background-color: var(--dga-secondary-dark);
+}
+
+/* ตาราง */
+.dga-log-table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.dga-log-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--dga-border);
+}
+
+.dga-log-table th {
+    background-color: var(--dga-primary);
+    color: var(--dga-white);
+    text-align: left;
+    padding: 12px;
+    font-weight: bold;
+}
+
+.dga-log-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--dga-border);
+    vertical-align: top;
+}
+
+.dga-log-table tr:nth-child(even) {
+    background-color: var(--dga-gray);
+}
+
+.dga-log-table tr:hover {
+    background-color: var(--dga-primary-light);
+}
+
+/* แถบสถานะกิจกรรม */
+.dga-log-view {
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: var(--dga-info);
+    color: var(--dga-white);
+    border-radius: var(--dga-radius);
+    font-size: 12px;
+}
+
+.dga-log-download {
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: var(--dga-secondary);
+    color: var(--dga-white);
+    border-radius: var(--dga-radius);
+    font-size: 12px;
+}
+
+.dga-log-update {
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: var(--dga-success);
+    color: var(--dga-white);
+    border-radius: var(--dga-radius);
+    font-size: 12px;
+}
+
+/* การแบ่งหน้า */
+.dga-log-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dga-log-page-info {
+    font-size: 14px;
+    color: var(--dga-text-light);
+}
+
+/* ส่วนส่งออก */
+.dga-log-export {
+    text-align: right;
+    margin-top: 20px;
+}
+
+/* สถานะโหลด */
+.dga-log-container.loading::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dga-log-container.loading::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--dga-primary-light);
+    border-top: 4px solid var(--dga-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1001;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ข้อความแจ้งเตือน */
+.dga-log-error {
+    color: var(--dga-danger);
+    background-color: rgba(220, 53, 69, 0.1);
+    padding: 12px;
+    border-radius: var(--dga-radius);
+    margin-bottom: 20px;
+    border-left: 4px solid var(--dga-danger);
+}
+
+/* รองรับการแสดงผลบนอุปกรณ์มือถือ */
+@media (max-width: 768px) {
+    .dga-log-filter {
+        flex-direction: column;
+    }
+    
+    .dga-log-filter select,
+    .dga-log-filter input {
+        width: 100%;
+    }
+    
+    .dga-log-table-container {
+        overflow-x: scroll;
+    }
+    
+    .dga-log-table th,
+    .dga-log-table td {
+        padding: 8px;
+        font-size: 13px;
+    }
+}

@@ -1,0 +1,343 @@
+/* Modern Badge UI styles for wptax editor */
+:root {
+    --badge-primary: #1976d2;
+    --badge-hover: #1565c0;
+    --badge-text: #ffffff;
+    --badge-bg: rgba(25, 118, 210, 0.95);
+    --badge-secondary: #757575;
+    --badge-edit: #ff7043;
+    --badge-edit-hover: #f4511e;
+    --badge-shadow: rgba(0, 0, 0, 0.1);
+    --badge-radius: 16px;
+    --transition: all 0.2s ease;
+}
+
+/* Main container - compact badge style */
+.wptax-taxonomy-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Prompt', sans-serif;
+    background: transparent;
+    padding: 0;
+    margin: 4px 0;
+    display: inline-block;
+}
+
+/* Each taxonomy section */
+.wptax-taxonomy-section {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 8px;
+    margin-bottom: 6px;
+    background: var(--badge-bg);
+    border-radius: var(--badge-radius);
+    padding: 6px 12px;
+    box-shadow: 0 2px 6px var(--badge-shadow);
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+
+.wptax-taxonomy-section:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px var(--badge-shadow);
+}
+
+/* Taxonomy title - minimal style */
+.wptax-taxonomy-title {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    margin-right: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Term display */
+.wptax-term-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+/* Terms container */
+.wptax-terms-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+
+/* Term links in badge */
+.wptax-term-link,
+.wptax-no-term {
+    color: var(--badge-text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0;
+    position: relative;
+}
+
+.wptax-term-link::after {
+    content: '•';
+    margin: 0 4px;
+    opacity: 0.4;
+    font-size: 10px;
+}
+
+.wptax-term-link:last-child::after {
+    display: none;
+}
+
+.wptax-term-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.wptax-no-term {
+    opacity: 0.7;
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* Edit button */
+.wptax-edit-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    margin-left: 4px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.wptax-edit-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.wptax-edit-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffffff" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
+    background-size: contain;
+}
+
+/* Edit form - modern dropdown */
+.wptax-edit-form {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    min-width: 220px;
+    max-width: 300px;
+    z-index: 1000;
+    animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Checkbox container */
+.wptax-checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Scrollbar styling */
+.wptax-checkbox-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.wptax-checkbox-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 2px;
+}
+
+.wptax-checkbox-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 2px;
+}
+
+/* Checkbox items */
+.wptax-checkbox-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.wptax-checkbox-item:hover {
+    background: #f5f5f5;
+    border-color: var(--badge-primary);
+}
+
+.wptax-checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    cursor: pointer;
+    accent-color: var(--badge-primary);
+}
+
+.wptax-checkbox-item label {
+    font-size: 13px;
+    cursor: pointer;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+/* Action buttons */
+.wptax-buttons-group {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.wptax-save-btn,
+.wptax-cancel-btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.wptax-save-btn {
+    background: var(--badge-primary);
+    color: #ffffff;
+}
+
+.wptax-save-btn:hover {
+    background: var(--badge-hover);
+}
+
+.wptax-cancel-btn {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.wptax-cancel-btn:hover {
+    background: #e0e0e0;
+}
+
+/* Loading state */
+.wptax-loading {
+    opacity: 0.7;
+    pointer-events: none;
+    position: relative;
+}
+
+.wptax-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Messages */
+.wptax-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease;
+    z-index: 10000;
+}
+
+.wptax-success {
+    background: #4caf50;
+}
+
+.wptax-error {
+    background: #f44336;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .wptax-taxonomy-section {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .wptax-edit-form {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 320px;
+        margin-top: 0;
+    }
+    
+    /* Overlay for mobile */
+    .wptax-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+}

@@ -1,0 +1,468 @@
+/**
+ * Enhanced CKAN CACCESS CSS
+ * Styles for both editable and read-only modes with tag display
+ */
+
+/* Main Container */
+.ckan-taxo-caccess-container-zkt789 {
+    max-width: 900px;
+    margin: 25px 0;
+    padding: 25px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.ckan-taxo-caccess-container-zkt789 h3 {
+    margin: 0 0 25px 0;
+    color: #1a202c;
+    font-size: 1.6em;
+    font-weight: 600;
+    border-bottom: 2px solid #0073aa;
+    padding-bottom: 12px;
+}
+
+/* Read-only Display with Tags */
+.ckan-taxo-readonly-display-zkt789 {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+/* Summary Section */
+.ckan-taxo-summary-zkt789 {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #cbd5e0;
+}
+
+.ckan-taxo-summary-zkt789 p {
+    margin: 0;
+    font-size: 15px;
+    color: #2d3748;
+    font-weight: 500;
+}
+
+/* Tags Container */
+.ckan-taxo-tags-container-zkt789 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e0;
+}
+
+/* Individual Tag Styles */
+.ckan-taxo-tag-zkt789 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(102, 126, 234, 0.25);
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.ckan-taxo-tag-zkt789::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ckan-taxo-tag-zkt789:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.35);
+}
+
+.ckan-taxo-tag-zkt789:hover::before {
+    opacity: 1;
+}
+
+.tag-icon {
+    font-size: 16px;
+}
+
+.tag-name {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.tag-tooltip {
+    cursor: help;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.tag-tooltip:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* No Terms Message */
+.ckan-taxo-no-terms-zkt789 {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border: 1px dashed #adb5bd;
+}
+
+.ckan-taxo-no-terms-zkt789 p {
+    margin: 10px 0;
+    color: #6c757d;
+    font-size: 15px;
+}
+
+.ckan-taxo-no-terms-zkt789 p:first-child {
+    font-size: 16px;
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Read-only Info Box */
+.ckan-taxo-readonly-info-zkt789 {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 1px solid #ffd93d;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.ckan-taxo-readonly-info-zkt789 p {
+    margin: 0;
+    color: #856404;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Edit Mode Styles */
+.ckan-taxo-select-all-container-zkt789 {
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.ckan-taxo-select-all-container-zkt789 label {
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #495057;
+}
+
+.ckan-taxo-search-container-zkt789 {
+    margin-bottom: 20px;
+}
+
+#ckan-taxo-search-zkt789 {
+    width: 100%;
+    padding: 12px 18px;
+    border: 2px solid #e0e6ed;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+#ckan-taxo-search-zkt789:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 4px rgba(0, 115, 170, 0.1);
+}
+
+/* Terms Container for Edit Mode */
+.ckan-taxo-terms-container-zkt789 {
+    max-height: 450px;
+    overflow-y: auto;
+    border: 1px solid #e0e6ed;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fafbfc;
+}
+
+/* Custom Scrollbar */
+.ckan-taxo-terms-container-zkt789::-webkit-scrollbar {
+    width: 10px;
+}
+
+.ckan-taxo-terms-container-zkt789::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 5px;
+}
+
+.ckan-taxo-terms-container-zkt789::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    border-radius: 5px;
+}
+
+/* Term Items in Edit Mode */
+.ckan-taxo-term-item-zkt789 {
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: white;
+    border: 1px solid #e0e6ed;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.ckan-taxo-term-item-zkt789:hover {
+    background-color: #f8f9fa;
+    border-color: #0073aa;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ckan-taxo-term-item-zkt789.selected {
+    background: linear-gradient(135deg, #e3f2fd 0%, #d1e7f8 100%);
+    border-color: #2196f3;
+}
+
+.ckan-taxo-term-item-zkt789.just-updated {
+    animation: highlightPulse 0.6s ease;
+}
+
+@keyframes highlightPulse {
+    0% { transform: scale(1); background-color: #d4edda; }
+    50% { transform: scale(1.02); background-color: #b8dabc; }
+    100% { transform: scale(1); background-color: #d4edda; }
+}
+
+.ckan-taxo-term-item-zkt789 label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    margin: 0;
+    gap: 12px;
+}
+
+.ckan-taxo-term-item-zkt789 input[type="checkbox"] {
+    margin-top: 3px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.term-name {
+    font-weight: 500;
+    color: #2d3748;
+    font-size: 15px;
+}
+
+.term-description {
+    display: block;
+    font-size: 13px;
+    color: #718096;
+    margin-top: 6px;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* Submit Button */
+.ckan-taxo-submit-container-zkt789 {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e6ed;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#ckan-taxo-submit-zkt789 {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(102, 126, 234, 0.25);
+}
+
+#ckan-taxo-submit-zkt789:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.35);
+}
+
+#ckan-taxo-submit-zkt789:active {
+    transform: translateY(0);
+}
+
+#ckan-taxo-submit-zkt789:disabled {
+    background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+/* Loading Spinner */
+.ckan-taxo-spinner-zkt789 {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.ckan-taxo-spinner-zkt789.is-active {
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Message Container */
+.ckan-taxo-message-zkt789 {
+    margin-top: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: none;
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ckan-taxo-message-zkt789 p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.ckan-taxo-message-zkt789.success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 1px solid #b8dabc;
+    color: #155724;
+}
+
+.ckan-taxo-message-zkt789.error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.ckan-taxo-message-zkt789.warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 1px solid #ffd93d;
+    color: #856404;
+}
+
+/* Access Denied */
+.ckan-taxo-access-denied-zkt789 {
+    padding: 50px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+    border: 2px solid #f5c6cb;
+    border-radius: 12px;
+    color: #721c24;
+    margin: 25px 0;
+}
+
+.ckan-taxo-access-denied-zkt789 h3 {
+    margin: 0 0 20px 0;
+    font-size: 28px;
+    border: none;
+    color: #721c24;
+}
+
+.ckan-taxo-access-denied-zkt789 p {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Error Container */
+.ckan-taxo-error-zkt789 {
+    padding: 25px;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    color: #721c24;
+    text-align: center;
+    margin: 25px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ckan-taxo-caccess-container-zkt789 {
+        padding: 20px;
+        margin: 20px 10px;
+    }
+    
+    .ckan-taxo-tags-container-zkt789 {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .ckan-taxo-tag-zkt789 {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .ckan-taxo-terms-container-zkt789 {
+        max-height: 350px;
+        padding: 15px;
+    }
+    
+    #ckan-taxo-submit-zkt789 {
+        padding: 10px 24px;
+        font-size: 14px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .ckan-taxo-select-all-container-zkt789,
+    .ckan-taxo-search-container-zkt789,
+    .ckan-taxo-submit-container-zkt789,
+    .ckan-taxo-message-zkt789 {
+        display: none !important;
+    }
+    
+    .ckan-taxo-tag-zkt789 {
+        background: none !important;
+        color: #000 !important;
+        border: 1px solid #000;
+        box-shadow: none !important;
+    }
+}

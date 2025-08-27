@@ -1,0 +1,658 @@
+/**
+ * DGA Translate API Styles - WCAG 2.1 AA Compliant
+ * Version: 12.0.0
+ * Updated with proper contrast ratios following WCAG Technique G18
+ * Minimum contrast ratio: 4.5:1 for normal text, 3:1 for large text
+ */
+
+/* Main Container */
+.dga-translate-api-abc456 {
+    position: relative;
+    display: inline-block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Sarabun', Roboto, sans-serif;
+    z-index: 999999;
+}
+
+/* Position Variants */
+.dga-translate-api-abc456.dga-position-fixed {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999;
+}
+
+.dga-translate-api-abc456.dga-position-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 999999;
+}
+
+/* Button Container */
+.dga-translate-buttons-abc456 {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* Language Buttons - Enhanced for WCAG with proper contrast ratios */
+.dga-translate-btn-abc456 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2937; /* Darker text for better contrast (13.1:1 on white) */
+    text-decoration: none;
+    font-size: 15px; /* Increased for better readability */
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    min-width: 85px;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* WCAG: Ensure minimum touch target size */
+    min-height: 44px;
+    /* Ensure text doesn't get cut off */
+    white-space: nowrap;
+}
+
+/* WCAG: Enhanced focus indicators with proper contrast */
+.dga-translate-btn-abc456:focus {
+    outline: 3px solid #2f72e1;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(47, 114, 225, 0.3);
+}
+
+.dga-translate-btn-abc456:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dga-translate-btn-abc456:focus-visible {
+    outline: 3px solid #2f72e1;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(47, 114, 225, 0.3);
+}
+
+.dga-translate-btn-abc456:hover:not(:disabled) {
+    border-color: #2f72e1;
+    background: #f9fafb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dga-translate-btn-abc456:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Active state with WCAG-compliant contrast ratio (4.6:1) */
+.dga-translate-btn-abc456.active {
+    border-color: #2f72e1;
+    background: #2f72e1; /* Changed from #4285f4 to meet WCAG AA (4.6:1 contrast) */
+    color: #ffffff;
+    box-shadow: 0 3px 6px rgba(47, 114, 225, 0.3);
+}
+
+/* WCAG: Clear disabled state with proper contrast */
+.dga-translate-btn-abc456:disabled,
+.dga-translate-btn-abc456[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: #f5f5f5;
+    color: #6b7280; /* Maintains 4.5:1 contrast ratio */
+    pointer-events: none;
+}
+
+/* Flag Icons */
+.dga-flag-icon-abc456 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dga-flag-icon-abc456 svg {
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+/* Language Text - WCAG: Enhanced readability */
+.dga-lang-text-abc456 {
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    /* Contrast ratios:
+       - Inactive button: #1f2937 on #ffffff = 13.1:1 (AAA)
+       - Active button: #ffffff on #2f72e1 = 4.6:1 (AA) */
+}
+
+/* Special handling for Thai text */
+.dga-lang-text-abc456[lang="th"] {
+    font-size: 16px; /* Larger for Thai characters */
+    line-height: 1.3;
+    font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Loading Animation - WCAG: Ensure visible loading state */
+.dga-translate-loading-abc456 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+    min-width: 220px;
+    justify-content: center;
+    z-index: 10;
+    border: 2px solid #2f72e1;
+}
+
+.dga-translate-loading-abc456.active {
+    display: flex;
+}
+
+.dga-translate-loading-abc456[aria-busy="true"] {
+    /* Visual indicator for busy state */
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Spinner with updated colors */
+.dga-spinner-abc456 {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #2f72e1;
+    border-radius: 50%;
+    animation: dga-spin 1s linear infinite;
+}
+
+.dga-loading-text-abc456 {
+    font-size: 14px;
+    color: #374151; /* Contrast ratio 7.4:1 on white (AAA) */
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Progress Bar - WCAG: Add role and states */
+.dga-translate-progress-abc456 {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(47, 114, 225, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    display: none;
+    border: 1px solid rgba(47, 114, 225, 0.2);
+}
+
+.dga-translate-progress-abc456.active {
+    display: block;
+}
+
+.dga-progress-bar-abc456 {
+    height: 100%;
+    background: #2f72e1;
+    width: 0;
+    animation: progress 2s ease-in-out forwards;
+}
+
+/* API Status Indicator */
+.dga-api-status-abc456 {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dga-api-status-abc456.error {
+    background: #ef4444;
+}
+
+.dga-api-status-abc456.loading {
+    background: #f59e0b;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Style Variants */
+.dga-translate-api-abc456.dga-style-modern .dga-translate-btn-abc456 {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dga-translate-api-abc456.dga-style-minimal .dga-translate-btn-abc456 {
+    border: 1px solid #e5e7eb;
+    box-shadow: none;
+}
+
+.dga-translate-api-abc456.dga-style-flat .dga-translate-btn-abc456 {
+    border: none;
+    box-shadow: none;
+    background: #f3f4f6;
+}
+
+.dga-translate-api-abc456.dga-style-flat .dga-translate-btn-abc456.active {
+    background: #2f72e1;
+}
+
+/* WCAG: High contrast mode support */
+@media (prefers-contrast: high) {
+    .dga-translate-btn-abc456 {
+        border-width: 3px;
+        border-color: #111827;
+    }
+    
+    .dga-translate-btn-abc456.active {
+        background: #1e40af; /* Darker blue for high contrast */
+        border-color: #1e40af;
+    }
+    
+    .dga-translate-btn-abc456:focus {
+        outline-width: 4px;
+        outline-color: #111827;
+    }
+    
+    .dga-loading-text-abc456 {
+        color: #111827;
+        font-weight: 700;
+    }
+    
+    .dga-spinner-abc456 {
+        border-color: #d1d5db;
+        border-top-color: #111827;
+    }
+}
+
+/* WCAG: Dark mode support with proper contrast */
+@media (prefers-color-scheme: dark) {
+    .dga-translate-api-abc456 {
+        color-scheme: dark;
+    }
+    
+    .dga-translate-btn-abc456 {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f9fafb; /* Light text on dark background */
+    }
+    
+    .dga-translate-btn-abc456:hover:not(:disabled) {
+        background: #4b5563;
+        border-color: #60a5fa;
+    }
+    
+    .dga-translate-btn-abc456.active {
+        background: #2563eb; /* Bright blue for dark mode */
+        border-color: #2563eb;
+        color: #ffffff;
+    }
+    
+    .dga-translate-btn-abc456:disabled,
+    .dga-translate-btn-abc456[aria-disabled="true"] {
+        background: #1f2937;
+        color: #6b7280;
+        border-color: #374151;
+    }
+    
+    .dga-translate-loading-abc456 {
+        background: rgba(31, 41, 55, 0.98);
+        border-color: #60a5fa;
+    }
+    
+    .dga-loading-text-abc456 {
+        color: #f3f4f6;
+    }
+    
+    .dga-spinner-abc456 {
+        border-color: #4b5563;
+        border-top-color: #60a5fa;
+    }
+    
+    .dga-api-status-abc456 {
+        border-color: #374151;
+    }
+}
+
+/* WCAG: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .dga-translate-btn-abc456,
+    .dga-translate-buttons-abc456,
+    .dga-translate-loading-abc456 {
+        transition: none !important;
+    }
+    
+    .dga-spinner-abc456,
+    .dga-progress-bar-abc456,
+    .dga-api-status-abc456.loading {
+        animation: none !important;
+    }
+    
+    .dga-translate-loading-abc456[aria-busy="true"] {
+        animation: none !important;
+        border-color: #2f72e1;
+    }
+    
+    .dga-translate-btn-abc456:hover:not(:disabled) {
+        transform: none !important;
+    }
+}
+
+/* Responsive Design - Tablet */
+@media (max-width: 768px) {
+    .dga-translate-api-abc456.dga-position-fixed {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .dga-translate-btn-abc456 {
+        padding: 12px 14px;
+        font-size: 14px;
+        min-width: 75px;
+        /* WCAG: Maintain minimum touch target on mobile */
+        min-height: 44px;
+    }
+    
+    .dga-lang-text-abc456 {
+        font-size: 14px;
+    }
+    
+    .dga-lang-text-abc456[lang="th"] {
+        font-size: 15px;
+    }
+    
+    .dga-translate-loading-abc456 {
+        padding: 12px 16px;
+        min-width: 180px;
+    }
+}
+
+/* Small screens - show only flags */
+@media (max-width: 480px) {
+    .dga-translate-api-abc456.dga-position-fixed {
+        top: 5px;
+        right: 5px;
+    }
+    
+    .dga-lang-text-abc456 {
+        display: none;
+    }
+    
+    .dga-translate-btn-abc456 {
+        min-width: 50px;
+        padding: 12px;
+        gap: 0;
+    }
+    
+    .dga-translate-buttons-abc456 {
+        gap: 6px;
+    }
+    
+    .dga-translate-loading-abc456 {
+        font-size: 13px;
+        padding: 10px 14px;
+        min-width: 150px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .dga-translate-btn-abc456 {
+        min-width: 44px;
+        padding: 10px;
+    }
+    
+    .dga-flag-icon-abc456 svg {
+        width: 24px;
+        height: 16px;
+    }
+}
+
+/* Animations */
+@keyframes dga-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes progress {
+    0% { width: 0; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Hide Google Translate Elements - WCAG: Properly hide from all users */
+.skiptranslate,
+.goog-te-banner-frame,
+.goog-te-gadget,
+.goog-te-gadget-simple,
+.goog-te-gadget-icon,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+#google_translate_element_api,
+.goog-te-menu-value,
+.goog-te-menu-frame,
+.goog-te-menu2,
+.goog-te-menu2-item,
+div#goog-gt-,
+.goog-te-banner,
+.goog-te-ftab,
+.goog-te-combo {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    /* WCAG: Ensure hidden from screen readers */
+    position: absolute !important;
+    left: -9999px !important;
+    pointer-events: none !important;
+}
+
+/* Remove Google Translate top margin */
+body {
+    top: 0 !important;
+    position: static !important;
+    margin-top: 0 !important;
+}
+
+body.translated-ltr,
+body.translated-rtl {
+    top: 0 !important;
+    position: static !important;
+    margin-top: 0 !important;
+}
+
+html {
+    margin-top: 0 !important;
+}
+
+html.translated-ltr,
+html.translated-rtl {
+    margin-top: 0 !important;
+}
+
+/* Hide all Google Translate elements when in Thai mode */
+body[data-lang="th"] .goog-te-banner-frame,
+body[data-lang="th"] .goog-te-menu-frame,
+body[data-lang="th"] .skiptranslate,
+body[data-lang="th"] [class*="goog-te"],
+body[data-lang="th"] [id*="goog-gt"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Google Translate API Badge - Optional */
+.dga-translate-api-abc456::after {
+    content: 'API';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #2f72e1;
+    color: #ffffff;
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    /* WCAG: Decorative element */
+    aria-hidden: true;
+}
+
+/* Hide badge on small screens */
+@media (max-width: 480px) {
+    .dga-translate-api-abc456::after {
+        display: none;
+    }
+}
+
+/* WCAG: Print styles */
+@media print {
+    .dga-translate-api-abc456 {
+        display: none !important;
+    }
+}
+
+/* Keyboard navigation enhancement */
+.dga-translate-btn-abc456:focus-visible {
+    z-index: 1;
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Ensure good contrast for links in translated content */
+.translated-content a {
+    color: #2f72e1;
+    text-decoration: underline;
+}
+
+.translated-content a:hover {
+    color: #1e40af;
+}
+
+.translated-content a:focus {
+    outline: 2px solid #2f72e1;
+    outline-offset: 2px;
+}
+
+/* Error state styling */
+.dga-translate-api-abc456.error .dga-translate-btn-abc456 {
+    border-color: #f87171;
+}
+
+.dga-translate-api-abc456.error .dga-api-status-abc456 {
+    background: #ef4444;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Success state */
+.dga-translate-api-abc456.success .dga-api-status-abc456 {
+    background: #10b981;
+    animation: none;
+}
+
+/* Loading state for buttons */
+.dga-translate-btn-abc456.loading {
+    position: relative;
+    color: transparent;
+}
+
+.dga-translate-btn-abc456.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #e5e7eb;
+    border-top-color: #2f72e1;
+    border-radius: 50%;
+    animation: dga-spin 0.8s linear infinite;
+}
+
+/* Tooltips for additional information */
+.dga-translate-btn-abc456[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: #1f2937;
+    color: #ffffff;
+    font-size: 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    margin-bottom: 8px;
+}
+
+.dga-translate-btn-abc456[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+/* Custom scrollbar for better visibility */
+.dga-translate-api-abc456 *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dga-translate-api-abc456 *::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 4px;
+}
+
+.dga-translate-api-abc456 *::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 4px;
+}
+
+.dga-translate-api-abc456 *::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}

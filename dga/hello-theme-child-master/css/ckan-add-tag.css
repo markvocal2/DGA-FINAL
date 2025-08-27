@@ -1,0 +1,341 @@
+/* Container สำหรับ Tags */
+.ckan-tag-container-def456 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* รายการ Tags */
+.ckan-tags-list-def456 {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 10px;
+}
+
+/* สไตล์ของแต่ละ Tag */
+.ckan-tag-def456 {
+    display: inline-flex;
+    align-items: center;
+    background-color: #1e73be; /* สีน้ำเงิน */
+    color: #000000; /* ตัวอักษรสีดำ */
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin: 0 5px 5px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: background-color 0.2s;
+    position: relative;
+    padding-right: 25px; /* เพิ่มพื้นที่สำหรับปุ่ม x */
+}
+
+.ckan-tag-def456:hover {
+    background-color: #1a65a8; /* สีน้ำเงินเข้มเมื่อ hover */
+}
+
+/* ปุ่มลบ (x) ใน tag */
+.ckan-tag-delete-def456 {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.ckan-tag-delete-def456:hover {
+    background-color: #d32f2f;
+    color: #ffffff;
+}
+
+/* ปุ่ม "เพิ่ม TAG" */
+.ckan-add-tag-btn-def456 {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f47321; /* สีส้ม */
+    color: #000000; /* ตัวอักษรสีดำ */
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.ckan-add-tag-btn-def456:hover {
+    background-color: #e06010; /* สีส้มเข้มเมื่อ hover */
+}
+
+.ckan-add-tag-btn-def456 .dashicons {
+    margin-right: 5px;
+}
+
+/* สไตล์ของ Modal */
+.ckan-modal-def456 {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ckan-modal-content-def456 {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Delete Modal Specific Styles */
+.ckan-delete-modal-content-def456 {
+    max-width: 500px;
+}
+
+.ckan-modal-close-def456 {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ckan-modal-def456 h3 {
+    margin-top: 0;
+    color: #000000; /* ตัวอักษรสีดำ */
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Delete Modal Body */
+.ckan-delete-modal-body-def456 {
+    margin: 20px 0;
+}
+
+.ckan-delete-info-def456 {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    color: #856404;
+}
+
+.ckan-transfer-option-def456 {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.ckan-transfer-option-def456 label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ckan-transfer-option-def456 input[type="radio"] {
+    margin-right: 8px;
+}
+
+.ckan-transfer-select-def456 {
+    width: 100%;
+    max-width: 250px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+/* Autocomplete Wrapper */
+.ckan-autocomplete-wrapper-def456 {
+    position: relative;
+    margin: 15px 0;
+}
+
+/* Autocomplete Input */
+.ckan-autocomplete-input-def456 {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.ckan-autocomplete-input-def456:focus {
+    outline: none;
+    border-color: #1e73be;
+    box-shadow: 0 0 0 2px rgba(30, 115, 190, 0.2);
+}
+
+/* Autocomplete Results Dropdown */
+.ckan-autocomplete-results-def456 {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Autocomplete Result Item */
+.ckan-autocomplete-item-def456 {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.ckan-autocomplete-item-def456:last-child {
+    border-bottom: none;
+}
+
+.ckan-autocomplete-item-def456:hover {
+    background-color: #f5f5f5;
+}
+
+/* Create New Item */
+.ckan-autocomplete-item-def456.create-new {
+    background-color: #f0f8ff;
+    color: #1e73be;
+    font-weight: 500;
+}
+
+.ckan-autocomplete-item-def456.create-new:hover {
+    background-color: #e0f0ff;
+}
+
+/* No Results */
+.ckan-autocomplete-item-def456.no-results {
+    color: #999;
+    font-style: italic;
+    cursor: default;
+}
+
+.ckan-autocomplete-item-def456.no-results:hover {
+    background-color: transparent;
+}
+
+/* Tags ใน Modal */
+.ckan-modal-tags-def456 {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.ckan-modal-tag-def456 {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e5e5e5;
+    color: #000000; /* ตัวอักษรสีดำ */
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin: 0 5px 5px 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ckan-modal-tag-def456:hover {
+    background-color: #d5d5d5;
+}
+
+.ckan-modal-tag-def456.selected {
+    background-color: #1e73be; /* สีน้ำเงิน */
+    color: #ffffff; /* ตัวอักษรสีขาวสำหรับ tags ที่เลือก */
+}
+
+/* ส่วนท้ายของ Modal */
+.ckan-modal-footer-def456 {
+    text-align: right;
+    padding-top: 15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.ckan-save-tags-btn-def456,
+.ckan-confirm-delete-btn-def456 {
+    background-color: #f47321; /* สีส้ม */
+    color: #000000; /* ตัวอักษรสีดำ */
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+}
+
+.ckan-save-tags-btn-def456:hover,
+.ckan-confirm-delete-btn-def456:hover {
+    background-color: #e06010; /* สีส้มเข้มเมื่อ hover */
+}
+
+.ckan-cancel-delete-btn-def456 {
+    background-color: #e0e0e0;
+    color: #333333;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.ckan-cancel-delete-btn-def456:hover {
+    background-color: #d0d0d0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ckan-modal-content-def456 {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .ckan-modal-tags-def456 {
+        max-height: 200px;
+    }
+    
+    .ckan-tag-def456 {
+        font-size: 12px;
+        padding: 4px 8px;
+        padding-right: 22px;
+    }
+    
+    .ckan-tag-delete-def456 {
+        width: 16px;
+        height: 16px;
+        line-height: 14px;
+        font-size: 11px;
+    }
+}

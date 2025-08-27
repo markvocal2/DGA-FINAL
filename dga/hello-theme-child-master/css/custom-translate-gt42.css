@@ -1,0 +1,462 @@
+/**
+ * WCAG 2.1 AA Compliant CSS for Google Translate Widget
+ * Version: 3.0.0
+ */
+
+/* Main container สำหรับ translate widget */
+.translate-wrapper-gt42 {
+    display: inline-block;
+    margin: 10px 0;
+    position: relative;
+    min-height: 40px;
+}
+
+.google-translate-element-gt42 {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-width: 120px;
+    position: relative;
+}
+
+/* Loading indicator */
+.translate-loading-gt42 {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #6c757d;
+    text-align: center;
+    max-width: 200px;
+    font-family: inherit;
+}
+
+/* ซ่อน loading เมื่อโหลดเสร็จ - ปรับปรุงให้ปลอดภัยขึ้น */
+.google-translate-element-gt42[data-gt-initialized] .translate-loading-gt42,
+.google-translate-element-gt42.translate-loaded-gt42 .translate-loading-gt42,
+.translate-loading-gt42[aria-hidden="true"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* แสดง Google Translate widget เสมอ */
+.google-translate-element-gt42 .goog-te-gadget,
+.google-translate-element-gt42 .goog-te-gadget-simple,
+.google-translate-element-gt42 .goog-te-combo {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Debug styles - แสดงเส้นขอบเมื่อมี widget */
+.google-translate-element-gt42[data-gt-initialized] {
+    border: 1px dashed #28a745;
+    padding: 4px;
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+/* แสดงข้อความ debug */
+.google-translate-element-gt42[data-gt-initialized]:before {
+    content: "✓ Widget Loaded";
+    font-size: 10px;
+    color: #28a745;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+/* บังคับให้ปุ่มแสดงและคลิกได้ - Fallback สำหรับทุกกรณี */
+*[class*="goog-te-gadget"],
+*[class*="goog-te-combo"],
+*[class*="goog-te-menu"] {
+    pointer-events: auto !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Visual feedback เมื่อ hover บนปุ่ม */
+.goog-te-gadget-simple:hover::before {
+    content: "คลิกเพื่อเลือกภาษา";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ซ่อน tooltip ใน production */
+body:not(.translate-debug-gt42) .goog-te-gadget-simple:hover::before {
+    display: none;
+}
+
+/* Force clickable area */
+.goog-te-gadget-simple,
+.goog-te-menu-value,
+.goog-te-gadget-icon {
+    min-width: 20px !important;
+    min-height: 20px !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Active state สำหรับ touch devices */
+.goog-te-gadget-simple:active,
+.goog-te-menu-value:active {
+    background-color: #e9ecef !important;
+    transform: scale(0.95) !important;
+}
+
+/* ซ่อน debug styles ใน production */
+body:not(.translate-debug-gt42) .google-translate-element-gt42[data-gt-initialized] {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+}
+
+body:not(.translate-debug-gt42) .google-translate-element-gt42[data-gt-initialized]:before {
+    display: none;
+}
+
+/* ซ่อน loading เมื่อมี Google Translate elements */
+.google-translate-element-gt42:has(.goog-te-gadget) .translate-loading-gt42 {
+    display: none !important;
+}
+
+/* Fallback สำหรับ browsers ที่ไม่รองรับ :has() */
+body.translate-loaded-gt42 .translate-loading-gt42 {
+    display: none !important;
+}
+
+/* Google Translate Gadget Styling */
+.goog-te-gadget {
+    font-family: inherit !important;
+    margin: 0 !important;
+    color: inherit !important;
+}
+
+.goog-te-gadget-simple {
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    color: #495057 !important;
+    min-height: 38px !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important; /* บังคับให้คลิกได้ */
+    position: relative !important;
+    z-index: 10 !important;
+    user-select: none !important;
+}
+
+.goog-te-gadget-simple:hover {
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+.goog-te-gadget-simple:active {
+    background-color: #e9ecef !important;
+    transform: translateY(0) scale(0.98) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+.goog-te-gadget-simple:focus {
+    outline: 2px solid #0d6efd !important;
+    outline-offset: 2px !important;
+    background-color: #f8f9fa !important;
+    border-color: #0d6efd !important;
+}
+
+/* บังคับให้ menu value คลิกได้ */
+.goog-te-menu-value {
+    color: #495057 !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 11 !important;
+}
+
+.goog-te-menu-value:hover {
+    color: #0d6efd !important;
+}
+
+.goog-te-menu-value:active {
+    color: #0a58ca !important;
+    transform: scale(0.98) !important;
+}
+
+.goog-te-menu-value span {
+    color: inherit !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    pointer-events: auto !important;
+    cursor: inherit !important;
+}
+
+.goog-te-gadget-icon {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23495057"><path d="M7 10l5 5 5-5z"/></svg>') !important;
+    background-size: 16px 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-left: 4px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 12 !important;
+}
+
+.goog-te-gadget-icon:hover {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230d6efd"><path d="M7 10l5 5 5-5z"/></svg>') !important;
+}
+
+.goog-te-gadget-icon:focus {
+    outline: 2px solid #0d6efd !important;
+    outline-offset: 1px !important;
+    border-radius: 2px !important;
+}
+
+/* แก้ไข combo box ให้คลิกได้ดีขึ้น */
+.goog-te-combo {
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid #dee2e6 !important;
+    background-color: #ffffff !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    max-width: 220px !important;
+    font-family: inherit !important;
+    color: #495057 !important;
+    line-height: 1.5 !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+.goog-te-combo:hover {
+    border-color: #adb5bd !important;
+    background-color: #f8f9fa !important;
+}
+
+.goog-te-combo:focus {
+    outline: none !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25) !important;
+    background-color: #ffffff !important;
+}
+
+.goog-te-combo option {
+    color: #495057 !important;
+    background-color: #ffffff !important;
+    padding: 6px 8px !important;
+}
+
+.goog-te-combo option:hover,
+.goog-te-combo option:focus {
+    background-color: #f8f9fa !important;
+}
+
+/* ซ่อน banner ที่ไม่ต้องการ */
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+/* ป้องกัน body shift */
+body {
+    top: 0 !important;
+    position: static !important;
+}
+
+.skiptranslate {
+    display: none !important;
+}
+
+/* ซ่อน internal forms และ inputs */
+form[action*="translate.googleapis.com"] {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+}
+
+input[id*="goog-gt-voting"],
+input[name*="sl"],
+input[name*="tl"], 
+input[name*="query"],
+input[name*="gtrans"],
+input[name*="vote"] {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+}
+
+/* ซ่อน internal iframes */
+iframe[name="votingFrame"],
+iframe[sandbox*="allow-scripts"][srcdoc] {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+}
+
+/* Screen reader announcer */
+#wcag-announcer-gt42 {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .goog-te-gadget-simple {
+        border: 2px solid !important;
+        font-weight: bold !important;
+    }
+    
+    .goog-te-combo {
+        border: 2px solid !important;
+        font-weight: bold !important;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .goog-te-gadget-simple {
+        background-color: #343a40 !important;
+        border-color: #6c757d !important;
+        color: #ffffff !important;
+    }
+    
+    .goog-te-gadget-simple:hover {
+        background-color: #495057 !important;
+        border-color: #adb5bd !important;
+    }
+    
+    .goog-te-combo {
+        background-color: #343a40 !important;
+        border-color: #6c757d !important;
+        color: #ffffff !important;
+    }
+    
+    .goog-te-combo:hover {
+        background-color: #495057 !important;
+        border-color: #adb5bd !important;
+    }
+    
+    .goog-te-combo option {
+        background-color: #343a40 !important;
+        color: #ffffff !important;
+    }
+    
+    .translate-loading-gt42 {
+        background-color: #343a40 !important;
+        border-color: #6c757d !important;
+        color: #adb5bd !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .goog-te-gadget-simple,
+    .goog-te-combo {
+        transition: none !important;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .translate-wrapper-gt42 {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .goog-te-combo {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    .goog-te-gadget-simple {
+        min-width: 140px !important;
+        justify-content: center !important;
+    }
+}
+
+/* Focus management สำหรับ keyboard users */
+.goog-te-gadget-simple[tabindex="0"]:focus,
+.goog-te-combo[tabindex="0"]:focus,
+[role="button"][tabindex="0"]:focus {
+    outline: 2px solid #0d6efd !important;
+    outline-offset: 2px !important;
+}
+
+/* การปรับปรุงสำหรับ NVDA และ JAWS */
+.goog-te-gadget .goog-te-menu-value {
+    speak: normal !important;
+}
+
+/* Error state styling หากจำเป็น */
+.translate-wrapper-gt42[data-error="true"] {
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #f8d7da;
+}
+
+.translate-wrapper-gt42[data-error="true"]::after {
+    content: attr(data-error-message);
+    display: block;
+    color: #721c24;
+    font-size: 12px;
+    margin-top: 4px;
+}

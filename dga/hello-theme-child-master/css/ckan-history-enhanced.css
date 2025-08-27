@@ -1,0 +1,759 @@
+/**
+ * CKAN History Report System - Complete CSS
+ * Version: 3.0 FINAL
+ * Modern, responsive design with Thai UI support
+ * 
+ * Installation: Save as /css/ckan-history.css in your child theme
+ */
+
+/* ============================================
+   VARIABLES & ROOT CONFIGURATION
+   ============================================ */
+:root {
+    /* Primary Colors */
+    --ckan-primary: #1976D2;
+    --ckan-primary-light: #64B5F6;
+    --ckan-primary-dark: #0D47A1;
+    
+    /* Status Colors */
+    --ckan-success: #4CAF50;
+    --ckan-warning: #FFC107;
+    --ckan-danger: #F44336;
+    --ckan-info: #2196F3;
+    --ckan-secondary: #FF9800;
+    
+    /* Neutral Colors */
+    --ckan-text-primary: #212121;
+    --ckan-text-secondary: #616161;
+    --ckan-text-light: #9E9E9E;
+    --ckan-bg-primary: #FFFFFF;
+    --ckan-bg-secondary: #F5F5F5;
+    --ckan-bg-tertiary: #EEEEEE;
+    --ckan-border: #E0E0E0;
+    
+    /* Shadows */
+    --ckan-shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --ckan-shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    --ckan-shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    
+    /* Spacing */
+    --ckan-spacing-xs: 4px;
+    --ckan-spacing-sm: 8px;
+    --ckan-spacing-md: 16px;
+    --ckan-spacing-lg: 24px;
+    --ckan-spacing-xl: 32px;
+    
+    /* Border Radius */
+    --ckan-radius-sm: 4px;
+    --ckan-radius-md: 8px;
+    --ckan-radius-lg: 12px;
+    
+    /* Transitions */
+    --ckan-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   MAIN CONTAINER
+   ============================================ */
+.ckan-report-container-zrx582 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Sarabun", sans-serif;
+    background: var(--ckan-bg-secondary);
+    border-radius: var(--ckan-radius-lg);
+    padding: var(--ckan-spacing-xl);
+    margin: var(--ckan-spacing-lg) 0;
+    box-shadow: var(--ckan-shadow-md);
+    position: relative;
+    min-height: 500px;
+}
+
+.ckan-report-container-zrx582.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 999;
+    border-radius: var(--ckan-radius-lg);
+}
+
+.ckan-report-container-zrx582.loading::after {
+    content: 'กำลังโหลด...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    font-size: 16px;
+    color: var(--ckan-primary);
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+.ckan-report-header-zrx582 {
+    margin-bottom: var(--ckan-spacing-xl);
+}
+
+.ckan-header-title-zrx582 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--ckan-spacing-lg);
+    padding-bottom: var(--ckan-spacing-md);
+    border-bottom: 2px solid var(--ckan-primary);
+}
+
+.ckan-header-title-zrx582 h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ckan-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.ckan-header-title-zrx582 h2 .dashicons {
+    margin-right: var(--ckan-spacing-sm);
+    color: var(--ckan-primary);
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+}
+
+.ckan-header-meta-zrx582 {
+    display: flex;
+    align-items: center;
+    gap: var(--ckan-spacing-md);
+}
+
+.ckan-update-time-zrx582 {
+    font-size: 13px;
+    color: var(--ckan-text-secondary);
+    display: flex;
+    align-items: center;
+}
+
+.ckan-update-time-zrx582 .dashicons {
+    margin-right: var(--ckan-spacing-xs);
+    font-size: 16px;
+}
+
+/* ============================================
+   FILTER CONTROLS
+   ============================================ */
+.ckan-filter-controls-zrx582 {
+    background: var(--ckan-bg-primary);
+    padding: var(--ckan-spacing-md);
+    border-radius: var(--ckan-radius-md);
+    box-shadow: var(--ckan-shadow-sm);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ckan-spacing-md);
+    align-items: flex-end;
+}
+
+.ckan-filter-group-zrx582 {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.ckan-filter-group-zrx582 label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ckan-text-secondary);
+    margin-bottom: var(--ckan-spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ckan-select-zrx582 {
+    padding: var(--ckan-spacing-sm) var(--ckan-spacing-md);
+    border: 1px solid var(--ckan-border);
+    border-radius: var(--ckan-radius-sm);
+    background: var(--ckan-bg-primary);
+    font-size: 14px;
+    color: var(--ckan-text-primary);
+    transition: var(--ckan-transition);
+    cursor: pointer;
+}
+
+.ckan-select-zrx582:hover,
+.ckan-select-zrx582:focus {
+    border-color: var(--ckan-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.ckan-btn-primary-zrx582,
+.ckan-btn-secondary-zrx582,
+.ckan-btn-tertiary-zrx582 {
+    padding: var(--ckan-spacing-sm) var(--ckan-spacing-md);
+    border: none;
+    border-radius: var(--ckan-radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--ckan-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ckan-spacing-xs);
+}
+
+.ckan-btn-primary-zrx582 {
+    background: var(--ckan-primary);
+    color: white;
+}
+
+.ckan-btn-primary-zrx582:hover {
+    background: var(--ckan-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--ckan-shadow-md);
+}
+
+.ckan-btn-secondary-zrx582 {
+    background: var(--ckan-secondary);
+    color: white;
+}
+
+.ckan-btn-secondary-zrx582:hover {
+    background: #F57C00;
+    transform: translateY(-1px);
+    box-shadow: var(--ckan-shadow-md);
+}
+
+.ckan-btn-tertiary-zrx582 {
+    background: transparent;
+    color: var(--ckan-primary);
+    border: 1px solid var(--ckan-primary);
+}
+
+.ckan-btn-tertiary-zrx582:hover {
+    background: var(--ckan-primary);
+    color: white;
+}
+
+.ckan-btn-sm-zrx582 {
+    padding: var(--ckan-spacing-xs) var(--ckan-spacing-sm);
+    font-size: 12px;
+}
+
+/* ============================================
+   SUMMARY CARDS
+   ============================================ */
+.ckan-summary-cards-zrx582 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--ckan-spacing-lg);
+    margin-bottom: var(--ckan-spacing-xl);
+}
+
+.ckan-card-zrx582 {
+    background: var(--ckan-bg-primary);
+    border-radius: var(--ckan-radius-md);
+    padding: var(--ckan-spacing-lg);
+    box-shadow: var(--ckan-shadow-sm);
+    display: flex;
+    align-items: center;
+    transition: var(--ckan-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.ckan-card-zrx582::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.ckan-card-created::before { background: var(--ckan-success); }
+.ckan-card-edited::before { background: var(--ckan-info); }
+.ckan-card-deleted::before { background: var(--ckan-danger); }
+.ckan-card-users::before { background: var(--ckan-secondary); }
+
+.ckan-card-zrx582:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ckan-shadow-md);
+}
+
+.ckan-card-icon-zrx582 {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--ckan-spacing-md);
+    flex-shrink: 0;
+}
+
+.ckan-card-created .ckan-card-icon-zrx582 {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--ckan-success);
+}
+
+.ckan-card-edited .ckan-card-icon-zrx582 {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--ckan-info);
+}
+
+.ckan-card-deleted .ckan-card-icon-zrx582 {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--ckan-danger);
+}
+
+.ckan-card-users .ckan-card-icon-zrx582 {
+    background: rgba(255, 152, 0, 0.1);
+    color: var(--ckan-secondary);
+}
+
+.ckan-card-icon-zrx582 .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.ckan-card-body-zrx582 {
+    flex: 1;
+}
+
+.ckan-card-title-zrx582 {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ckan-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--ckan-spacing-xs);
+}
+
+.ckan-card-value-zrx582 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ckan-text-primary);
+    line-height: 1;
+}
+
+.ckan-card-trend-zrx582 {
+    font-size: 12px;
+    margin-top: var(--ckan-spacing-xs);
+}
+
+.ckan-loader-zrx582 {
+    color: var(--ckan-text-light);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ============================================
+   CHARTS SECTION
+   ============================================ */
+.ckan-charts-section-zrx582 {
+    margin-bottom: var(--ckan-spacing-xl);
+}
+
+.ckan-chart-container-zrx582 {
+    background: var(--ckan-bg-primary);
+    border-radius: var(--ckan-radius-md);
+    padding: var(--ckan-spacing-lg);
+    box-shadow: var(--ckan-shadow-sm);
+    margin-bottom: var(--ckan-spacing-lg);
+}
+
+.ckan-chart-header-zrx582 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--ckan-spacing-md);
+    padding-bottom: var(--ckan-spacing-md);
+    border-bottom: 1px solid var(--ckan-border);
+}
+
+.ckan-chart-header-zrx582 h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ckan-text-primary);
+    margin: 0;
+}
+
+.ckan-chart-body-zrx582 {
+    position: relative;
+    height: 300px;
+}
+
+.ckan-chart-full .ckan-chart-body-zrx582 {
+    height: 350px;
+}
+
+.ckan-chart-half .ckan-chart-body-zrx582 {
+    height: 250px;
+}
+
+.ckan-charts-row-zrx582 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--ckan-spacing-lg);
+}
+
+/* ============================================
+   DATA TABLE
+   ============================================ */
+.ckan-table-section-zrx582 {
+    background: var(--ckan-bg-primary);
+    border-radius: var(--ckan-radius-md);
+    box-shadow: var(--ckan-shadow-sm);
+    margin-bottom: var(--ckan-spacing-xl);
+    overflow: hidden;
+}
+
+.ckan-table-header-zrx582 {
+    padding: var(--ckan-spacing-lg);
+    border-bottom: 1px solid var(--ckan-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ckan-table-header-zrx582 h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ckan-text-primary);
+    margin: 0;
+}
+
+.ckan-table-actions-zrx582 {
+    display: flex;
+    gap: var(--ckan-spacing-sm);
+}
+
+.ckan-search-zrx582 {
+    padding: var(--ckan-spacing-sm) var(--ckan-spacing-md);
+    border: 1px solid var(--ckan-border);
+    border-radius: var(--ckan-radius-sm);
+    font-size: 14px;
+    width: 200px;
+}
+
+.ckan-table-responsive-zrx582 {
+    overflow-x: auto;
+}
+
+.ckan-data-table-zrx582 {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ckan-data-table-zrx582 thead th {
+    background: var(--ckan-bg-secondary);
+    padding: var(--ckan-spacing-md);
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ckan-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--ckan-border);
+}
+
+.ckan-data-table-zrx582 tbody td {
+    padding: var(--ckan-spacing-md);
+    font-size: 14px;
+    color: var(--ckan-text-primary);
+    border-bottom: 1px solid var(--ckan-border);
+}
+
+.ckan-data-table-zrx582 tbody tr:hover {
+    background: var(--ckan-bg-secondary);
+}
+
+.ckan-data-table-zrx582 tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ============================================
+   BADGES & STATUS
+   ============================================ */
+.ckan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ckan-spacing-xs);
+    padding: 2px var(--ckan-spacing-sm);
+    border-radius: var(--ckan-radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ckan-badge .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.ckan-badge-success {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--ckan-success);
+}
+
+.ckan-badge-primary {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--ckan-info);
+}
+
+.ckan-badge-danger {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--ckan-danger);
+}
+
+.ckan-badge-default {
+    background: rgba(158, 158, 158, 0.1);
+    color: var(--ckan-text-secondary);
+}
+
+.ckan-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: var(--ckan-spacing-xs);
+}
+
+.ckan-status-success {
+    background: var(--ckan-success);
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+.ckan-pagination-zrx582 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--ckan-spacing-md);
+    padding: var(--ckan-spacing-lg);
+    border-top: 1px solid var(--ckan-border);
+}
+
+.ckan-page-btn-zrx582 {
+    padding: var(--ckan-spacing-sm) var(--ckan-spacing-md);
+    border: 1px solid var(--ckan-border);
+    border-radius: var(--ckan-radius-sm);
+    background: var(--ckan-bg-primary);
+    color: var(--ckan-text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--ckan-transition);
+}
+
+.ckan-page-btn-zrx582:hover:not(:disabled) {
+    background: var(--ckan-primary);
+    color: white;
+    border-color: var(--ckan-primary);
+}
+
+.ckan-page-btn-zrx582:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ckan-page-info-zrx582 {
+    font-size: 14px;
+    color: var(--ckan-text-secondary);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.ckan-report-footer-zrx582 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--ckan-spacing-lg);
+    border-top: 1px solid var(--ckan-border);
+    margin-top: var(--ckan-spacing-xl);
+}
+
+.ckan-footer-left-zrx582 p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ckan-text-secondary);
+}
+
+.ckan-footer-right-zrx582 {
+    display: flex;
+    gap: var(--ckan-spacing-sm);
+}
+
+/* ============================================
+   LOADING & ERROR STATES
+   ============================================ */
+.ckan-loading-zrx582 {
+    text-align: center;
+    padding: var(--ckan-spacing-xl);
+    color: var(--ckan-text-secondary);
+}
+
+.ckan-loading-zrx582 .dashicons {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.ckan-report-error-zrx582 {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--ckan-danger);
+    padding: var(--ckan-spacing-md);
+    border-radius: var(--ckan-radius-md);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* ============================================
+   NOTIFICATIONS
+   ============================================ */
+.ckan-notification {
+    position: fixed;
+    top: 32px;
+    right: 20px;
+    padding: var(--ckan-spacing-md) var(--ckan-spacing-lg);
+    border-radius: var(--ckan-radius-md);
+    box-shadow: var(--ckan-shadow-lg);
+    font-size: 14px;
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+}
+
+.ckan-notification.error {
+    background: var(--ckan-danger);
+    color: white;
+}
+
+.ckan-notification.success {
+    background: var(--ckan-success);
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media screen and (max-width: 1200px) {
+    .ckan-charts-row-zrx582 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .ckan-report-container-zrx582 {
+        padding: var(--ckan-spacing-md);
+    }
+    
+    .ckan-summary-cards-zrx582 {
+        grid-template-columns: 1fr;
+    }
+    
+    .ckan-filter-controls-zrx582 {
+        flex-direction: column;
+    }
+    
+    .ckan-filter-group-zrx582 {
+        width: 100%;
+    }
+    
+    .ckan-table-header-zrx582 {
+        flex-direction: column;
+        gap: var(--ckan-spacing-md);
+        align-items: flex-start;
+    }
+    
+    .ckan-search-zrx582 {
+        width: 100%;
+    }
+    
+    .ckan-report-footer-zrx582 {
+        flex-direction: column;
+        gap: var(--ckan-spacing-md);
+        align-items: center;
+        text-align: center;
+    }
+    
+    .ckan-data-table-zrx582 {
+        font-size: 12px;
+    }
+    
+    .ckan-data-table-zrx582 thead th,
+    .ckan-data-table-zrx582 tbody td {
+        padding: var(--ckan-spacing-sm);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .ckan-header-title-zrx582 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--ckan-spacing-md);
+    }
+    
+    .ckan-header-title-zrx582 h2 {
+        font-size: 20px;
+    }
+    
+    .ckan-card-value-zrx582 {
+        font-size: 24px;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .ckan-report-container-zrx582 {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .ckan-filter-controls-zrx582,
+    .ckan-table-actions-zrx582,
+    .ckan-pagination-zrx582,
+    .ckan-footer-right-zrx582,
+    .ckan-btn-primary-zrx582,
+    .ckan-btn-secondary-zrx582,
+    .ckan-btn-tertiary-zrx582 {
+        display: none !important;
+    }
+    
+    .ckan-chart-container-zrx582,
+    .ckan-table-section-zrx582 {
+        page-break-inside: avoid;
+    }
+    
+    .ckan-data-table-zrx582 {
+        font-size: 10px;
+    }
+}

@@ -1,0 +1,346 @@
+/**
+ * CKAN Organization Editor - Compact Admin-only CSS
+ */
+
+/* Main Wrapper */
+.ckan-org-wrapper-adm347 {
+    display: inline-block;
+    margin: 10px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Display Container */
+.ckan-org-display-adm347 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #f5f7fa;
+    border-radius: 6px;
+    border: 1px solid #e1e5eb;
+    transition: all 0.2s ease;
+}
+
+.ckan-org-display-adm347:hover {
+    background: #eef2f7;
+    border-color: #d1d5db;
+}
+
+/* Organization Label */
+.ckan-org-prefix-adm347 {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.ckan-org-name-adm347 {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.ckan-org-name-adm347.empty {
+    color: #9ca3af;
+    font-style: italic;
+    font-weight: 400;
+}
+
+/* Edit Button */
+.ckan-edit-btn-adm347 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.ckan-edit-btn-adm347:hover {
+    background: #f47321;
+    border-color: #f47321;
+    color: white;
+    transform: scale(1.05);
+}
+
+.ckan-edit-btn-adm347:active {
+    transform: scale(0.95);
+}
+
+.ckan-edit-btn-adm347:focus-visible {
+    outline: 2px solid #f47321;
+    outline-offset: 2px;
+}
+
+/* Modal */
+.ckan-modal-adm347 {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.ckan-modal-adm347.is-open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.ckan-modal-overlay-adm347 {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+}
+
+.ckan-modal-content-adm347 {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+}
+
+.ckan-modal-adm347.is-open .ckan-modal-content-adm347 {
+    transform: scale(1);
+}
+
+/* Modal Header */
+.ckan-modal-header-adm347 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ckan-modal-header-adm347 h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.ckan-modal-close-adm347 {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.ckan-modal-close-adm347:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* Modal Body */
+.ckan-modal-body-adm347 {
+    padding: 20px;
+}
+
+.ckan-org-select-adm347 {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    color: #1f2937;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.ckan-org-select-adm347:focus {
+    outline: none;
+    border-color: #f47321;
+    box-shadow: 0 0 0 3px rgba(244, 115, 33, 0.1);
+}
+
+.ckan-org-select-adm347:disabled {
+    background: #f9fafb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Modal Footer */
+.ckan-modal-footer-adm347 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.ckan-cancel-btn-adm347,
+.ckan-update-btn-adm347 {
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ckan-cancel-btn-adm347 {
+    background: white;
+    color: #6b7280;
+    border-color: #d1d5db;
+}
+
+.ckan-cancel-btn-adm347:hover {
+    background: #f9fafb;
+    color: #4b5563;
+}
+
+.ckan-update-btn-adm347 {
+    background: #f47321;
+    color: white;
+}
+
+.ckan-update-btn-adm347:hover:not(:disabled) {
+    background: #e06010;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(244, 115, 33, 0.2);
+}
+
+.ckan-update-btn-adm347:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Notifications */
+.ckan-notifications-adm347 {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000000;
+    pointer-events: none;
+}
+
+.ckan-notification-adm347 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 250px;
+    max-width: 400px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    pointer-events: all;
+    font-size: 14px;
+}
+
+.ckan-notification-adm347.show {
+    transform: translateX(0);
+}
+
+/* Notification Types */
+.ckan-notification-adm347.success {
+    border-left: 3px solid #10b981;
+}
+
+.ckan-notification-adm347.error {
+    border-left: 3px solid #ef4444;
+}
+
+.ckan-notification-adm347 .icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+}
+
+.ckan-notification-adm347.success .icon {
+    color: #10b981;
+}
+
+.ckan-notification-adm347.error .icon {
+    color: #ef4444;
+}
+
+.ckan-notification-adm347 .message {
+    flex: 1;
+    color: #1f2937;
+}
+
+.ckan-notification-adm347 .close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0;
+}
+
+.ckan-notification-adm347 .close:hover {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .ckan-modal-content-adm347 {
+        max-width: calc(100vw - 40px);
+    }
+    
+    .ckan-notifications-adm347 {
+        left: 20px;
+        right: 20px;
+    }
+    
+    .ckan-notification-adm347 {
+        max-width: 100%;
+    }
+}
+
+/* Accessibility */
+.ckan-modal-adm347 *:focus-visible {
+    outline: 2px solid #f47321;
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.ckan-org-select-adm347.loading {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%239ca3af" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { background-position: right 12px center; }
+    to { background-position: right 12px center; transform: rotate(360deg); }
+}

@@ -1,0 +1,617 @@
+/**
+ * PDPA Cookie Consent CSS - Enhanced Compatibility Version
+ * สีหลัก: น้ำเงิน, ส้ม, ตัวอักษรสีดำ
+ * แก้ไขปัญหาการขัดแย้งกับ components อื่นๆ
+ * Version: 3.0.0
+ */
+
+:root {
+    --pdpa-primary: #1a56db; /* สีน้ำเงิน */
+    --pdpa-secondary: #ff8a33; /* สีส้ม */
+    --pdpa-text: #2d3748; /* สีดำอ่อน */
+    --pdpa-light-bg: #f8fafc;
+    --pdpa-border: #e2e8f0;
+    --pdpa-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --pdpa-toggle-on: #1a56db; /* สีน้ำเงิน */
+    --pdpa-toggle-off: #cbd5e0;
+    --pdpa-z-overlay: 999999;
+    --pdpa-z-container: 1000000;
+    --pdpa-z-reopen: 99999;
+}
+
+/* Base styles */
+.pdpa-cookie-consent-xyz789 * {
+    box-sizing: border-box;
+}
+
+/* Overlay backdrop - ปรับ z-index ให้เหมาะสม */
+.pdpa-overlay-xyz789 {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    z-index: var(--pdpa-z-overlay) !important;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    animation: pdpa-fade-in-xyz789 0.3s ease;
+    pointer-events: auto !important;
+}
+
+/* PDPA Cookie Consent Container */
+.pdpa-cookie-consent-xyz789 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 14px;
+    color: var(--pdpa-text);
+    line-height: 1.5;
+    /* Ensure this container doesn't block other elements */
+    pointer-events: none;
+}
+
+.pdpa-cookie-consent-xyz789 > * {
+    pointer-events: auto;
+}
+
+/* Main consent container - centered modal */
+.pdpa-consent-container-xyz789 {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90% !important;
+    max-width: 600px !important;
+    background-color: white !important;
+    border-radius: 16px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    z-index: var(--pdpa-z-container) !important;
+    overflow: hidden;
+    animation: pdpa-modal-in-xyz789 0.4s ease;
+    pointer-events: auto !important;
+}
+
+/* Scroll lock class - ปรับปรุงให้ไม่กระทบ position */
+body.pdpa-scroll-lock-xyz789 {
+    overflow: hidden !important;
+    position: relative !important;
+    height: 100%;
+}
+
+/* Ensure language switcher stays on top */
+body.pdpa-active-xyz789 .dga-translate-api-abc456 {
+    z-index: calc(var(--pdpa-z-container) + 10) !important;
+    pointer-events: auto !important;
+    position: relative !important;
+}
+
+.dga-translate-api-abc456,
+.dga-translate-api-abc456 * {
+    pointer-events: auto !important;
+}
+
+/* Animations */
+@keyframes pdpa-fade-in-xyz789 {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes pdpa-modal-in-xyz789 {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes pdpa-shake-xyz789 {
+    0%, 100% {
+        transform: translate(-50%, -50%);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(-48%, -50%);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate(-52%, -50%);
+    }
+}
+
+.pdpa-shake-xyz789 {
+    animation: pdpa-shake-xyz789 0.5s ease !important;
+}
+
+/* Header */
+.pdpa-header-xyz789 {
+    background: linear-gradient(135deg, var(--pdpa-primary), #0f45b5);
+    color: white;
+    padding: 24px 28px;
+    position: relative;
+}
+
+.pdpa-header-xyz789 h3 {
+    margin: 0 0 8px !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: white !important;
+}
+
+.pdpa-header-xyz789 p {
+    margin: 0 !important;
+    opacity: 0.95;
+    font-size: 14px;
+    color: white !important;
+}
+
+/* Content */
+.pdpa-content-xyz789 {
+    padding: 24px 28px;
+    background-color: white;
+    border-bottom: 1px solid var(--pdpa-border);
+}
+
+.pdpa-content-xyz789 p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--pdpa-text);
+}
+
+/* Action buttons */
+.pdpa-actions-xyz789 {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 28px;
+    background-color: var(--pdpa-light-bg);
+    flex-wrap: wrap;
+}
+
+.pdpa-button-xyz789 {
+    cursor: pointer;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    min-width: 120px;
+    text-align: center;
+    pointer-events: auto !important;
+}
+
+.pdpa-button-xyz789:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.pdpa-button-xyz789:active {
+    transform: translateY(0);
+}
+
+.pdpa-accept-xyz789 {
+    background-color: var(--pdpa-primary);
+    color: white;
+}
+
+.pdpa-accept-xyz789:hover {
+    background-color: #0f45b5;
+}
+
+.pdpa-reject-xyz789 {
+    background-color: #e2e8f0;
+    color: var(--pdpa-text);
+}
+
+.pdpa-reject-xyz789:hover {
+    background-color: #cbd5e0;
+}
+
+.pdpa-settings-xyz789 {
+    background-color: white;
+    color: var(--pdpa-primary);
+    border: 2px solid var(--pdpa-primary);
+}
+
+.pdpa-settings-xyz789:hover {
+    background-color: #f0f5ff;
+    border-color: #0f45b5;
+}
+
+.pdpa-save-xyz789 {
+    background-color: var(--pdpa-secondary);
+    color: white;
+    width: auto;
+    min-width: 150px;
+}
+
+.pdpa-save-xyz789:hover {
+    background-color: #f97316;
+}
+
+/* Settings panel */
+.pdpa-settings-panel-xyz789 {
+    padding: 0 28px 24px;
+    background-color: white;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar for settings panel */
+.pdpa-settings-panel-xyz789::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pdpa-settings-panel-xyz789::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.pdpa-settings-panel-xyz789::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.pdpa-settings-panel-xyz789::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.pdpa-setting-item-xyz789 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--pdpa-border);
+}
+
+.pdpa-setting-item-xyz789:last-of-type {
+    border-bottom: none;
+}
+
+.pdpa-setting-info-xyz789 {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.pdpa-setting-info-xyz789 h4 {
+    margin: 0 0 6px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: var(--pdpa-text) !important;
+}
+
+.pdpa-setting-info-xyz789 p {
+    margin: 0 !important;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* Toggle switch */
+.pdpa-toggle-wrapper-xyz789 {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.pdpa-toggle-xyz789 {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.pdpa-toggle-label-xyz789 {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--pdpa-toggle-off);
+    border-radius: 24px;
+    transition: .3s;
+}
+
+.pdpa-toggle-label-xyz789:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pdpa-toggle-xyz789:checked + .pdpa-toggle-label-xyz789 {
+    background-color: var(--pdpa-toggle-on);
+}
+
+.pdpa-toggle-xyz789:checked + .pdpa-toggle-label-xyz789:before {
+    transform: translateX(24px);
+}
+
+.pdpa-toggle-xyz789:disabled + .pdpa-toggle-label-xyz789 {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Setting actions */
+.pdpa-setting-actions-xyz789 {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--pdpa-border);
+}
+
+/* ====================================== */
+/* Reopen button - Cookie Emoji Version */
+/* ====================================== */
+.pdpa-reopen-button-xyz789 {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--pdpa-primary) 0%, #0f45b5 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3);
+    z-index: var(--pdpa-z-reopen);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: auto;
+    max-width: 56px; /* Width for emoji only */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: auto !important;
+}
+
+/* Icon styling - Emoji Version */
+.pdpa-reopen-icon-xyz789 {
+    font-size: 24px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Text styling - hidden by default */
+.pdpa-reopen-text-xyz789 {
+    margin-left: 0;
+    font-weight: 500;
+    opacity: 0;
+    width: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+/* Hover state - show text with animation */
+.pdpa-reopen-button-xyz789:hover {
+    background: linear-gradient(135deg, #0f45b5 0%, var(--pdpa-primary) 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(26, 86, 219, 0.4),
+        0 0 40px rgba(26, 86, 219, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+    padding: 14px 24px;
+    max-width: 300px; /* Expand to show text */
+}
+
+.pdpa-reopen-button-xyz789:hover .pdpa-reopen-text-xyz789 {
+    opacity: 1;
+    width: auto;
+    margin-left: 10px;
+}
+
+.pdpa-reopen-button-xyz789:hover .pdpa-reopen-icon-xyz789 {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* Active state */
+.pdpa-reopen-button-xyz789:active {
+    transform: translateY(0);
+    transition: transform 0.1s ease;
+}
+
+/* Focus state for accessibility */
+.pdpa-reopen-button-xyz789:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Pulse animation to draw attention */
+@keyframes pdpa-pulse-xyz789 {
+    0% {
+        box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(26, 86, 219, 0.5), 0 0 0 8px rgba(26, 86, 219, 0.1);
+    }
+    100% {
+        box-shadow: 0 4px 15px rgba(26, 86, 219, 0.3);
+    }
+}
+
+/* Bouncing animation on load */
+@keyframes pdpa-bounce-xyz789 {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Add subtle animations on page load */
+.pdpa-reopen-button-xyz789 {
+    animation: 
+        pdpa-pulse-xyz789 2s ease-in-out 1,
+        pdpa-bounce-xyz789 2s ease-in-out;
+    animation-delay: 0.5s, 1s;
+}
+
+/* Notification styles */
+.pdpa-notification-xyz789 {
+    position: fixed !important;
+    z-index: calc(var(--pdpa-z-container) + 100) !important;
+    pointer-events: none !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .pdpa-consent-container-xyz789 {
+        width: 95% !important;
+        max-width: 100% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+    
+    .pdpa-header-xyz789 {
+        padding: 20px 24px;
+    }
+    
+    .pdpa-header-xyz789 h3 {
+        font-size: 18px !important;
+    }
+    
+    .pdpa-content-xyz789 {
+        padding: 20px 24px;
+    }
+    
+    .pdpa-actions-xyz789 {
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px 24px;
+    }
+    
+    .pdpa-button-xyz789 {
+        width: 100%;
+        padding: 14px 20px;
+    }
+    
+    .pdpa-settings-panel-xyz789 {
+        padding: 0 24px 20px;
+        max-height: 250px;
+    }
+    
+    .pdpa-reopen-button-xyz789 {
+        padding: 12px 12px;
+        bottom: 15px;
+        right: 15px;
+        max-width: 48px;
+    }
+    
+    /* Disable hover expansion on mobile */
+    .pdpa-reopen-button-xyz789:hover {
+        padding: 12px 12px;
+        max-width: 48px;
+        transform: scale(1.05); /* Slight scale instead of expand */
+    }
+    
+    .pdpa-reopen-text-xyz789 {
+        display: none !important; /* Always hide text on mobile */
+    }
+    
+    .pdpa-reopen-icon-xyz789 {
+        font-size: 20px;
+    }
+    
+    .pdpa-reopen-button-xyz789:hover .pdpa-reopen-icon-xyz789 {
+        transform: rotate(15deg) scale(1);
+    }
+}
+
+/* Tablet responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .pdpa-reopen-button-xyz789:hover {
+        max-width: 250px; /* Slightly smaller on tablet */
+    }
+}
+
+/* Disabled button state */
+.pdpa-button-xyz789:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Focus styles for accessibility */
+.pdpa-button-xyz789:focus,
+.pdpa-toggle-xyz789:focus + .pdpa-toggle-label-xyz789 {
+    outline: 2px solid var(--pdpa-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .pdpa-overlay-xyz789 {
+        background-color: rgba(0, 0, 0, 0.9) !important;
+    }
+    
+    .pdpa-consent-container-xyz789 {
+        border: 2px solid white;
+    }
+    
+    .pdpa-button-xyz789 {
+        border: 2px solid currentColor;
+    }
+    
+    .pdpa-reopen-button-xyz789 {
+        border: 2px solid white;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .pdpa-reopen-button-xyz789,
+    .pdpa-reopen-icon-xyz789,
+    .pdpa-reopen-text-xyz789,
+    .pdpa-button-xyz789,
+    .pdpa-consent-container-xyz789,
+    .pdpa-overlay-xyz789 {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Compatibility with common WordPress elements */
+#wpadminbar {
+    z-index: calc(var(--pdpa-z-container) + 1000) !important;
+}
+
+/* Ensure PDPA doesn't block other popups/modals */
+.modal,
+.mfp-wrap,
+.fancybox-container,
+.elementor-popup-modal {
+    z-index: calc(var(--pdpa-z-container) + 500) !important;
+}
+
+/* Print styles */
+@media print {
+    .pdpa-cookie-consent-xyz789,
+    .pdpa-overlay-xyz789,
+    .pdpa-consent-container-xyz789,
+    .pdpa-reopen-button-xyz789,
+    .pdpa-notification-xyz789 {
+        display: none !important;
+    }
+}

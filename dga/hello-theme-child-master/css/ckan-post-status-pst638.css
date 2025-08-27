@@ -1,0 +1,269 @@
+/**
+ * CKAN Post Status Toggle - Consent Style UI
+ * Version: 2.1.0
+ */
+
+/* Toggle Container - Same style as Consent */
+.ckan-status-toggle-container-pst638 {
+    position: relative;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    margin: 25px 0;
+    transition: all 0.3s ease;
+    max-width: 500px;
+    border: 1px solid #eaeaea;
+}
+
+.ckan-status-toggle-wrapper-pst638 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+/* Labels */
+.ckan-status-label-pst638 {
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.public-label-pst638 {
+    color: #28a745;
+}
+
+.private-label-pst638 {
+    color: #dc3545;
+}
+
+/* Toggle Switch - Same as Consent */
+.ckan-status-toggle-pst638 {
+    position: relative;
+    width: 70px;
+    height: 34px;
+    background-color: #e9ecef;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.ckan-status-toggle-slider-pst638 {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Public State (Green) */
+.ckan-status-toggle-pst638.is-public {
+    background-color: #28a745;
+}
+
+.ckan-status-toggle-pst638.is-public .ckan-status-toggle-slider-pst638 {
+    left: 3px;
+}
+
+.ckan-status-toggle-pst638.is-public ~ .public-label-pst638 {
+    opacity: 1;
+}
+
+.ckan-status-toggle-pst638.is-public ~ .private-label-pst638 {
+    opacity: 0.6;
+}
+
+/* Private State (Red) */
+.ckan-status-toggle-pst638.is-private {
+    background-color: #dc3545;
+}
+
+.ckan-status-toggle-pst638.is-private .ckan-status-toggle-slider-pst638 {
+    left: calc(100% - 31px);
+}
+
+.ckan-status-toggle-pst638.is-private ~ .private-label-pst638 {
+    opacity: 1;
+}
+
+.ckan-status-toggle-pst638.is-private ~ .public-label-pst638 {
+    opacity: 0.6;
+}
+
+/* Status Display */
+.ckan-status-display-pst638 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.status-text-pst638 {
+    margin-right: 10px;
+}
+
+.status-icon-pst638 {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #28a745;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.is-private .status-text-pst638 {
+    color: #dc3545;
+}
+
+.is-private .status-icon-pst638 {
+    background-color: #dc3545;
+}
+
+.is-public .status-text-pst638 {
+    color: #28a745;
+}
+
+/* Info Display */
+.ckan-status-info-pst638 {
+    margin-top: 12px;
+    padding: 10px;
+    background-color: #fff3cd;
+    color: #856404;
+    border-radius: 6px;
+    font-size: 14px;
+    border-left: 3px solid #ffc107;
+}
+
+/* Loading State */
+.ckan-status-toggle-container-pst638.is-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.ckan-status-toggle-container-pst638.is-loading:after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #666;
+    border-radius: 50%;
+    animation: spin-pst638 1s infinite linear;
+}
+
+/* Notification Messages */
+.ckan-notification-pst638 {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    animation: slideDown-pst638 0.3s forwards;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.ckan-notification-pst638.success {
+    background-color: #28a745;
+}
+
+.ckan-notification-pst638.error {
+    background-color: #dc3545;
+}
+
+/* Notice */
+.ckan-status-notice-pst638 {
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 8px;
+    font-weight: 500;
+    margin: 20px 0;
+    border: 1px solid #f5c6cb;
+}
+
+/* Animations */
+@keyframes spin-pst638 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown-pst638 {
+    from { 
+        top: -50px; 
+        opacity: 0;
+    }
+    to { 
+        top: -45px; 
+        opacity: 1;
+    }
+}
+
+/* Hover Effects */
+.ckan-status-toggle-pst638:hover {
+    filter: brightness(1.1);
+}
+
+.ckan-status-toggle-pst638:hover .ckan-status-toggle-slider-pst638 {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Compact Style */
+.ckan-status-toggle-container-pst638.compact {
+    padding: 15px;
+    max-width: 400px;
+}
+
+.ckan-status-toggle-container-pst638.compact .ckan-status-toggle-wrapper-pst638 {
+    gap: 15px;
+}
+
+.ckan-status-toggle-container-pst638.compact .ckan-status-toggle-pst638 {
+    width: 60px;
+    height: 30px;
+}
+
+.ckan-status-toggle-container-pst638.compact .ckan-status-toggle-slider-pst638 {
+    width: 24px;
+    height: 24px;
+}
+
+.ckan-status-toggle-container-pst638.compact .ckan-status-toggle-pst638.is-private .ckan-status-toggle-slider-pst638 {
+    left: calc(100% - 27px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 576px) {
+    .ckan-status-toggle-container-pst638 {
+        padding: 20px;
+    }
+    
+    .ckan-status-toggle-wrapper-pst638 {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .ckan-status-toggle-pst638 {
+        margin: 10px 0;
+    }
+}

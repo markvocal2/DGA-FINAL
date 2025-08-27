@@ -1,0 +1,817 @@
+/**
+ * DGA Glossary CSS
+ * File: /css/dga-glossary.css
+ * Theme: Blue-Orange Modern UI
+ */
+
+/* Container */
+#dga-glossary-container {
+    font-family: 'Sarabun', Arial, sans-serif;
+    max-width: 100%;
+    margin: 20px 0;
+}
+
+/* Filter Section */
+.dga-glossary-filters {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-row {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    max-width: 400px;
+    flex: 1;
+}
+
+/* Selected Letter Display */
+.selected-letter-display {
+    flex-shrink: 0;
+}
+
+.selected-letter-box {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border: 3px solid #1890ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+#selected-letter-text {
+    font-size: 48px;
+    font-weight: bold;
+    color: #1890ff;
+    transition: all 0.3s ease;
+}
+
+.selected-letter-box.active {
+    background: #1890ff;
+    transform: scale(1.05);
+}
+
+.selected-letter-box.active #selected-letter-text {
+    color: white;
+}
+
+#dga-search-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #e0e6ed;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+#dga-search-input:focus {
+    outline: none;
+    border-color: #1890ff;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.btn-clear {
+    padding: 10px 20px;
+    background: #ff6b35;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-clear:hover {
+    background: #ff5722;
+    transform: translateY(-1px);
+}
+
+/* Alphabet Filters */
+.alphabet-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.alphabet-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.alphabet-label {
+    font-weight: bold;
+    color: #333;
+    min-width: 60px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.alphabet-filter {
+    padding: 8px 12px;
+    background: #e8f4ff;
+    color: #1890ff;
+    border: 1px solid #b3dafb;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    min-width: 35px;
+    text-align: center;
+}
+
+.alphabet-filter:hover {
+    background: #1890ff;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.alphabet-filter.active {
+    background: #1890ff;
+    color: white;
+}
+
+/* Table */
+.dga-glossary-table-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+#dga-glossary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px; /* ลดขนาดลง 30% จาก default 16px */
+}
+
+#dga-glossary-table thead {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    color: white;
+}
+
+#dga-glossary-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px; /* ลดขนาดหัวตารางด้วย */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#dga-glossary-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+
+#dga-glossary-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+#dga-glossary-table td {
+    padding: 10px 15px;
+    vertical-align: middle;
+    font-size: 13px; /* ลดขนาดเนื้อหาในตาราง */
+}
+
+/* Editable Cells */
+.editable-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cell-value {
+    flex: 1;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+}
+
+.edit-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.edit-icon {
+    font-size: 16px;
+}
+
+/* Edit Mode */
+.edit-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.edit-input {
+    flex: 1;
+    padding: 5px 8px;
+    border: 2px solid #1890ff;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.save-btn, .cancel-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.save-btn {
+    background: #52c41a;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #389e0d;
+}
+
+.cancel-btn {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.cancel-btn:hover {
+    background: #e0e0e0;
+}
+
+/* View Button */
+.view-btn {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #ff6b35;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+    background: #ff5722;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(255,107,53,0.3);
+}
+
+/* Highlight */
+.highlight {
+    background: #fff3cd;
+    color: #856404;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Skeleton Loader */
+.skeleton-row td {
+    padding: 20px;
+}
+
+.skeleton-wrapper {
+    display: flex;
+    gap: 15px;
+}
+
+.skeleton-item {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    flex: 1;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    background: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover {
+    background: #096dd9;
+    transform: translateY(-1px);
+}
+
+.page-numbers {
+    display: flex;
+    gap: 8px;
+}
+
+.page-number {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: #1890ff;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.page-number:hover {
+    background: #e6f7ff;
+    border-color: #1890ff;
+}
+
+.page-number.active {
+    background: #1890ff;
+    color: white;
+    border-color: #1890ff;
+}
+
+.page-info {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Notifications */
+.dga-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    z-index: 9999;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dga-notification.show {
+    transform: translateX(0);
+}
+
+.dga-notification.success {
+    background: #52c41a;
+}
+
+.dga-notification.error {
+    background: #ff4d4f;
+}
+
+/* No Data */
+.no-data, .error-message {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 16px;
+}
+
+.error-message {
+    color: #ff4d4f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .search-container {
+        flex: 1;
+    }
+    
+    .selected-letter-box {
+        width: 50px;
+        height: 50px;
+        margin: 0;
+    }
+    
+    #selected-letter-text {
+        font-size: 24px;
+    }
+    
+    .alphabet-group {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 5px;
+    }
+    
+    .alphabet-label {
+        grid-column: 1 / -1;
+        margin-bottom: 5px;
+    }
+    
+    .alphabet-filter {
+        padding: 5px 8px;
+        font-size: 12px;
+        min-width: unset;
+    }
+    
+    #dga-glossary-table {
+        font-size: 12px;
+    }
+    
+    #dga-glossary-table th,
+    #dga-glossary-table td {
+        padding: 8px;
+    }
+    
+    .edit-container {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .edit-input {
+        width: 100%;
+    }
+    
+    .pagination-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .page-numbers {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #dga-glossary-container {
+        padding: 10px;
+    }
+    
+    .dga-glossary-filters {
+        padding: 15px;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    #dga-search-input {
+        font-size: 14px;
+    }
+    
+    .btn-clear {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+    
+    .selected-letter-box {
+        width: 45px;
+        height: 45px;
+    }
+    
+    #selected-letter-text {
+        font-size: 20px;
+    }
+    
+    .alphabet-group {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 4px;
+    }
+    
+    .alphabet-filter {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+    
+    #dga-glossary-table {
+        font-size: 11px;
+    }
+    
+    #dga-glossary-table th,
+    #dga-glossary-table td {
+        padding: 6px;
+    }
+    
+    .view-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .editable-cell {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .page-number {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+    
+    .pagination-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    /* Hide table headers on very small screens */
+    #dga-glossary-table thead {
+        display: none;
+    }
+    
+    /* Make table responsive on small screens */
+    #dga-glossary-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    
+    #dga-glossary-table td {
+        display: block;
+        text-align: left;
+        padding: 5px 0;
+        border: none;
+    }
+    
+    #dga-glossary-table td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: inline-block;
+        width: 120px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .dga-glossary-filters,
+    .edit-btn,
+    .pagination-container {
+        display: none !important;
+    }
+    
+    #dga-glossary-table {
+        box-shadow: none;
+    }
+}
+
+
+/* Alphabet Filters - Modified for better active state */
+.alphabet-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.alphabet-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.alphabet-label {
+    font-weight: bold;
+    color: #333;
+    min-width: 60px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.alphabet-filter {
+    padding: 8px 12px;
+    background: #e8f4ff;
+    color: #1890ff;
+    border: 1px solid #b3dafb;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    min-width: 35px;
+    text-align: center;
+    position: relative;
+    transform-origin: center;
+}
+
+.alphabet-filter:hover {
+    background: #b3dafb;
+    color: #096dd9;
+    transform: scale(1.15);
+    z-index: 1;
+}
+
+/* Enhanced Active State */
+.alphabet-filter.active {
+    background: #1890ff;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transform: scale(1.3);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+    z-index: 2;
+    border-color: #096dd9;
+    padding: 10px 14px;
+    animation: pulse 0.5s ease-in-out;
+}
+
+.alphabet-filter.active:hover {
+    transform: scale(1.35);
+    box-shadow: 0 6px 16px rgba(24, 144, 255, 0.5);
+}
+
+/* Animation for active state */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1.3);
+    }
+}
+
+/* Thai alphabet specific adjustments */
+.thai-alphabet .alphabet-filter.active {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+}
+
+/* English alphabet specific adjustments */
+.english-alphabet .alphabet-filter.active {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+}
+
+/* [Keep all existing CSS below alphabet filters unchanged] */
+
+/* Responsive adjustments for active state */
+@media (max-width: 768px) {
+    .alphabet-group {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 5px;
+    }
+    
+    .alphabet-label {
+        grid-column: 1 / -1;
+        margin-bottom: 5px;
+    }
+    
+    .alphabet-filter {
+        padding: 5px 8px;
+        font-size: 12px;
+        min-width: unset;
+    }
+    
+    .alphabet-filter.active {
+        font-size: 14px;
+        transform: scale(1.2);
+        padding: 6px 9px;
+    }
+    
+    .alphabet-filter.active:hover {
+        transform: scale(1.25);
+    }
+}
+
+@media (max-width: 480px) {
+    .alphabet-group {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 4px;
+    }
+    
+    .alphabet-filter {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+    
+    .alphabet-filter.active {
+        font-size: 13px;
+        transform: scale(1.15);
+        padding: 7px 5px;
+        box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+    }
+    
+    .alphabet-filter.active:hover {
+        transform: scale(1.2);
+    }
+}
+
+
+/* Additional animations and effects */
+.alphabet-filter {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pulse animation for one-time effect */
+.pulse-once {
+    animation: pulseOnce 0.6s ease-in-out;
+}
+
+@keyframes pulseOnce {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+    }
+}
+
+/* Glow effect for active state */
+.alphabet-filter.active {
+    position: relative;
+    overflow: visible;
+}
+
+.alphabet-filter.active::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(24, 144, 255, 0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    animation: glow 2s ease-in-out infinite;
+    z-index: -1;
+    border-radius: 3px;
+}
+
+@keyframes glow {
+    0%, 100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Different colors for Thai and English active states */
+.thai-alphabet .alphabet-filter.active {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.english-alphabet .alphabet-filter.active {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.english-alphabet .alphabet-filter.active::before {
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.3) 0%, transparent 70%);
+}
+
+/* Smooth transition when deactivating */
+.alphabet-filter:not(.active) {
+    transition: all 0.3s ease-out;
+}

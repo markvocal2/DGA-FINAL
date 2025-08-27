@@ -1,0 +1,353 @@
+/**
+ * File: /css/dga-thai-date-zxk429.css
+ * Description: สไตล์ชีทสำหรับ Shortcode [dga_thai_date] พร้อมฟีเจอร์แก้ไขสำหรับ Admin
+ */
+
+/* Container หลัก */
+.dga-container-zxk429 {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 10px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    color: #004080;
+    margin: 1em 0;
+    transition: all 0.3s ease;
+}
+
+.dga-container-zxk429:hover {
+    background-color: #f5f5f5;
+    border-color: #d0d0d0;
+}
+
+/* ส่วนวันที่และการดู */
+.dga-date-zxk429,
+.dga-views-zxk429 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Icons */
+.dga-container-zxk429 svg {
+    width: 1.1em;
+    height: 1.1em;
+    flex-shrink: 0;
+    color: #005A9C;
+}
+
+/* จำนวนผู้เข้าชม */
+.dga-view-count-zxk429 {
+    font-weight: bold;
+    color: #C65E00;
+    font-size: 1.1em;
+    transition: all 0.2s ease;
+}
+
+/* สไตล์สำหรับ Administrator - ตัวเลขจะดูเหมือนปุ่มที่คลิกได้ */
+.dga-editable-zxk429 {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background-color: rgba(255, 243, 205, 0.3);
+    position: relative;
+    user-select: none;
+}
+
+.dga-editable-zxk429:hover {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.dga-editable-zxk429:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+    background-color: #fff3cd;
+}
+
+.dga-editable-zxk429:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Tooltip hint สำหรับ Admin */
+.dga-editable-zxk429::after {
+    content: "✏️";
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 0.7em;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.dga-editable-zxk429:hover::after {
+    opacity: 0.7;
+}
+
+/* Edit wrapper */
+.dga-edit-wrapper-zxk429 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* สไตล์สำหรับ edit mode */
+.dga-edit-input-zxk429 {
+    width: 100px;
+    padding: 6px 8px;
+    border: 2px solid #0073aa;
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #C65E00;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: inherit;
+}
+
+.dga-edit-input-zxk429:focus {
+    outline: none;
+    border-color: #005a87;
+    box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+}
+
+/* ลบ spinner ใน number input */
+.dga-edit-input-zxk429::-webkit-inner-spin-button,
+.dga-edit-input-zxk429::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.dga-edit-input-zxk429[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* ปุ่ม Save และ Cancel */
+.dga-edit-buttons-zxk429 {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.dga-save-btn-zxk429,
+.dga-cancel-btn-zxk429 {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.dga-save-btn-zxk429 {
+    background-color: #00a32a;
+    color: white;
+}
+
+.dga-save-btn-zxk429:hover:not(:disabled) {
+    background-color: #008a20;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dga-save-btn-zxk429:disabled {
+    background-color: #7ad03a;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.dga-cancel-btn-zxk429 {
+    background-color: #646970;
+    color: white;
+}
+
+.dga-cancel-btn-zxk429:hover {
+    background-color: #50575e;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Admin indicator */
+.dga-admin-indicator-zxk429 {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+/* ข้อความแจ้งเตือน */
+.dga-message-zxk429 {
+    position: fixed;
+    top: 32px;
+    right: 20px;
+    z-index: 99999;
+    padding: 14px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(400px);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    max-width: 300px;
+}
+
+.dga-message-zxk429.dga-message-show-zxk429 {
+    transform: translateX(0);
+}
+
+.dga-message-success-zxk429 {
+    background-color: #00a32a;
+    color: white;
+    border-left: 4px solid #008a20;
+}
+
+.dga-message-error-zxk429 {
+    background-color: #cc1818;
+    color: white;
+    border-left: 4px solid #a01515;
+}
+
+.dga-message-info-zxk429 {
+    background-color: #0073aa;
+    color: white;
+    border-left: 4px solid #005a87;
+}
+
+/* ข้อความปกติ */
+.dga-view-text-zxk429 {
+    color: #004080;
+    font-weight: normal;
+}
+
+/* Responsive design สำหรับ mobile */
+@media (max-width: 600px) {
+    .dga-container-zxk429 {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: flex-start;
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    .dga-edit-input-zxk429 {
+        width: 80px;
+        font-size: 0.95em;
+    }
+    
+    .dga-edit-buttons-zxk429 {
+        gap: 4px;
+    }
+    
+    .dga-save-btn-zxk429,
+    .dga-cancel-btn-zxk429 {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+    
+    .dga-message-zxk429 {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .dga-admin-indicator-zxk429 {
+        font-size: 0.75em;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .dga-container-zxk429 {
+        border-width: 2px;
+    }
+    
+    .dga-editable-zxk429:hover {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+    
+    .dga-edit-input-zxk429 {
+        border-width: 3px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .dga-container-zxk429 {
+        background-color: #2a2a2a;
+        border-color: #4a4a4a;
+        color: #a8c7ff;
+    }
+    
+    .dga-container-zxk429:hover {
+        background-color: #333333;
+    }
+    
+    .dga-view-count-zxk429 {
+        color: #ff9d5c;
+    }
+    
+    .dga-view-text-zxk429 {
+        color: #a8c7ff;
+    }
+    
+    .dga-editable-zxk429 {
+        background-color: rgba(255, 157, 92, 0.1);
+    }
+    
+    .dga-editable-zxk429:hover {
+        background-color: rgba(255, 157, 92, 0.2);
+        border-color: #ff9d5c;
+    }
+    
+    .dga-edit-input-zxk429 {
+        background-color: #1a1a1a;
+        border-color: #0095ff;
+        color: #ff9d5c;
+    }
+    
+    .dga-admin-indicator-zxk429 {
+        color: #999;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .dga-container-zxk429,
+    .dga-editable-zxk429,
+    .dga-save-btn-zxk429,
+    .dga-cancel-btn-zxk429,
+    .dga-message-zxk429 {
+        transition: none;
+    }
+    
+    .dga-message-zxk429 {
+        animation: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .dga-editable-zxk429::after,
+    .dga-admin-indicator-zxk429,
+    .dga-edit-wrapper-zxk429,
+    .dga-message-zxk429 {
+        display: none !important;
+    }
+    
+    .dga-container-zxk429 {
+        border: 1px solid #000;
+        background: none;
+    }
+}

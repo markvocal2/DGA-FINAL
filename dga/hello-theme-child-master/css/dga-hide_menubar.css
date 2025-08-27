@@ -1,0 +1,102 @@
+/* CSS สำหรับซ่อนและแสดง WordPress Menu Bar */
+/* ไฟล์: /css/dga-hide_menubar.css */
+
+/* ซ่อน admin bar ตั้งแต่แรก */
+body.dga-menubar-enabled #wpadminbar {
+    position: fixed;
+    top: -32px;
+    width: 100%;
+    transition: top 0.3s ease-in-out;
+    z-index: 99999;
+}
+
+/* ปรับตำแหน่ง body เมื่อ admin bar ถูกซ่อน */
+body.dga-menubar-enabled {
+    margin-top: 0 !important;
+}
+
+/* แสดง admin bar เมื่อมี class dga-menubar-show */
+body.dga-menubar-enabled.dga-menubar-show #wpadminbar {
+    top: 0;
+}
+
+/* ปรับตำแหน่ง body เมื่อ admin bar แสดง */
+body.dga-menubar-enabled.dga-menubar-show {
+    margin-top: 32px !important;
+    transition: margin-top 0.3s ease-in-out;
+}
+
+/* ปุ่ม Tab สำหรับ toggle menu bar */
+.dga-menubar-tab {
+    position: fixed;
+    top: 2px;
+    right: 150px;
+    background: #2c3e50;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 99999;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-weight: 500;
+    user-select: none;
+}
+
+.dga-menubar-tab:hover {
+    background: #34495e;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    transform: translateY(-1px);
+}
+
+.dga-menubar-tab:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+/* ปรับสีปุ่มเมื่อ menu bar แสดง */
+body.dga-menubar-enabled.dga-menubar-show .dga-menubar-tab {
+    background: #27ae60;
+}
+
+body.dga-menubar-enabled.dga-menubar-show .dga-menubar-tab:hover {
+    background: #229954;
+}
+
+/* สำหรับ mobile responsive */
+@media screen and (max-width: 782px) {
+    body.dga-menubar-enabled #wpadminbar {
+        top: -46px;
+    }
+    
+    body.dga-menubar-enabled.dga-menubar-show {
+        margin-top: 46px !important;
+    }
+    
+    .dga-menubar-tab {
+        left: 8px;
+        top: 8px;
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+}
+
+/* เพิ่ม animation สำหรับการแสดง/ซ่อนที่นุ่มนวล */
+#wpadminbar {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* ถ้าเว็บมี header แบบ fixed ให้ปุ่มอยู่ใต้ header */
+.site-header-fixed .dga-menubar-tab {
+    top: 70px; /* ปรับตามความสูงของ header */
+}
+
+/* สำหรับเว็บที่มี top bar อื่นๆ */
+.has-top-bar .dga-menubar-tab {
+    top: 50px; /* ปรับตามความสูงของ top bar */
+}

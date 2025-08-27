@@ -1,0 +1,411 @@
+/**
+ * Custom Main Menu Styles
+ * Version: 1.1
+ * Unique ID: mnu738
+ * Enhanced with viewport detection and improved UX
+ */
+
+/* Container */
+.custom-menu-container-mnu738 {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 4px;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Main menu */
+.custom-main-menu-mnu738 {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.custom-main-menu-mnu738 > li {
+    position: relative;
+}
+
+/* Increase clickable area */
+.custom-main-menu-mnu738 > li > a {
+    display: block;
+    color: #000000;
+    text-decoration: none;
+    padding: 18px 24px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Hover and active states */
+.custom-main-menu-mnu738 > li:hover > a,
+.custom-main-menu-mnu738 > li.active-mnu738 > a,
+.custom-main-menu-mnu738 > li > a:focus {
+    background-color: #0066cc;
+    color: #ffffff;
+}
+
+/* Maintain hover state while navigating */
+.custom-main-menu-mnu738 > li.active-mnu738 > a .dropdown-indicator-mnu738,
+.sub-menu-mnu738 li.active-mnu738 > a .dropdown-indicator-mnu738 {
+    color: inherit;
+}
+
+/* Sub-menu styles */
+.sub-menu-mnu738 {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    z-index: 1000;
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    animation: fadeInMenu 0.2s ease;
+}
+
+/* Create invisible bridge to prevent hover gap */
+.sub-menu-mnu738::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: transparent;
+    z-index: 999;
+}
+
+/* Active submenu state */
+.sub-menu-mnu738.active-submenu-mnu738 {
+    display: block;
+}
+
+/* Animation for smooth appearance */
+@keyframes fadeInMenu {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sub-menu positioning classes */
+.sub-menu-mnu738.position-top-mnu738 {
+    top: auto;
+    bottom: 100%;
+}
+
+/* Sub-menu items */
+.sub-menu-mnu738 li {
+    position: relative;
+}
+
+/* Larger click area for sub-menu items */
+.sub-menu-mnu738 li a {
+    display: block;
+    color: #333333;
+    padding: 12px 24px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-size: 15px;
+}
+
+.sub-menu-mnu738 li:hover > a,
+.sub-menu-mnu738 li a:focus {
+    background-color: #f0f7ff;
+    color: #0066cc;
+    padding-left: 28px;
+}
+
+/* Smooth transitions for better UX */
+.sub-menu-mnu738 li a {
+    position: relative;
+    overflow: hidden;
+}
+
+.sub-menu-mnu738 li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: #f0f7ff;
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.sub-menu-mnu738 li:hover > a::before {
+    left: 0;
+}
+
+/* Active parent item in submenu */
+.sub-menu-mnu738 li.active-mnu738 > a {
+    background-color: #f0f7ff;
+    color: #0066cc;
+}
+
+/* Increase hover area for menu items with children */
+.has-children-mnu738 {
+    position: relative;
+}
+
+/* Create larger hover area */
+.has-children-mnu738::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+/* Desktop only - extend hover area when submenu is active */
+@media (min-width: 769px) {
+    .has-children-mnu738.active-mnu738::after {
+        right: -50px;
+        bottom: -10px;
+    }
+    
+    /* For nested items */
+    .sub-menu-mnu738 .has-children-mnu738.active-mnu738::after {
+        top: -10px;
+        bottom: -10px;
+        left: -10px;
+        right: -30px;
+    }
+}
+
+/* Dropdown indicator */
+.dropdown-indicator-mnu738 {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.arrow-mnu738 {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid currentColor;
+    transition: transform 0.2s ease;
+    vertical-align: middle;
+}
+
+/* Arrow for nested items */
+.sub-menu-mnu738 .dropdown-indicator-mnu738 .arrow-mnu738 {
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid currentColor;
+}
+
+/* Third level and deeper sub-menus */
+.sub-menu-mnu738 .sub-menu-mnu738 {
+    top: -8px;
+    left: 100%;
+    margin-left: 0;
+}
+
+/* Create horizontal bridge for nested menus */
+.sub-menu-mnu738 .sub-menu-mnu738::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: transparent;
+    z-index: 999;
+}
+
+/* Right-positioned nested menu bridge */
+.sub-menu-mnu738 .sub-menu-mnu738.position-right-mnu738::before {
+    left: -20px;
+}
+
+/* Left-positioned nested menu bridge */
+.sub-menu-mnu738 .sub-menu-mnu738.position-left-mnu738::before {
+    right: -20px;
+    left: auto;
+}
+
+/* Position left for nested menus */
+.sub-menu-mnu738 .sub-menu-mnu738.position-left-mnu738 {
+    left: auto;
+    right: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Arrow adjustment for left-positioned menus */
+.sub-menu-mnu738 li.has-children-mnu738 > a .arrow-mnu738 {
+    margin-left: auto;
+}
+
+/* Visual feedback for touch devices */
+.custom-main-menu-mnu738 a.touched-mnu738 {
+    background-color: rgba(0, 102, 204, 0.1);
+}
+
+/* Accessibility: Focus visible */
+.custom-main-menu-mnu738 a:focus,
+.sub-menu-mnu738 a:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: -2px;
+}
+
+/* Focus within support for better keyboard navigation */
+.custom-main-menu-mnu738 li:focus-within > .sub-menu-mnu738 {
+    display: block;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .custom-main-menu-mnu738 {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .custom-main-menu-mnu738 > li {
+        border-bottom: 1px solid #e5e5e5;
+    }
+    
+    .custom-main-menu-mnu738 > li:last-child {
+        border-bottom: none;
+    }
+    
+    .custom-main-menu-mnu738 > li > a {
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+    
+    .sub-menu-mnu738, 
+    .sub-menu-mnu738 .sub-menu-mnu738 {
+        position: static;
+        box-shadow: none;
+        border-left: 3px solid #0066cc;
+        margin-left: 20px;
+        margin-top: 0;
+        border-radius: 0;
+        display: none;
+        animation: none;
+        background-color: #f8f9fa;
+        min-width: auto;
+        width: calc(100% - 20px);
+    }
+    
+    /* Reset positioning classes on mobile */
+    .sub-menu-mnu738.position-left-mnu738,
+    .sub-menu-mnu738.position-right-mnu738,
+    .sub-menu-mnu738.position-top-mnu738 {
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+    }
+    
+    /* Mobile menu item with children */
+    .custom-main-menu-mnu738 li.has-children-mnu738 > a {
+        cursor: pointer;
+        padding-right: 50px;
+        position: relative;
+    }
+    
+    /* Position arrow on the right for mobile */
+    .custom-main-menu-mnu738 .dropdown-indicator-mnu738 {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    /* Rotate arrow when expanded */
+    .custom-main-menu-mnu738 li.expanded > a > .dropdown-indicator-mnu738 .arrow-mnu738 {
+        transform: rotate(180deg);
+    }
+    
+    /* Show sub-menu when expanded */
+    .custom-main-menu-mnu738 li.expanded > .sub-menu-mnu738 {
+        display: block;
+    }
+    
+    /* Mobile sub-menu styling */
+    .sub-menu-mnu738 li a {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+    
+    .sub-menu-mnu738 li:hover > a {
+        padding-left: 24px;
+    }
+    
+    /* Reset nested arrow for mobile */
+    .sub-menu-mnu738 .dropdown-indicator-mnu738 .arrow-mnu738 {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid currentColor;
+        border-bottom: none;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .custom-main-menu-mnu738 > li > a {
+        padding: 15px 18px;
+        font-size: 15px;
+    }
+    
+    .sub-menu-mnu738 {
+        min-width: 200px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .custom-menu-container-mnu738 {
+        display: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .custom-main-menu-mnu738 > li > a {
+        border: 1px solid transparent;
+    }
+    
+    .custom-main-menu-mnu738 > li:hover > a,
+    .custom-main-menu-mnu738 > li.active-mnu738 > a {
+        border-color: currentColor;
+    }
+    
+    .sub-menu-mnu738 {
+        border: 1px solid currentColor;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .custom-main-menu-mnu738 a,
+    .arrow-mnu738,
+    .sub-menu-mnu738 {
+        transition: none;
+    }
+    
+    @keyframes fadeInMenu {
+        from, to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}

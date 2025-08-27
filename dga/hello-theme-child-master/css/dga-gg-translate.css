@@ -1,0 +1,92 @@
+/*
+ * DGA Google Translate Stylesheet
+ * Version: 1.0.1
+ */
+
+/* --- Hide Google Translate's Default UI --- */
+body {
+    top: 0 !important;
+}
+
+.skiptranslate {
+    display: none !important;
+}
+
+#goog-gt-tt {
+    display: none !important;
+}
+
+/* --- Custom Flag Switcher Styles --- */
+.dga_translator_container_gt01 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Vertical layout */
+.dga_translator_container_gt01[data-layout="vertical"] {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.dga_lang_switcher_xkp329 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 0;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    text-decoration: none;
+    position: relative;
+}
+
+.dga_lang_switcher_xkp329:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Active language indicator */
+.dga_lang_switcher_xkp329.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 2px;
+    background-color: #0073aa;
+    border-radius: 1px;
+}
+
+.dga_lang_switcher_xkp329 img {
+    width: 32px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    display: block;
+}
+
+.dga_lang_text_xkp329 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.2;
+}
+
+/* Focus styles for accessibility */
+.dga_lang_switcher_xkp329:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .dga_translator_container_gt01 {
+        gap: 8px;
+    }
+    
+    .dga_lang_switcher_xkp329 img {
+        width: 28px;
+    }
+}

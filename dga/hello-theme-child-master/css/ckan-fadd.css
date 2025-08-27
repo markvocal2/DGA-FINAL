@@ -1,0 +1,790 @@
+/* CKAN Form Add CSS - Updated for Metadata Standard - ckan-fadd.css */
+
+/* Main container */
+.ckan-fadd-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    font-family: 'Kanit', 'Sarabun', sans-serif;
+}
+
+/* Form title */
+.ckan-fadd-title {
+    color: #0056b3;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #0056b3 0%, #ff8c00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Form sections */
+.ckan-fadd-section {
+    margin-bottom: 40px;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #0056b3;
+}
+
+.ckan-fadd-section:nth-child(2) {
+    border-left-color: #ff8c00;
+}
+
+.ckan-fadd-section:nth-child(3) {
+    border-left-color: #28a745;
+}
+
+.ckan-fadd-section-title {
+    color: #333;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Form fields */
+.ckan-fadd-field {
+    margin-bottom: 22px;
+}
+
+.ckan-fadd-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.ckan-fadd-field .required {
+    color: #e74c3c;
+    margin-left: 3px;
+}
+
+.ckan-fadd-field .char-limit {
+    color: #6c757d;
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.ckan-fadd-field input[type="text"],
+.ckan-fadd-field input[type="email"],
+.ckan-fadd-field input[type="url"],
+.ckan-fadd-field input[type="number"],
+.ckan-fadd-field select,
+.ckan-fadd-field textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #fff;
+}
+
+.ckan-fadd-field input:focus,
+.ckan-fadd-field select:focus,
+.ckan-fadd-field textarea:focus {
+    border-color: #ff8c00;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
+}
+
+.ckan-fadd-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Special styling for org_id field */
+#org_id {
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    background-color: #f8f9fa;
+    border: 2px solid #0056b3;
+}
+
+#org_id:focus {
+    background-color: #fff;
+    border-color: #ff8c00;
+}
+
+/* Character counter */
+.char-counter {
+    text-align: right;
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.char-counter.warning {
+    color: #ff8c00;
+    font-weight: 500;
+}
+
+.char-counter.warning span {
+    font-weight: 600;
+}
+
+/* Field groups for side-by-side layout */
+.ckan-fadd-field-group {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.ckan-fadd-field.half {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.ckan-fadd-field.third {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Radio buttons */
+.ckan-fadd-radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.ckan-fadd-radio {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ckan-fadd-radio input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+/* Static fields (display only) */
+.ckan-fadd-static-field {
+    padding: 12px;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Submit button */
+.ckan-fadd-submit {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.ckan-fadd-submit-btn {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+    font-weight: 500;
+}
+
+.ckan-fadd-submit-btn:hover {
+    background: linear-gradient(135deg, #ff6b00 0%, #ff5500 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+}
+
+.ckan-fadd-submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Tooltip styles */
+.tooltip-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #0056b3;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: help;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.tooltip-icon:hover {
+    background-color: #ff8c00;
+}
+
+.tooltip-icon:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    width: max-content;
+    max-width: 300px;
+    z-index: 10;
+    animation: fadeIn 0.3s;
+}
+
+.tooltip-icon:hover::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    z-index: 11;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Status message */
+.ckan-fadd-status {
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 500;
+    animation: slideDown 0.3s;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.ckan-fadd-status.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.ckan-fadd-status.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Loading skeleton */
+.ckan-fadd-form-skeleton {
+    padding: 20px;
+}
+
+.ckan-fadd-skeleton-item {
+    height: 40px;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 5px;
+}
+
+.ckan-fadd-skeleton-item:nth-child(odd) {
+    width: 70%;
+}
+
+.ckan-fadd-skeleton-item:nth-child(even) {
+    width: 100%;
+    height: 80px;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Thai datepicker customization */
+.thai-datepicker {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 40px;
+}
+
+/* Error state */
+.ckan-fadd-field.error input,
+.ckan-fadd-field.error select,
+.ckan-fadd-field.error textarea {
+    border-color: #e74c3c;
+    background-color: #fff8f8;
+}
+
+.ckan-fadd-field.error label {
+    color: #e74c3c;
+}
+
+/* Special error styling for required mandatory fields */
+.ckan-fadd-field.error input[required],
+.ckan-fadd-field.error select[required],
+.ckan-fadd-field.error textarea[required] {
+    border-color: #dc3545;
+    border-width: 2px;
+    box-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+}
+
+/* Success state for completed fields */
+.ckan-fadd-field.completed input:valid,
+.ckan-fadd-field.completed select:valid,
+.ckan-fadd-field.completed textarea:valid {
+    border-color: #28a745;
+    background-color: #f8fff9;
+}
+
+/* Select2 customization */
+.select2-container {
+    width: 100% !important;
+}
+
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 42px;
+    padding: 4px;
+    background-color: #fff;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #ff8c00;
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1);
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+    border: 1px solid #0056b3;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-top: 4px;
+    margin-right: 5px;
+    color: #0056b3;
+    font-weight: 500;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #0056b3;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #ff8c00;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #0056b3;
+}
+
+.select2-dropdown {
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.select2-container--open .select2-dropdown {
+    border-color: #ff8c00;
+}
+
+.select2-search--dropdown .select2-search__field {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__clear {
+    margin-top: 5px;
+    margin-right: 10px;
+    color: #e74c3c;
+}
+
+/* Enhanced styling for mandatory section */
+.ckan-fadd-section:first-of-type {
+    background: linear-gradient(145deg, #f8f9fa 0%, #fff 100%);
+    border-left: 6px solid #0056b3;
+    box-shadow: 0 2px 10px rgba(0, 86, 179, 0.1);
+}
+
+.ckan-fadd-section:first-of-type .ckan-fadd-section-title {
+    color: #0056b3;
+    font-weight: 600;
+}
+
+/* Field numbering enhancement */
+.ckan-fadd-field label:first-child {
+    font-size: 15px;
+}
+
+/* Enhanced mandatory field indicators */
+.ckan-fadd-section:first-of-type .required {
+    background-color: #e74c3c;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    margin-left: 8px;
+    font-weight: 600;
+}
+
+/* "อื่น ๆ" other fields styling */
+.ckan-fadd-other-field {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    border-left: 3px solid #ff8c00;
+}
+
+.ckan-fadd-other-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #495057;
+    background-color: #fff;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.ckan-fadd-other-field input:focus {
+    border-color: #ff8c00;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.25);
+}
+
+.ckan-fadd-other-field input::placeholder {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Error state for other fields */
+.ckan-fadd-field.error .ckan-fadd-other-field {
+    border-left-color: #e74c3c;
+    background-color: #fff8f8;
+}
+
+.ckan-fadd-field.error .ckan-fadd-other-field input {
+    border-color: #e74c3c;
+}
+
+/* Animation for other fields */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ckan-fadd-other-field {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Admin-only fields styling */
+.admin-only-badge {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-only-note {
+    display: block;
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 5px;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+/* Disabled admin fields */
+select.admin-disabled,
+input.admin-disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-color: #ced4da;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+select.admin-disabled:hover,
+input.admin-disabled:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.ckan-fadd-field:has(.admin-disabled) {
+    position: relative;
+}
+
+.ckan-fadd-field:has(.admin-disabled)::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -15px;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #dc3545 0%, #c82333 100%);
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+/* Admin field group styling */
+.ckan-fadd-field-group:has(.admin-disabled) {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.ckan-fadd-field-group:has(.admin-disabled)::before {
+    content: 'ฟิลด์สำหรับผู้ดูแลระบบ';
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    background-color: #fff;
+    color: #dc3545;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+/* Progress indicator styles */
+.ckan-fadd-progress {
+    background-color: #f8f9fa;
+    height: 6px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.ckan-fadd-progress-bar {
+    background: linear-gradient(90deg, #0056b3 0%, #ff8c00 100%);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Accessibility improvements */
+.ckan-fadd-field:focus-within label {
+    color: #0056b3;
+    font-weight: 600;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .ckan-fadd-field input,
+    .ckan-fadd-field select,
+    .ckan-fadd-field textarea {
+        border: 2px solid #000;
+    }
+    
+    .ckan-fadd-field.error input,
+    .ckan-fadd-field.error select,
+    .ckan-fadd-field.error textarea {
+        border: 3px solid #dc3545;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .ckan-fadd-container {
+        padding: 20px;
+    }
+    
+    .ckan-fadd-section {
+        padding: 15px;
+    }
+    
+    .ckan-fadd-field-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .ckan-fadd-field.half,
+    .ckan-fadd-field.third {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .ckan-fadd-radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .ckan-fadd-submit-btn {
+        width: 100%;
+        padding: 18px 20px;
+        font-size: 16px;
+    }
+    
+    .ckan-fadd-title {
+        font-size: 24px;
+    }
+    
+    .ckan-fadd-section-title {
+        font-size: 18px;
+    }
+    
+    .tooltip-icon:hover::after {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: none;
+        transform: none;
+        top: 50%;
+    }
+}
+
+/* jQuery UI Datepicker overrides */
+.ui-datepicker {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    font-family: 'Kanit', 'Sarabun', sans-serif;
+    padding: 10px;
+}
+
+.ui-datepicker-header {
+    background: linear-gradient(135deg, #0056b3 0%, #0078ff 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.ui-datepicker-title {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.ui-datepicker-calendar th {
+    background-color: #f5f8fa;
+    padding: 8px;
+    font-weight: 500;
+}
+
+.ui-datepicker-calendar td {
+    border: 1px solid #f5f5f5;
+    padding: 5px;
+}
+
+.ui-datepicker-calendar td a {
+    text-align: center;
+    padding: 5px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+    border-radius: 4px;
+}
+
+.ui-datepicker-calendar .ui-state-default {
+    background: #fff;
+    border: none;
+    color: #333;
+}
+
+.ui-datepicker-calendar .ui-state-hover {
+    background: #f5f8fa;
+    color: #0056b3;
+}
+
+.ui-datepicker-calendar .ui-state-active {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%);
+    color: #fff;
+    font-weight: 600;
+}
+
+.ui-datepicker-prev,
+.ui-datepicker-next {
+    cursor: pointer;
+    color: white;
+}
+
+/* Print styles */
+@media print {
+    .ckan-fadd-submit,
+    .tooltip-icon,
+    .ckan-fadd-status {
+        display: none;
+    }
+    
+    .ckan-fadd-container {
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .ckan-fadd-section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .ckan-fadd-field input,
+    .ckan-fadd-field select,
+    .ckan-fadd-field textarea {
+        border: 1px solid #000;
+        background: white;
+    }
+}

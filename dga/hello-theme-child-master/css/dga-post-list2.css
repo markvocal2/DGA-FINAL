@@ -1,0 +1,902 @@
+/* WCAG 2.1 AAA Compliant Colors - G18 Technique Implementation */
+:root {
+    --dga-primary-text: #111827;          /* 16.6:1 ratio */
+    --dga-secondary-text: #374151;        /* 9.2:1 ratio */
+    --dga-meta-text: #bf5900;             /* 4.52:1 ratio - WCAG compliant */
+    --dga-link-color: #1e40af;            /* 7.1:1 ratio */
+    --dga-link-hover: #1e3a8a;            /* 9.1:1 ratio */
+    --dga-excerpt-text: #4b5563;          /* 7.1:1 ratio */
+    --dga-background: #ffffff;
+    --dga-border: #e5e7eb;
+    --dga-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Container */
+.dga-post-list-container-xy34 {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    color: var(--dga-primary-text);
+    background: var(--dga-background);
+}
+
+/* Base Layout - List View (Default) */
+.dga-post-grid-xy34 {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Card View Layout */
+.dga-view-card-xy34 .dga-post-grid-xy34 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Post Card - List View (Default) */
+.dga-post-card-xy34 {
+    background: var(--dga-background);
+    border: 1px solid var(--dga-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem;
+    min-height: 80px;
+    color: var(--dga-primary-text);
+}
+
+/* Post Card - Card View */
+.dga-view-card-xy34 .dga-post-card-xy34 {
+    border: 2px solid var(--dga-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px var(--dga-shadow);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    min-height: auto;
+    height: 100%;
+}
+
+.dga-post-card-xy34:hover,
+.dga-post-card-xy34:focus-within {
+    border-color: var(--dga-link-color);
+    box-shadow: 0 2px 12px rgba(30, 64, 175, 0.1);
+    background: #fafbff;
+}
+
+.dga-view-card-xy34 .dga-post-card-xy34:hover,
+.dga-view-card-xy34 .dga-post-card-xy34:focus-within {
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.15);
+    transform: translateY(-2px);
+    background: var(--dga-background);
+}
+
+/* Image Container - List View */
+.dga-post-image-container-xy34 {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #f3f4f6;
+    border-radius: 6px;
+    margin-right: 0.875rem;
+}
+
+/* Image Container - Card View */
+.dga-view-card-xy34 .dga-post-image-container-xy34 {
+    width: 100%;
+    height: 200px;
+    margin-right: 0;
+    border-radius: 0;
+}
+
+.dga-post-image-xy34 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.dga-post-card-xy34:hover .dga-post-image-xy34 {
+    transform: scale(1.1);
+}
+
+.dga-view-card-xy34 .dga-post-card-xy34:hover .dga-post-image-xy34 {
+    transform: scale(1.05);
+}
+
+/* Placeholder for missing images */
+.dga-image-placeholder-xy34 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #9ca3af;
+    font-size: 1.5rem;
+}
+
+/* Content - List View (Horizontal Layout) */
+.dga-post-content-xy34 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0; /* Allow text truncation */
+}
+
+/* Content - Card View (Vertical Layout) */
+.dga-view-card-xy34 .dga-post-content-xy34 {
+    padding: 1.25rem;
+    justify-content: flex-start;
+    min-width: auto;
+}
+
+.dga-post-title-xy34 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--dga-primary-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Title - Card View */
+.dga-view-card-xy34 .dga-post-title-xy34 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    -webkit-line-clamp: 3;
+}
+
+.dga-post-title-xy34 a {
+    color: var(--dga-link-color);
+    text-decoration: none;
+    position: relative;
+    /* G18 Technique: Text shadow for better contrast */
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.dga-post-title-xy34 a:hover,
+.dga-post-title-xy34 a:focus {
+    color: var(--dga-link-hover);
+    text-decoration: underline;
+    outline: 2px solid var(--dga-link-color);
+    outline-offset: 2px;
+    /* Enhanced shadow on hover/focus for G18 compliance */
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.dga-post-excerpt-xy34 {
+    color: var(--dga-excerpt-text);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+/* Excerpt - Card View */
+.dga-view-card-xy34 .dga-post-excerpt-xy34 {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    -webkit-line-clamp: 3;
+    color: var(--dga-secondary-text);
+    flex: 1;
+}
+
+/* Meta Information - WCAG G18 Compliant */
+.dga-post-meta-xy34 {
+    color: var(--dga-meta-text);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    border: none;
+    padding: 0;
+    font-weight: 500;
+    /* G18 Technique: Subtle background for better contrast */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(248, 250, 252, 0.7) 100%);
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+}
+
+/* Meta - Card View */
+.dga-view-card-xy34 .dga-post-meta-xy34 {
+    font-size: 0.875rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--dga-border);
+    background: none;
+    padding: 0.75rem 0 0 0;
+}
+
+/* Author and Category Info - Card View Only */
+.dga-post-author-xy34,
+.dga-post-categories-xy34 {
+    display: none;
+    color: var(--dga-meta-text);
+    font-weight: 500;
+}
+
+.dga-view-card-xy34 .dga-post-author-xy34,
+.dga-view-card-xy34 .dga-post-categories-xy34 {
+    display: inline;
+    color: var(--dga-meta-text);
+    font-size: 0.875rem;
+}
+
+.dga-view-card-xy34 .dga-post-author-xy34:before {
+    content: "โดย ";
+    color: var(--dga-secondary-text);
+}
+
+.dga-view-card-xy34 .dga-post-categories-xy34:before {
+    content: " ใน ";
+    color: var(--dga-secondary-text);
+}
+
+/* Skeleton Loading - List View (Default) */
+.dga-post-card-skeleton-xy34 {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem;
+    min-height: 80px;
+    animation: dga-skeleton-pulse-xy34 1.5s ease-in-out infinite;
+}
+
+/* Skeleton Loading - Card View */
+.dga-view-card-xy34 .dga-post-card-skeleton-xy34 {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    min-height: auto;
+    height: 100%;
+}
+
+.dga-skeleton-image-xy34 {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    border-radius: 6px;
+    margin-right: 0.875rem;
+    animation: dga-skeleton-shimmer-xy34 2s infinite;
+}
+
+/* Skeleton Image - Card View */
+.dga-view-card-xy34 .dga-skeleton-image-xy34 {
+    width: 100%;
+    height: 200px;
+    border-radius: 0;
+    margin-right: 0;
+}
+
+.dga-skeleton-content-xy34 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Skeleton Content - Card View */
+.dga-view-card-xy34 .dga-skeleton-content-xy34 {
+    padding: 1.25rem;
+    justify-content: flex-start;
+}
+
+.dga-skeleton-title-xy34 {
+    height: 1.25rem;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    animation: dga-skeleton-shimmer-xy34 2s infinite;
+}
+
+/* Skeleton Title - Card View */
+.dga-view-card-xy34 .dga-skeleton-title-xy34 {
+    height: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.dga-skeleton-meta-xy34 {
+    height: 0.875rem;
+    width: 40%;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: dga-skeleton-shimmer-xy34 2s infinite;
+}
+
+/* Skeleton Meta - Card View */
+.dga-view-card-xy34 .dga-skeleton-meta-xy34 {
+    height: 1rem;
+    width: 60%;
+}
+
+/* Animations */
+@keyframes dga-skeleton-pulse-xy34 {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes dga-skeleton-shimmer-xy34 {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Error Message - WCAG G18 Compliant */
+.dga-error-message-xy34 {
+    background: #fef2f2;
+    border: 2px solid #dc2626;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #991b1b; /* 7.3:1 contrast ratio */
+    text-align: center;
+    font-weight: 600;
+    margin-top: 1rem;
+    /* G18 Technique: Background ensures adequate contrast */
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+/* Screen Reader Only */
+.sr-only-xy34 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Loading Indicator */
+.dga-loading-indicator-xy34 {
+    text-align: center;
+    padding: 2rem;
+    color: var(--dga-secondary-text);
+    font-weight: 500;
+}
+
+/* Focus Management - Enhanced for G18 */
+.dga-post-card-xy34:focus-within {
+    outline: 3px solid var(--dga-link-color);
+    outline-offset: 2px;
+    /* G18 Technique: Background adjustment for focus visibility */
+    background: rgba(30, 64, 175, 0.05);
+}
+
+/* High Contrast Support - G18 Implementation */
+@media (prefers-contrast: high) {
+    :root {
+        --dga-primary-text: #000000;
+        --dga-secondary-text: #000000;
+        --dga-meta-text: #8b4513; /* Higher contrast brown */
+        --dga-link-color: #000080;
+        --dga-link-hover: #000000;
+        --dga-excerpt-text: #2d2d2d;
+        --dga-background: #ffffff;
+        --dga-border: #000000;
+    }
+    
+    .dga-post-card-xy34 {
+        border-color: var(--dga-border);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dga-post-title-xy34 a:focus {
+        outline: 3px solid #000000;
+        background: #ffff00;
+        color: #000000;
+        text-shadow: none;
+    }
+    
+    .dga-post-meta-xy34 {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #cccccc;
+    }
+}
+
+/* Forced Colors Mode Support - G18 Compliance */
+@media (forced-colors: active) {
+    .dga-post-card-xy34 {
+        border: 1px solid ButtonText;
+        background: ButtonFace;
+        color: ButtonText;
+    }
+    
+    .dga-post-title-xy34 a {
+        color: LinkText;
+        text-shadow: none;
+    }
+    
+    .dga-post-title-xy34 a:hover,
+    .dga-post-title-xy34 a:focus {
+        color: LinkText;
+        background: Highlight;
+        forced-color-adjust: none;
+    }
+    
+    .dga-post-meta-xy34 {
+        color: ButtonText;
+        background: transparent;
+        border: 1px solid ButtonText;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .dga-post-card-xy34,
+    .dga-post-image-xy34,
+    .dga-skeleton-image-xy34,
+    .dga-skeleton-title-xy34,
+    .dga-skeleton-meta-xy34 {
+        animation: none;
+        transition: none;
+    }
+    
+    .dga-post-card-xy34:hover {
+        transform: none;
+    }
+    
+    .dga-post-card-xy34:hover .dga-post-image-xy34 {
+        transform: none;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dga-post-list-container-xy34 {
+        padding: 0.75rem;
+    }
+    
+    /* List View Mobile */
+    .dga-post-grid-xy34 {
+        gap: 0.5rem;
+    }
+    
+    /* Card View Mobile */
+    .dga-view-card-xy34 .dga-post-grid-xy34 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .dga-post-card-xy34 {
+        padding: 0.625rem;
+        min-height: 70px;
+    }
+    
+    .dga-view-card-xy34 .dga-post-card-xy34 {
+        padding: 0;
+        min-height: auto;
+    }
+    
+    .dga-post-image-container-xy34 {
+        width: 50px;
+        height: 50px;
+        margin-right: 0.75rem;
+    }
+    
+    .dga-view-card-xy34 .dga-post-image-container-xy34 {
+        width: 100%;
+        height: 180px;
+        margin-right: 0;
+    }
+    
+    .dga-post-title-xy34 {
+        font-size: 0.95rem;
+        -webkit-line-clamp: 1;
+    }
+    
+    .dga-view-card-xy34 .dga-post-title-xy34 {
+        font-size: 1.125rem;
+        -webkit-line-clamp: 2;
+    }
+    
+    .dga-post-excerpt-xy34 {
+        font-size: 0.8rem;
+    }
+    
+    .dga-view-card-xy34 .dga-post-excerpt-xy34 {
+        font-size: 0.9rem;
+    }
+    
+    .dga-post-meta-xy34 {
+        font-size: 0.7rem;
+    }
+    
+    .dga-view-card-xy34 .dga-post-content-xy34 {
+        padding: 1rem;
+    }
+    
+    .dga-skeleton-image-xy34 {
+        width: 50px;
+        height: 50px;
+        margin-right: 0.75rem;
+    }
+    
+    .dga-view-card-xy34 .dga-skeleton-image-xy34 {
+        width: 100%;
+        height: 180px;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .dga-post-list-container-xy34 {
+        padding: 0.5rem;
+    }
+    
+    .dga-post-card-xy34 {
+        padding: 0.5rem;
+        min-height: 60px;
+    }
+    
+    .dga-view-card-xy34 .dga-post-card-xy34 {
+        padding: 0;
+        min-height: auto;
+    }
+    
+    .dga-post-image-container-xy34 {
+        width: 45px;
+        height: 45px;
+        margin-right: 0.625rem;
+    }
+    
+    .dga-view-card-xy34 .dga-post-image-container-xy34 {
+        width: 100%;
+        height: 160px;
+        margin-right: 0;
+    }
+    
+    .dga-post-title-xy34 {
+        font-size: 0.9rem;
+    }
+    
+    .dga-view-card-xy34 .dga-post-title-xy34 {
+        font-size: 1.0625rem;
+    }
+    
+    .dga-post-excerpt-xy34 {
+        font-size: 0.75rem;
+    }
+    
+    .dga-view-card-xy34 .dga-post-content-xy34 {
+        padding: 0.875rem;
+    }
+    
+    .dga-skeleton-image-xy34 {
+        width: 45px;
+        height: 45px;
+        margin-right: 0.625rem;
+    }
+    
+    .dga-view-card-xy34 .dga-skeleton-image-xy34 {
+        width: 100%;
+        height: 160px;
+        margin-right: 0;
+    }
+}
+
+/* Print Styles - WCAG G18 Compliant */
+@media print {
+    :root {
+        --dga-primary-text: #000000;
+        --dga-secondary-text: #000000;
+        --dga-meta-text: #000000;
+        --dga-link-color: #000000;
+        --dga-excerpt-text: #333333;
+        --dga-background: #ffffff;
+        --dga-border: #000000;
+    }
+    
+    .dga-post-card-skeleton-xy34,
+    .dga-loading-indicator-xy34 {
+        display: none;
+    }
+    
+    .dga-post-card-xy34 {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--dga-border);
+        background: var(--dga-background);
+        color: var(--dga-primary-text);
+    }
+    
+    .dga-post-title-xy34 a {
+        color: var(--dga-link-color);
+        text-decoration: underline;
+        text-shadow: none;
+    }
+    
+    .dga-post-meta-xy34 {
+        color: var(--dga-meta-text);
+        background: transparent;
+        border: 1px solid #cccccc;
+        font-weight: 600;
+    }
+}
+
+/* Additional G18 Techniques for Enhanced Accessibility */
+
+/* Ensure sufficient contrast for interactive elements */
+.dga-post-card-xy34:hover .dga-post-title-xy34 a,
+.dga-post-card-xy34:focus-within .dga-post-title-xy34 a {
+    /* G18: Enhanced contrast on interaction */
+    background: rgba(30, 64, 175, 0.08);
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    margin: -0.125rem -0.25rem;
+}
+
+/* G18: Ensure meta information is always readable */
+.dga-post-meta-xy34 time {
+    /* Specific styling for time elements to meet 4.5:1 requirement */
+    color: var(--dga-meta-text);
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.0625rem 0.125rem;
+    border-radius: 2px;
+    border: 0.5px solid rgba(191, 89, 0, 0.2);
+}
+
+/* Card view time styling */
+.dga-view-card-xy34 .dga-post-meta-xy34 time {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* G18: Enhanced focus indicators */
+.dga-post-title-xy34 a:focus-visible {
+    outline: 3px solid var(--dga-link-color);
+    outline-offset: 3px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 1px var(--dga-background);
+    border-radius: 3px;
+}
+
+/* G18: Ensure adequate contrast for all text states */
+.dga-post-card-xy34[aria-pressed="true"] .dga-post-meta-xy34,
+.dga-post-card-xy34:active .dga-post-meta-xy34 {
+    color: var(--dga-meta-text);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(191, 89, 0, 0.3);
+}
+
+/* =================================================================
+   WCAG G145 & G18 Solutions for Absolutely Positioned Text
+   ================================================================= */
+
+/* G145 Technique: Large Text (18pt+) with 3:1 Contrast Ratio */
+#featured-title,
+.featured-title-xy34,
+[id*="featured-title"],
+.dga-overlay-title-xy34 {
+    /* Large text styling for G145 compliance */
+    font-size: 1.5rem !important; /* 24px = 18pt */
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    color: #ffffff !important;
+    
+    /* Multi-layer text shadow for contrast enhancement */
+    text-shadow: 
+        /* Primary black shadow for contrast */
+        0 0 3px rgba(0, 0, 0, 0.9),
+        0 0 6px rgba(0, 0, 0, 0.8),
+        0 0 9px rgba(0, 0, 0, 0.7),
+        /* Secondary shadows for depth */
+        1px 1px 2px rgba(0, 0, 0, 0.9),
+        -1px -1px 2px rgba(0, 0, 0, 0.9),
+        1px -1px 2px rgba(0, 0, 0, 0.9),
+        -1px 1px 2px rgba(0, 0, 0, 0.9) !important;
+    
+    /* Backup background for extreme cases */
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.6) 100%
+    ) !important;
+    
+    /* Padding and border radius for background */
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px !important;
+    
+    /* Backdrop filter for modern browsers */
+    backdrop-filter: blur(2px) brightness(0.7) !important;
+    -webkit-backdrop-filter: blur(2px) brightness(0.7) !important;
+    
+    /* Ensure text is selectable and accessible */
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+/* G18 Technique: Normal Text with 4.5:1 Contrast Ratio */
+#featured-description,
+.featured-description-xy34,
+[id*="featured-description"],
+.dga-overlay-description-xy34 {
+    /* Normal text styling for G18 compliance */
+    font-size: 1rem !important; /* 16px */
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+    color: #ffffff !important;
+    
+    /* Enhanced multi-layer text shadow for 4.5:1 contrast */
+    text-shadow: 
+        /* Primary black shadows for strong contrast */
+        0 0 2px rgba(0, 0, 0, 0.95),
+        0 0 4px rgba(0, 0, 0, 0.9),
+        0 0 6px rgba(0, 0, 0, 0.85),
+        0 0 8px rgba(0, 0, 0, 0.8),
+        /* Directional shadows for outline effect */
+        1px 1px 1px rgba(0, 0, 0, 0.95),
+        -1px -1px 1px rgba(0, 0, 0, 0.95),
+        1px -1px 1px rgba(0, 0, 0, 0.95),
+        -1px 1px 1px rgba(0, 0, 0, 0.95),
+        /* Additional outline for extreme contrast */
+        2px 2px 2px rgba(0, 0, 0, 0.9),
+        -2px -2px 2px rgba(0, 0, 0, 0.9),
+        2px -2px 2px rgba(0, 0, 0, 0.9),
+        -2px 2px 2px rgba(0, 0, 0, 0.9) !important;
+    
+    /* Strong background overlay for guaranteed contrast */
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    ) !important;
+    
+    /* Enhanced padding for readability */
+    padding: 0.75rem 1rem !important;
+    border-radius: 6px !important;
+    
+    /* Backdrop filter for additional contrast */
+    backdrop-filter: blur(3px) brightness(0.6) !important;
+    -webkit-backdrop-filter: blur(3px) brightness(0.6) !important;
+    
+    /* Box shadow for additional separation */
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    
+    /* Ensure text is accessible */
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+/* Alternative High Contrast Solutions */
+
+/* Dark text on light background option for G145 */
+.dga-light-bg-title-xy34 {
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: none !important;
+    backdrop-filter: blur(2px) brightness(1.3) !important;
+}
+
+/* Dark text on light background option for G18 */
+.dga-light-bg-description-xy34 {
+    color: #000000 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: none !important;
+    backdrop-filter: blur(3px) brightness(1.3) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Pseudo-element overlay technique for complex backgrounds */
+#featured-title::before,
+.featured-title-xy34::before {
+    content: '';
+    position: absolute;
+    top: -0.25rem;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: -0.25rem;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
+    border-radius: 8px;
+    z-index: -1;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+#featured-description::before,
+.featured-description-xy34::before {
+    content: '';
+    position: absolute;
+    top: -0.375rem;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: -0.375rem;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.7) 50%,
+        rgba(0, 0, 0, 0.85) 100%
+    );
+    border-radius: 6px;
+    z-index: -1;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    #featured-title,
+    .featured-title-xy34 {
+        font-size: 1.25rem !important; /* Still 18pt+ for G145 */
+        padding: 0.375rem 0.75rem !important;
+    }
+    
+    #featured-description,
+    .featured-description-xy34 {
+        font-size: 0.9rem !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+}
+
+/* High contrast mode specific enhancements */
+@media (prefers-contrast: high) {
+    #featured-title,
+    .featured-title-xy34 {
+        background: rgba(0, 0, 0, 0.95) !important;
+        color: #ffffff !important;
+        border: 2px solid #ffffff !important;
+    }
+    
+    #featured-description,
+    .featured-description-xy34 {
+        background: rgba(0, 0, 0, 0.95) !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+    }
+}
+
+/* Print optimization for absolutely positioned text */
+@media print {
+    #featured-title,
+    .featured-title-xy34,
+    #featured-description,
+    .featured-description-xy34 {
+        color: #000000 !important;
+        background: #ffffff !important;
+        text-shadow: none !important;
+        backdrop-filter: none !important;
+        border: 1px solid #000000 !important;
+    }
+}

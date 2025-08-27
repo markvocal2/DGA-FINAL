@@ -1,0 +1,699 @@
+/**
+ * DGA Password Reset with CloudFlare Turnstile - Styles
+ * Version: 2.0.0
+ * Theme: Blue & Orange with CloudFlare Integration
+ */
+
+/* Container and Layout */
+.dga-reset-container-cfz357 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dga-reset-box-cfz357 {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+.dga-reset-box-cfz357::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb 0%, #f97316 100%);
+    animation: gradientSlide 3s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradientSlide {
+    0%, 100% {
+        background: linear-gradient(90deg, #2563eb 0%, #f97316 100%);
+    }
+    50% {
+        background: linear-gradient(90deg, #f97316 0%, #2563eb 100%);
+    }
+}
+
+/* Icons */
+.dga-reset-icon-cfz357,
+.dga-reset-icon-error-cfz357 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    border-radius: 50%;
+    margin-bottom: 24px;
+    position: relative;
+    animation: iconFadeIn 0.6s ease-out;
+    transition: all 0.3s ease;
+}
+
+.dga-reset-icon-error-cfz357 {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.dga-reset-icon-cfz357 svg,
+.dga-reset-icon-error-cfz357 svg {
+    color: #ffffff;
+    animation: iconBounce 0.8s ease-out 0.3s;
+}
+
+.dga-reset-icon-cfz357::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    background: linear-gradient(135deg, #2563eb20 0%, #f9731620 100%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulseRing 2s ease-out infinite;
+}
+
+.dga-reset-icon-error-cfz357::after {
+    background: linear-gradient(135deg, #ef444420 0%, #dc262620 100%);
+}
+
+/* Icon animations */
+@keyframes iconFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes iconBounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.1); }
+    60% { transform: scale(0.95); }
+    80% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes pulseRing {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+}
+
+/* Typography */
+.dga-reset-box-cfz357 h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 12px;
+    line-height: 1.2;
+}
+
+.dga-subtitle-cfz357 {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0 0 32px;
+    line-height: 1.5;
+}
+
+/* Form Elements */
+.dga-form-cfz357 {
+    text-align: left;
+}
+
+.dga-form-group-cfz357 {
+    margin-bottom: 20px;
+}
+
+.dga-form-group-cfz357 label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+/* Input fields */
+.dga-form-group-cfz357 input[type="email"],
+.dga-form-group-cfz357 input[type="password"],
+.dga-form-group-cfz357 input[type="text"] {
+    width: 100%;
+    padding: 12px 48px 12px 16px;
+    font-size: 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    color: #1e293b;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.dga-form-group-cfz357 input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.dga-form-group-cfz357 input.error {
+    border-color: #dc2626 !important;
+    background-color: #fef2f2;
+}
+
+.dga-form-group-cfz357 input::placeholder {
+    color: #94a3b8;
+}
+
+/* Password Wrapper */
+.dga-password-wrapper-cfz357 {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Toggle button */
+.dga-toggle-password-cfz357 {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    color: #64748b;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.dga-toggle-password-cfz357:hover {
+    color: #2563eb;
+}
+
+.dga-toggle-password-cfz357:focus {
+    outline: none;
+    color: #2563eb;
+}
+
+.dga-toggle-password-cfz357 svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+/* CloudFlare Turnstile Container */
+.dga-captcha-container-cfz357 {
+    margin: 24px 0;
+    display: flex;
+    justify-content: center;
+    min-height: 70px;
+    position: relative;
+}
+
+/* Customize Turnstile widget appearance */
+.dga-captcha-container-cfz357 .cf-turnstile {
+    transform: scale(1);
+    transform-origin: center;
+    transition: transform 0.2s ease;
+}
+
+.dga-captcha-container-cfz357 .cf-turnstile iframe {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Password Strength Indicator */
+.dga-password-strength-cfz357 {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dga-password-strength-cfz357.weak {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+}
+
+.dga-password-strength-cfz357.medium {
+    background: #fed7aa;
+    color: #ea580c;
+    border: 1px solid #fdba74;
+}
+
+.dga-password-strength-cfz357.strong {
+    background: #bbf7d0;
+    color: #16a34a;
+    border: 1px solid #86efac;
+}
+
+/* Buttons */
+.dga-btn-primary-cfz357 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.dga-btn-primary-cfz357:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.dga-btn-primary-cfz357:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.dga-btn-primary-cfz357:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    background: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 100%);
+}
+
+.dga-btn-block-cfz357 {
+    width: 100%;
+}
+
+/* Button Loading State */
+.dga-spinner-cfz357 {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Messages */
+.dga-message-cfz357 {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideInUp 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dga-message-cfz357::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.dga-message-cfz357.success {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.dga-message-cfz357.success::before {
+    background: #16a34a;
+}
+
+.dga-message-cfz357.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.dga-message-cfz357.error::before {
+    background: #dc2626;
+}
+
+.dga-message-cfz357.info {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.dga-message-cfz357.info::before {
+    background: #2563eb;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Security Notice */
+.dga-security-notice-cfz357 {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #64748b;
+    opacity: 0.8;
+}
+
+.dga-security-notice-cfz357 svg {
+    width: 16px;
+    height: 16px;
+    color: #2563eb;
+}
+
+/* Links */
+.dga-links-cfz357 {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.dga-links-cfz357 a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.dga-links-cfz357 a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .dga-reset-container-cfz357 {
+        padding: 15px;
+        min-height: 100vh;
+    }
+    
+    .dga-reset-box-cfz357 {
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+    
+    .dga-reset-box-cfz357 h2 {
+        font-size: 24px;
+    }
+    
+    .dga-subtitle-cfz357 {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+    
+    .dga-form-group-cfz357 input[type="email"],
+    .dga-form-group-cfz357 input[type="password"],
+    .dga-form-group-cfz357 input[type="text"] {
+        font-size: 16px;
+        padding: 14px 48px 14px 16px;
+        height: 48px;
+        line-height: normal;
+    }
+    
+    .dga-toggle-password-cfz357 {
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        right: 0;
+        top: 0;
+        transform: none;
+        border-radius: 0 6px 6px 0;
+    }
+    
+    .dga-btn-primary-cfz357 {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    /* Scale down Turnstile on mobile */
+    .dga-captcha-container-cfz357 .cf-turnstile {
+        transform: scale(0.95);
+    }
+    
+    .dga-reset-icon-cfz357,
+    .dga-reset-icon-error-cfz357 {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 20px;
+    }
+    
+    .dga-reset-icon-cfz357 svg,
+    .dga-reset-icon-error-cfz357 svg {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 360px) {
+    .dga-reset-box-cfz357 {
+        padding: 24px 16px;
+    }
+    
+    .dga-reset-box-cfz357 h2 {
+        font-size: 22px;
+    }
+    
+    /* Further scale down Turnstile */
+    .dga-captcha-container-cfz357 .cf-turnstile {
+        transform: scale(0.9);
+    }
+}
+
+/* Accessibility */
+.dga-reset-container-cfz357 *:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.dga-toggle-password-cfz357:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .dga-reset-box-cfz357 {
+        border: 2px solid #1e293b;
+    }
+    
+    .dga-form-group-cfz357 input {
+        border-width: 2px;
+    }
+    
+    .dga-btn-primary-cfz357 {
+        border: 2px solid transparent;
+    }
+    
+    .dga-toggle-password-cfz357 {
+        border-left: 1px solid #e2e8f0;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .dga-reset-container-cfz357 {
+        background: #0f172a;
+    }
+    
+    .dga-reset-box-cfz357 {
+        background: #1e293b;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dga-reset-box-cfz357 h2 {
+        color: #f1f5f9;
+    }
+    
+    .dga-subtitle-cfz357 {
+        color: #cbd5e1;
+    }
+    
+    .dga-form-group-cfz357 label {
+        color: #e2e8f0;
+    }
+    
+    .dga-form-group-cfz357 input[type="email"],
+    .dga-form-group-cfz357 input[type="password"],
+    .dga-form-group-cfz357 input[type="text"] {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+    
+    .dga-form-group-cfz357 input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .dga-toggle-password-cfz357 {
+        color: #94a3b8;
+    }
+    
+    .dga-toggle-password-cfz357:hover {
+        color: #3b82f6;
+    }
+    
+    .dga-links-cfz357,
+    .dga-security-notice-cfz357 {
+        border-top-color: #334155;
+    }
+    
+    .dga-security-notice-cfz357 {
+        color: #94a3b8;
+    }
+    
+    /* Dark mode for messages */
+    .dga-message-cfz357.success {
+        background: #14532d;
+        color: #86efac;
+        border-color: #166534;
+    }
+    
+    .dga-message-cfz357.error {
+        background: #450a0a;
+        color: #fca5a5;
+        border-color: #7f1d1d;
+    }
+    
+    .dga-message-cfz357.info {
+        background: #1e3a8a;
+        color: #93c5fd;
+        border-color: #1e40af;
+    }
+}
+
+/* Orange Accent Elements */
+.dga-btn-primary-cfz357::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.dga-btn-primary-cfz357:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+/* Prevent layout shift on toggle */
+.dga-password-wrapper-cfz357 input {
+    -webkit-text-security: none;
+    text-security: none;
+}
+
+.dga-password-wrapper-cfz357 input[type="password"] {
+    -webkit-text-security: disc;
+    text-security: disc;
+}
+
+/* Fix for Safari/iOS */
+@supports (-webkit-touch-callout: none) {
+    .dga-form-group-cfz357 input {
+        -webkit-appearance: none;
+        -webkit-border-radius: 8px;
+    }
+    
+    .dga-password-wrapper-cfz357 {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
+
+/* Loading overlay for Turnstile */
+.cf-turnstile[data-state="loading"] {
+    position: relative;
+}
+
+.cf-turnstile[data-state="loading"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Print styles */
+@media print {
+    .dga-reset-container-cfz357 {
+        display: none;
+    }
+}

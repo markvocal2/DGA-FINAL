@@ -1,0 +1,612 @@
+/**
+ * DGA Password Reset Styles - Improved Version
+ * Theme: Blue & Orange
+ * Fixed: Password field stability in responsive view
+ */
+
+/* Container and Layout */
+.dga-reset-container-xyz789 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dga-reset-box-xyz789 {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+.dga-reset-box-xyz789::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb 0%, #f97316 100%);
+    animation: gradientSlide 3s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradientSlide {
+    0%, 100% {
+        background: linear-gradient(90deg, #2563eb 0%, #f97316 100%);
+    }
+    50% {
+        background: linear-gradient(90deg, #f97316 0%, #2563eb 100%);
+    }
+}
+
+/* Icons */
+.dga-reset-icon-xyz789,
+.dga-reset-icon-error-xyz789 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    border-radius: 50%;
+    margin-bottom: 24px;
+    position: relative;
+    animation: iconFadeIn 0.6s ease-out;
+}
+
+.dga-reset-icon-error-xyz789 {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.dga-reset-icon-xyz789 svg,
+.dga-reset-icon-error-xyz789 svg {
+    color: #ffffff;
+    animation: iconBounce 0.8s ease-out 0.3s;
+}
+
+.dga-reset-icon-xyz789::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    background: linear-gradient(135deg, #2563eb20 0%, #f9731620 100%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulseRing 2s ease-out infinite;
+}
+
+.dga-reset-icon-error-xyz789::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    background: linear-gradient(135deg, #ef444420 0%, #dc262620 100%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulseRing 2s ease-out infinite;
+}
+
+/* Icon animations */
+@keyframes iconFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes iconBounce {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.1);
+    }
+    60% {
+        transform: scale(0.95);
+    }
+    80% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulseRing {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+}
+
+/* Typography */
+.dga-reset-box-xyz789 h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 12px;
+    line-height: 1.2;
+}
+
+.dga-subtitle-xyz789 {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0 0 32px;
+    line-height: 1.5;
+}
+
+/* Form Elements */
+.dga-form-xyz789 {
+    text-align: left;
+}
+
+.dga-form-group-xyz789 {
+    margin-bottom: 20px;
+}
+
+.dga-form-group-xyz789 label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+/* Fixed: Input field styles for better stability */
+.dga-form-group-xyz789 input[type="email"],
+.dga-form-group-xyz789 input[type="password"],
+.dga-form-group-xyz789 input[type="text"] {
+    width: 100%;
+    padding: 12px 48px 12px 16px; /* Fixed padding for consistency */
+    font-size: 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Smoother transition */
+    color: #1e293b;
+    box-sizing: border-box;
+    -webkit-appearance: none; /* Prevent iOS styling */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.dga-form-group-xyz789 input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.dga-form-group-xyz789 input::placeholder {
+    color: #94a3b8;
+}
+
+/* Fixed: Password Wrapper with improved stability */
+.dga-password-wrapper-xyz789 {
+    position: relative;
+    width: 100%; /* Ensure full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Fixed: Toggle button positioning */
+.dga-toggle-password-xyz789 {
+    position: absolute;
+    right: 0; /* Align to right edge */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 12px; /* Increased touch target */
+    color: #64748b;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2; /* Ensure button is above input */
+}
+
+.dga-toggle-password-xyz789:hover {
+    color: #2563eb;
+}
+
+.dga-toggle-password-xyz789:focus {
+    outline: none;
+    color: #2563eb;
+}
+
+/* Fixed: SVG icon sizing */
+.dga-toggle-password-xyz789 svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none; /* Prevent SVG from blocking clicks */
+}
+
+/* Password Strength Indicator */
+.dga-password-strength-xyz789 {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.dga-password-strength-xyz789.weak {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.dga-password-strength-xyz789.medium {
+    background: #fed7aa;
+    color: #ea580c;
+}
+
+.dga-password-strength-xyz789.strong {
+    background: #bbf7d0;
+    color: #16a34a;
+}
+
+/* Buttons */
+.dga-btn-primary-xyz789 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.dga-btn-primary-xyz789:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.dga-btn-primary-xyz789:active {
+    transform: translateY(0);
+}
+
+.dga-btn-primary-xyz789:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.dga-btn-block-xyz789 {
+    width: 100%;
+}
+
+/* Button Loading State */
+.dga-spinner-xyz789 {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Messages */
+.dga-message-xyz789 {
+    margin-top: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideInUp 0.3s ease;
+}
+
+.dga-message-xyz789.success {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.dga-message-xyz789.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Links */
+.dga-links-xyz789 {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.dga-links-xyz789 a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.dga-links-xyz789 a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Responsive Design - Improved */
+@media (max-width: 640px) {
+    .dga-reset-container-xyz789 {
+        padding: 15px;
+        min-height: 100vh; /* Full height on mobile */
+    }
+    
+    .dga-reset-box-xyz789 {
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+    
+    .dga-reset-box-xyz789 h2 {
+        font-size: 24px;
+    }
+    
+    .dga-subtitle-xyz789 {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+    
+    /* Critical fix for mobile input fields */
+    .dga-form-group-xyz789 input[type="email"],
+    .dga-form-group-xyz789 input[type="password"],
+    .dga-form-group-xyz789 input[type="text"] {
+        font-size: 16px; /* Prevent iOS zoom */
+        padding: 14px 48px 14px 16px; /* Slightly larger touch target */
+        height: 48px; /* Fixed height for consistency */
+        line-height: normal;
+    }
+    
+    /* Ensure toggle button stays in place on mobile */
+    .dga-toggle-password-xyz789 {
+        width: 48px; /* Fixed width */
+        height: 48px; /* Match input height */
+        padding: 0;
+        right: 0;
+        top: 0;
+        transform: none; /* Remove transform on mobile */
+        border-radius: 0 6px 6px 0; /* Round right corners */
+    }
+    
+    .dga-password-wrapper-xyz789 {
+        display: block; /* Ensure block display on mobile */
+    }
+    
+    .dga-btn-primary-xyz789 {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    .dga-reset-icon-xyz789,
+    .dga-reset-icon-error-xyz789 {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 20px;
+    }
+    
+    .dga-reset-icon-xyz789 svg,
+    .dga-reset-icon-error-xyz789 svg {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 360px) {
+    .dga-reset-box-xyz789 {
+        padding: 24px 16px;
+    }
+    
+    .dga-reset-box-xyz789 h2 {
+        font-size: 22px;
+    }
+}
+
+/* Accessibility */
+.dga-reset-container-xyz789 *:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Disable outline for mouse users, keep for keyboard */
+.dga-toggle-password-xyz789:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .dga-reset-box-xyz789 {
+        border: 2px solid #1e293b;
+    }
+    
+    .dga-form-group-xyz789 input {
+        border-width: 2px;
+    }
+    
+    .dga-btn-primary-xyz789 {
+        border: 2px solid transparent;
+    }
+    
+    .dga-toggle-password-xyz789 {
+        border-left: 1px solid #e2e8f0;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .dga-reset-container-xyz789 {
+        background: #0f172a;
+    }
+    
+    .dga-reset-box-xyz789 {
+        background: #1e293b;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dga-reset-box-xyz789 h2 {
+        color: #f1f5f9;
+    }
+    
+    .dga-subtitle-xyz789 {
+        color: #cbd5e1;
+    }
+    
+    .dga-form-group-xyz789 label {
+        color: #e2e8f0;
+    }
+    
+    .dga-form-group-xyz789 input[type="email"],
+    .dga-form-group-xyz789 input[type="password"],
+    .dga-form-group-xyz789 input[type="text"] {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+    
+    .dga-form-group-xyz789 input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .dga-toggle-password-xyz789 {
+        color: #94a3b8;
+        background: #334155;
+    }
+    
+    .dga-toggle-password-xyz789:hover {
+        color: #3b82f6;
+        background: #3f4c63;
+    }
+    
+    .dga-links-xyz789 {
+        border-top-color: #334155;
+    }
+}
+
+/* Orange Accent Elements */
+.dga-btn-primary-xyz789::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.dga-btn-primary-xyz789:hover::before {
+    left: 100%;
+}
+
+/* Prevent layout shift on toggle */
+.dga-password-wrapper-xyz789 input {
+    /* Ensure consistent rendering */
+    -webkit-text-security: none;
+    text-security: none;
+}
+
+.dga-password-wrapper-xyz789 input[type="password"] {
+    -webkit-text-security: disc;
+    text-security: disc;
+}
+
+/* Fix for Safari/iOS input field issues */
+@supports (-webkit-touch-callout: none) {
+    .dga-form-group-xyz789 input {
+        -webkit-appearance: none;
+        -webkit-border-radius: 8px;
+    }
+    
+    .dga-password-wrapper-xyz789 {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
+
+
+/* Messages */
+.dga-message-xyz789 {
+    margin-top: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideInUp 0.3s ease;
+}
+
+.dga-message-xyz789.success {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.dga-message-xyz789.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.dga-message-xyz789.info {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+/* Message content wrapper */
+.dga-message-xyz789 .message-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

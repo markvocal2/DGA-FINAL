@@ -1,0 +1,656 @@
+/**
+ * DGA Complaint Search Styles
+ * Version: 1.2.0
+ * Theme: Blue & Orange - Popup Style
+ */
+
+:root {
+    --dga-primary: #1a57a2;    /* สีน้ำเงินหลัก */
+    --dga-primary-dark: #12407c;
+    --dga-primary-light: #3977c2;
+    --dga-secondary: #ff7a00;  /* สีส้มหลัก */
+    --dga-secondary-dark: #e66d00;
+    --dga-secondary-light: #ff9633;
+    --dga-text: #333333;
+    --dga-light-text: #666666;
+    --dga-border: #dddddd;
+    --dga-light-bg: #f8f9fa;
+    --dga-white: #ffffff;
+    --dga-success: #28a745;
+    --dga-error: #dc3545;
+    --dga-warning: #ffc107;
+    --dga-info: #17a2b8;
+    --dga-shadow: rgba(0, 0, 0, 0.1);
+    --dga-shadow-dark: rgba(0, 0, 0, 0.3);
+    --dga-transition: all 0.3s ease;
+}
+
+/* Container */
+.dga-complaint-search-container {
+    position: relative;
+    display: flex;
+    margin: 2rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    z-index: 100; /* เพิ่ม z-index เพื่อให้แน่ใจว่าอยู่ด้านหน้า */
+}
+
+/* Toggle Button */
+.dga-complaint-toggle-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 320px;
+    background-color: var(--dga-primary);
+    color: var(--dga-white);
+    border: none;
+    border-radius: 12px 0 0 12px;
+    padding: 1rem 0.5rem;
+    cursor: pointer;
+    box-shadow: -3px 3px 10px var(--dga-shadow);
+    transition: var(--dga-transition);
+    z-index: 10;
+}
+
+.dga-complaint-toggle-btn:hover,
+.dga-complaint-toggle-btn:focus {
+    background-color: var(--dga-primary-dark);
+    outline: none;
+}
+
+.dga-complaint-toggle-btn[aria-expanded="true"] {
+    background-color: var(--dga-secondary);
+}
+
+.dga-complaint-toggle-btn[aria-expanded="true"]:hover {
+    background-color: var(--dga-secondary-dark);
+}
+
+.toggle-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    /* วางตัวอักษรในแนวตั้ง */
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-orientation: mixed;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Search Form */
+.dga-complaint-search-form {
+    position: relative;
+    width: 0;
+    height: 320px;
+    background-color: #ffffff;
+    border-radius: 0 12px 12px 0;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 0;
+    padding: 0;
+    visibility: hidden;
+    z-index: 9;
+}
+
+.dga-complaint-search-form.expanded {
+    width: 500px !important;
+    opacity: 1 !important;
+    padding: 1.5rem !important;
+    border: 1px solid #dddddd;
+    border-left: none;
+    visibility: visible !important;
+}
+
+.dga-complaint-search-form h3 {
+    color: var(--dga-primary);
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--dga-secondary);
+}
+
+#complaint-search-form {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dga-primary);
+}
+
+.input-with-button {
+    display: flex;
+    position: relative;
+}
+
+.input-with-button input {
+    flex: 1;
+    height: 46px;
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--dga-border);
+    border-radius: 6px 0 0 6px;
+    font-size: 1rem;
+    transition: var(--dga-transition);
+}
+
+.input-with-button input:focus {
+    outline: none;
+    border-color: var(--dga-primary);
+    box-shadow: 0 0 0 3px rgba(26, 87, 162, 0.2);
+}
+
+.search-btn {
+    background-color: var(--dga-secondary);
+    color: var(--dga-white);
+    border: none;
+    border-radius: 0 6px 6px 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--dga-transition);
+}
+
+.search-btn:hover,
+.search-btn:focus {
+    background-color: var(--dga-secondary-dark);
+    outline: none;
+}
+
+.form-hint {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--dga-light-text);
+}
+
+.error-message {
+    position: absolute;
+    color: var(--dga-error);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+    bottom: -20px;
+    left: 0;
+}
+
+/* Loading */
+.complaint-search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.loading-spinner {
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    color: var(--dga-primary);
+}
+
+/* Popup Result - ส่วนใหม่สำหรับ popup */
+.complaint-result-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+}
+
+.complaint-result-popup.active {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+.complaint-popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.complaint-popup-content {
+    position: relative;
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 600px;
+    height: 600px; /* ความสูงตามที่ต้องการ */
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px var(--dga-shadow-dark);
+    z-index: 2;
+    overflow: hidden;
+}
+
+/* Search Results */
+.complaint-search-result {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--dga-primary) var(--dga-light-bg);
+}
+
+.complaint-search-result::-webkit-scrollbar {
+    width: 8px;
+}
+
+.complaint-search-result::-webkit-scrollbar-track {
+    background: var(--dga-light-bg);
+    border-radius: 4px;
+}
+
+.complaint-search-result::-webkit-scrollbar-thumb {
+    background-color: var(--dga-primary);
+    border-radius: 4px;
+}
+
+/* ปรับปรุงส่วนแสดงผล */
+.result-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--dga-primary);
+    color: white;
+    flex-shrink: 0;
+}
+
+.result-header h3 {
+    margin: 0;
+    color: white;
+    border: none;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.close-popup-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: var(--dga-transition);
+}
+
+.close-popup-btn:hover,
+.close-popup-btn:focus {
+    color: var(--dga-secondary-light);
+    outline: none;
+}
+
+/* Result Reference Number */
+.result-ref-number {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--dga-light-bg);
+    border-bottom: 1px solid var(--dga-border);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.ref-label {
+    font-weight: bold;
+    color: var(--dga-primary);
+    margin-right: 0.5rem;
+}
+
+.ref-value {
+    background-color: var(--dga-primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Status Highlight */
+.result-status-highlight {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--dga-light-bg);
+    flex-shrink: 0;
+}
+
+.status-banner {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background-color: var(--dga-primary);
+    color: white;
+}
+
+.status-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.status-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Status colors */
+.status-banner.status-pending {
+    background-color: var(--dga-warning);
+    color: var(--dga-text);
+}
+
+.status-banner.status-in-progress {
+    background-color: var(--dga-info);
+}
+
+.status-banner.status-completed {
+    background-color: var(--dga-success);
+}
+
+.status-banner.status-rejected {
+    background-color: var(--dga-error);
+}
+
+.status-banner.status-closed {
+    background-color: #6c757d;
+}
+
+/* Progress Bar */
+.result-progress {
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--dga-border);
+    flex-shrink: 0;
+}
+
+.result-progress h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--dga-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--dga-light-bg);
+    border: 2px solid var(--dga-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dga-light-text);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    transition: var(--dga-transition);
+}
+
+.step-label {
+    font-size: 0.875rem;
+    color: var(--dga-light-text);
+    transition: var(--dga-transition);
+}
+
+.progress-connector {
+    flex: 1;
+    height: 3px;
+    background-color: var(--dga-border);
+    margin: 0 5px;
+    position: relative;
+    top: -15px;
+    transition: var(--dga-transition);
+}
+
+/* Active and completed step styles */
+.progress-step.active .step-number {
+    background-color: var(--dga-primary);
+    border-color: var(--dga-primary);
+    color: var(--dga-white);
+}
+
+.progress-step.active .step-label {
+    color: var(--dga-primary);
+    font-weight: 600;
+}
+
+.progress-step.completed .step-number {
+    background-color: var(--dga-success);
+    border-color: var(--dga-success);
+    color: var(--dga-white);
+}
+
+.progress-connector.active {
+    background-color: var(--dga-success);
+}
+
+/* Result Details - Compact grid layout for popup */
+.result-details {
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--dga-border);
+    flex-shrink: 0;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.detail-item {
+    margin-bottom: 0.25rem;
+}
+
+.detail-label {
+    color: var(--dga-light-text);
+    font-size: 0.85rem;
+    margin-bottom: 0.15rem;
+}
+
+.detail-value {
+    color: var(--dga-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Result Summary */
+.result-summary {
+    padding: 0.75rem 1.5rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.result-summary h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--dga-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.summary-content {
+    color: var(--dga-text);
+    line-height: 1.6;
+    font-size: 0.95rem;
+    background-color: var(--dga-light-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    white-space: pre-line; /* ให้แสดงการขึ้นบรรทัดใหม่ตามต้นฉบับ */
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* Error Display */
+.result-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2rem;
+    text-align: center;
+}
+
+.error-icon {
+    color: var(--dga-error);
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-error p {
+    color: var(--dga-error);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.result-error .close-popup-btn {
+    background-color: var(--dga-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--dga-transition);
+}
+
+.result-error .close-popup-btn:hover,
+.result-error .close-popup-btn:focus {
+    background-color: var(--dga-primary-dark);
+    outline: none;
+}
+
+/* Body Style when popup is open */
+body.complaint-popup-open {
+    overflow: hidden;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .dga-complaint-search-container {
+        flex-direction: column;
+    }
+    
+    .dga-complaint-toggle-btn {
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        border-radius: 12px 12px 0 0;
+        padding: 1rem;
+    }
+    
+    .toggle-text {
+        writing-mode: horizontal-tb;
+        transform: rotate(0deg);
+        margin-bottom: 0;
+        margin-right: 1rem;
+    }
+    
+    .toggle-icon {
+        margin-top: 0;
+    }
+    
+    .dga-complaint-search-form {
+        height: auto;
+        width: 100%;
+        max-height: 0;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .dga-complaint-search-form.expanded {
+        width: 100% !important;
+        max-height: 800px;
+        border: 1px solid var(--dga-border);
+        border-top: none;
+    }
+    
+    .complaint-popup-content {
+        width: 95%;
+        height: 80vh;
+    }
+    
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .dga-complaint-toggle-btn {
+        box-shadow: -2px 2px 8px var(--dga-shadow);
+    }
+    
+    .dga-complaint-search-form {
+        box-shadow: 2px 2px 8px var(--dga-shadow);
+    }
+    
+    .complaint-popup-content {
+        box-shadow: 0 5px 25px var(--dga-shadow-dark);
+    }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+    .dga-complaint-toggle-btn,
+    .dga-complaint-search-form,
+    .input-with-button input,
+    .search-btn,
+    .step-number,
+    .step-label,
+    .progress-connector,
+    .fa-circle-notch,
+    .complaint-result-popup {
+        transition: none;
+        animation: none;
+    }
+}

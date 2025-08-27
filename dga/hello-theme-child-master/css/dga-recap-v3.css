@@ -1,0 +1,132 @@
+/**
+ * DGA reCAPTCHA V3 CSS
+ * ไฟล์นี้จะต้องถูกบันทึกใน child-theme/css/dga-recap-v3.css
+ */
+
+/* Container styles */
+.dga-recaptcha-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Loading state */
+.dga-recaptcha-container.dga-recaptcha-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: dga-recaptcha-spin 1s linear infinite;
+}
+
+/* Loading spinner animation */
+@keyframes dga-recaptcha-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Form with reCAPTCHA loading */
+form.dga-recaptcha-processing {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Submit button disabled state */
+[type="submit"]:disabled,
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* reCAPTCHA badge positioning */
+.grecaptcha-badge {
+    visibility: hidden;
+}
+
+/* reCAPTCHA notice */
+.dga-recaptcha-notice {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Error message */
+.dga-recaptcha-error {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Success message */
+.dga-recaptcha-success {
+    color: #28a745;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Alert Messages */
+.alert {
+    position: relative;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.alert .close:hover {
+    opacity: 1;
+}
+
+/* Contact Form Integration */
+#department-contact-form .dga-recaptcha-container {
+    margin-top: 10px;
+}
+
+#department-contact-form.dga-recaptcha-processing {
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dga-recaptcha-container {
+        width: 100%;
+    }
+    
+    .alert {
+        font-size: 14px;
+        padding: 12px 15px;
+    }
+}

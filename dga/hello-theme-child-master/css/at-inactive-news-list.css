@@ -1,0 +1,403 @@
+/**
+ * Inactive News List Styles - ปรับปรุงแล้ว
+ * สไตล์สำหรับตารางแสดงรายการ posts ที่มีสถานะ inactive
+ */
+
+/* Container หลัก */
+.at-inactive-news-container {
+    max-width: 100%;
+    margin: 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ส่วนค้นหาและฟิลเตอร์ */
+.at-search-filter {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.at-search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#at-news-search {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+#at-news-search:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+#at-news-search-btn {
+    padding: 8px 16px;
+    background: #0073aa;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s;
+}
+
+#at-news-search-btn:hover {
+    background: #005a87;
+}
+
+.dashicons {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.at-filter-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #666;
+    font-size: 13px;
+}
+
+.at-refresh-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.at-refresh-btn:hover {
+    background: #f9f9f9;
+    border-color: #999;
+}
+
+.at-refresh-btn.spinning .dashicons-update {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* ตาราง */
+.at-news-table-container {
+    overflow-x: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.at-news-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.at-news-table thead {
+    background: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+}
+
+.at-news-table th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+}
+
+.at-news-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+
+.at-news-table tbody tr:hover {
+    background: #f5f8fa;
+}
+
+.at-news-table tbody tr.removing {
+    background: #fee;
+    opacity: 0.7;
+}
+
+/* คอลัมน์ต่างๆ */
+.at-id-col {
+    font-weight: 500;
+    color: #666;
+}
+
+.at-type-col .at-post-type-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #e8e8e8;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.at-date-col {
+    color: #666;
+}
+
+.at-title-col a {
+    color: #0073aa;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.at-title-col a:hover {
+    color: #005a87;
+    text-decoration: underline;
+}
+
+.at-docnum-col {
+    font-size: 12px;
+    color: #666;
+}
+
+.at-docnum-col div {
+    margin: 2px 0;
+}
+
+.at-status-col .at-status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.at-status-badge.inactive {
+    background: #fee;
+    color: #dc3232;
+}
+
+.at-action-col {
+    text-align: center;
+}
+
+/* ปุ่มในตาราง */
+.at-table-toggle {
+    padding: 5px 12px;
+    border: 1px solid #0073aa;
+    background: white;
+    color: #0073aa;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s;
+}
+
+.at-table-toggle:hover {
+    background: #0073aa;
+    color: white;
+}
+
+.at-table-toggle.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.at-table-toggle .spinner {
+    margin: 0;
+    float: none;
+}
+
+/* ข้อความสถานะต่างๆ */
+.at-loading-data,
+.at-no-data,
+.at-error-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.at-loading-data .spinner {
+    display: inline-block;
+    margin-right: 10px;
+    float: none;
+}
+
+.at-error-message {
+    color: #dc3232;
+}
+
+/* Pagination */
+.at-news-pagination {
+    margin: 20px 0;
+}
+
+.at-pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.at-page-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.at-pagination-link {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 13px;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.at-pagination-link:hover {
+    background: #f5f5f5;
+    border-color: #999;
+}
+
+.at-pagination-link.active {
+    background: #0073aa;
+    color: white;
+    border-color: #0073aa;
+}
+
+.at-pagination-dots {
+    padding: 5px;
+    color: #999;
+}
+
+/* ข้อความแสดงสถานะ */
+.at-news-status-message {
+    text-align: center;
+    color: #666;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .at-search-box {
+        flex-direction: column;
+    }
+    
+    #at-news-search-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .at-filter-info {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .at-news-table {
+        font-size: 12px;
+    }
+    
+    .at-news-table th,
+    .at-news-table td {
+        padding: 8px 5px;
+    }
+    
+    /* ซ่อนบางคอลัมน์บนมือถือ */
+    .at-news-table th:nth-child(2),
+    .at-news-table td:nth-child(2),
+    .at-news-table th:nth-child(5),
+    .at-news-table td:nth-child(5) {
+        display: none;
+    }
+    
+    .at-pagination-wrapper {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .at-inactive-news-container {
+        margin: 10px 0;
+    }
+    
+    .at-news-table-container {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+    
+    /* ปรับขนาดตารางให้เล็กลง */
+    .at-news-table {
+        min-width: auto;
+    }
+    
+    .at-title-col {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* Accessibility */
+.at-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus styles */
+button:focus,
+a:focus,
+input:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

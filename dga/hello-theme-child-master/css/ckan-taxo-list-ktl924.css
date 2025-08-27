@@ -1,0 +1,524 @@
+/**
+ * CKAN Taxonomy List CSS - DGA Theme
+ * Version: 2.1.0
+ * Design: DGA Brand Identity
+ */
+
+/* CSS Variables for DGA Colors */
+:root {
+    --dga-orange: #E85826;
+    --dga-orange-light: #FF6B35;
+    --dga-orange-dark: #D84315;
+    --dga-navy: #1E2962;
+    --dga-navy-light: #2C3E7A;
+    --dga-navy-dark: #0D1B3E;
+    --dga-gray-100: #F8F9FA;
+    --dga-gray-200: #E9ECEF;
+    --dga-gray-300: #DEE2E6;
+    --dga-gray-400: #CED4DA;
+    --dga-gray-500: #ADB5BD;
+    --dga-gray-600: #6C757D;
+    --dga-gray-700: #495057;
+    --dga-gray-800: #343A40;
+    --dga-gray-900: #212529;
+    --dga-success: #28A745;
+    --dga-warning: #FFC107;
+    --dga-danger: #DC3545;
+    --dga-shadow-sm: 0 1px 3px rgba(30, 41, 98, 0.12);
+    --dga-shadow-md: 0 2px 6px rgba(30, 41, 98, 0.15);
+    --dga-shadow-lg: 0 4px 12px rgba(30, 41, 98, 0.18);
+    --dga-radius: 6px;
+    --dga-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Container - Compact & Modern */
+.ckan-taxo-container-ktl924 {
+    background: #FFFFFF;
+    border-radius: var(--dga-radius);
+    box-shadow: var(--dga-shadow-md);
+    margin-bottom: 16px;
+    overflow: hidden;
+    font-family: 'Sarabun', 'Kanit', -apple-system, BlinkMacSystemFont, sans-serif;
+    position: relative;
+    border: 1px solid var(--dga-gray-200);
+    transition: var(--dga-transition);
+}
+
+.ckan-taxo-container-ktl924:hover {
+    box-shadow: var(--dga-shadow-lg);
+}
+
+/* Header - DGA Style */
+.ckan-taxo-header-ktl924 {
+    background: linear-gradient(135deg, var(--dga-navy) 0%, var(--dga-navy-light) 100%);
+    color: #FFFFFF;
+    padding: 10px 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add subtle pattern overlay */
+.ckan-taxo-header-ktl924::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -50px;
+    width: 100px;
+    height: 100%;
+    background: var(--dga-orange);
+    opacity: 0.1;
+    transform: skewX(-15deg);
+}
+
+.ckan-taxo-title-ktl924 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Content area - Optimized height */
+.ckan-taxo-content-ktl924 {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+    background: #FFFFFF;
+    max-height: 280px;
+    
+    /* Elegant scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--dga-gray-300) var(--dga-gray-100);
+}
+
+.ckan-taxo-content-ktl924::-webkit-scrollbar {
+    width: 5px;
+}
+
+.ckan-taxo-content-ktl924::-webkit-scrollbar-track {
+    background: var(--dga-gray-100);
+    border-radius: var(--dga-radius);
+}
+
+.ckan-taxo-content-ktl924::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--dga-orange-light), var(--dga-orange));
+    border-radius: var(--dga-radius);
+}
+
+.ckan-taxo-content-ktl924::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--dga-orange), var(--dga-orange-dark));
+}
+
+/* Term items - Clean & Modern */
+.ckan-taxo-item-ktl924 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border: none;
+    border-bottom: 1px solid var(--dga-gray-100);
+    background: transparent;
+    width: 100%;
+    cursor: pointer;
+    transition: var(--dga-transition);
+    font-size: 0.875rem;
+    text-align: left;
+    color: var(--dga-gray-700);
+    position: relative;
+    gap: 8px;
+}
+
+/* Remove last border */
+.ckan-taxo-item-ktl924:last-child {
+    border-bottom: none;
+}
+
+/* Hover effect */
+.ckan-taxo-item-ktl924:hover:not(.active) {
+    background: var(--dga-gray-100);
+    color: var(--dga-navy);
+    padding-left: 18px;
+}
+
+/* Focus state for accessibility */
+.ckan-taxo-item-ktl924:focus {
+    outline: 2px solid var(--dga-orange);
+    outline-offset: -2px;
+    z-index: 2;
+}
+
+/* Active state - DGA style */
+.ckan-taxo-item-ktl924.active {
+    background: linear-gradient(90deg, rgba(232, 88, 38, 0.08) 0%, rgba(232, 88, 38, 0.04) 100%);
+    color: var(--dga-navy);
+    font-weight: 500;
+    border-left: 3px solid var(--dga-orange);
+    padding-left: 11px;
+}
+
+/* Active indicator animation */
+.ckan-taxo-item-ktl924.active::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--dga-orange);
+    border-radius: 50%;
+    animation: pulse-ktl924 2s infinite;
+}
+
+@keyframes pulse-ktl924 {
+    0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+    50% { opacity: 0.6; transform: translateY(-50%) scale(1.2); }
+}
+
+/* Term name */
+.ckan-taxo-item-name-ktl924 {
+    flex: 1;
+    font-weight: 400;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Count badge - DGA style */
+.ckan-taxo-item-count-ktl924 {
+    background: linear-gradient(135deg, var(--dga-orange) 0%, var(--dga-orange-light) 100%);
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(232, 88, 38, 0.3);
+    transition: var(--dga-transition);
+}
+
+.ckan-taxo-item-ktl924:hover .ckan-taxo-item-count-ktl924 {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(232, 88, 38, 0.4);
+}
+
+/* Skeleton loading - Modern style */
+.ckan-taxo-skeleton-ktl924 {
+    padding: 8px 14px;
+}
+
+.ckan-taxo-skeleton-item-ktl924 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    margin-bottom: 8px;
+}
+
+.ckan-taxo-skeleton-name-ktl924 {
+    height: 14px;
+    width: 65%;
+    background: linear-gradient(90deg, 
+        var(--dga-gray-200) 25%, 
+        var(--dga-gray-100) 50%, 
+        var(--dga-gray-200) 75%);
+    background-size: 200% 100%;
+    animation: shimmer-ktl924 1.5s infinite;
+    border-radius: var(--dga-radius);
+}
+
+.ckan-taxo-skeleton-count-ktl924 {
+    height: 18px;
+    width: 32px;
+    background: linear-gradient(90deg,
+        rgba(232, 88, 38, 0.2) 25%,
+        rgba(232, 88, 38, 0.1) 50%,
+        rgba(232, 88, 38, 0.2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer-ktl924 1.5s infinite;
+    border-radius: 10px;
+}
+
+@keyframes shimmer-ktl924 {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Error messages - DGA style */
+.ckan-taxo-error-ktl924,
+.ckan-taxo-error-msg-ktl924 {
+    padding: 10px 14px;
+    background: linear-gradient(135deg, 
+        rgba(220, 53, 69, 0.1) 0%, 
+        rgba(220, 53, 69, 0.05) 100%);
+    color: var(--dga-danger);
+    border-radius: var(--dga-radius);
+    margin: 10px;
+    text-align: center;
+    font-size: 0.875rem;
+    border-left: 3px solid var(--dga-danger);
+    animation: slideIn-ktl924 0.3s ease-out;
+}
+
+@keyframes slideIn-ktl924 {
+    from { 
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Empty state */
+.ckan-taxo-empty-ktl924 {
+    padding: 24px;
+    text-align: center;
+    color: var(--dga-gray-500);
+    font-size: 0.875rem;
+}
+
+.ckan-taxo-empty-ktl924::before {
+    content: '📁';
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+/* Loading indicator */
+.ckan-taxo-loading-ktl924 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 4px;
+}
+
+.ckan-taxo-loading-ktl924 span {
+    width: 8px;
+    height: 8px;
+    background: var(--dga-orange);
+    border-radius: 50%;
+    animation: bounce-ktl924 1.4s ease-in-out infinite both;
+}
+
+.ckan-taxo-loading-ktl924 span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.ckan-taxo-loading-ktl924 span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce-ktl924 {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Accessibility */
+.screen-reader-text {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Focus visible for keyboard navigation */
+.ckan-taxo-item-ktl924:focus-visible {
+    outline: 2px solid var(--dga-orange);
+    outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dga-gray-100: #1A1A1A;
+        --dga-gray-200: #2D2D2D;
+        --dga-gray-700: #E0E0E0;
+        --dga-gray-800: #F5F5F5;
+    }
+    
+    .ckan-taxo-container-ktl924 {
+        background: #1A1A1A;
+        border-color: #2D2D2D;
+    }
+    
+    .ckan-taxo-content-ktl924 {
+        background: #1A1A1A;
+    }
+    
+    .ckan-taxo-item-ktl924 {
+        color: #E0E0E0;
+        border-bottom-color: #2D2D2D;
+    }
+    
+    .ckan-taxo-item-ktl924:hover:not(.active) {
+        background: #2D2D2D;
+        color: #FFFFFF;
+    }
+    
+    .ckan-taxo-item-ktl924.active {
+        background: linear-gradient(90deg, rgba(232, 88, 38, 0.15) 0%, rgba(232, 88, 38, 0.08) 100%);
+        color: #FFFFFF;
+    }
+}
+
+/* Responsive - Mobile optimized */
+@media (max-width: 768px) {
+    .ckan-taxo-container-ktl924 {
+        border-radius: 0;
+        margin-bottom: 12px;
+        box-shadow: var(--dga-shadow-sm);
+    }
+    
+    .ckan-taxo-header-ktl924 {
+        padding: 8px 12px;
+    }
+    
+    .ckan-taxo-title-ktl924 {
+        font-size: 0.9rem;
+    }
+    
+    .ckan-taxo-content-ktl924 {
+        max-height: 240px;
+    }
+    
+    .ckan-taxo-item-ktl924 {
+        padding: 9px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .ckan-taxo-item-ktl924.active {
+        padding-left: 9px;
+    }
+    
+    .ckan-taxo-item-count-ktl924 {
+        font-size: 0.7rem;
+        padding: 1px 6px;
+        min-width: 20px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .ckan-taxo-content-ktl924 {
+        max-height: 260px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .ckan-taxo-container-ktl924 {
+        box-shadow: none;
+        border: 1px solid var(--dga-gray-300);
+    }
+    
+    .ckan-taxo-skeleton-ktl924 {
+        display: none !important;
+    }
+    
+    .ckan-taxo-header-ktl924 {
+        background: var(--dga-navy);
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .ckan-taxo-item-ktl924:focus {
+        outline-width: 3px;
+    }
+    
+    .ckan-taxo-item-count-ktl924 {
+        font-weight: 700;
+        border: 1px solid currentColor;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .ckan-taxo-container-ktl924,
+    .ckan-taxo-item-ktl924,
+    .ckan-taxo-item-count-ktl924 {
+        transition: none;
+    }
+    
+    @keyframes pulse-ktl924 {
+        0%, 100% { opacity: 1; }
+    }
+}
+
+/* Custom icon support */
+.ckan-taxo-icon-ktl924 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    color: var(--dga-orange);
+}
+
+/* Badge variations */
+.ckan-taxo-item-count-ktl924.is-high {
+    background: linear-gradient(135deg, var(--dga-success) 0%, #34CE57 100%);
+}
+
+.ckan-taxo-item-count-ktl924.is-medium {
+    background: linear-gradient(135deg, var(--dga-warning) 0%, #FFCA28 100%);
+}
+
+.ckan-taxo-item-count-ktl924.is-low {
+    background: linear-gradient(135deg, var(--dga-gray-400) 0%, var(--dga-gray-500) 100%);
+}
+
+/* Tooltip support */
+.ckan-taxo-tooltip-ktl924 {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: var(--dga-navy);
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-bottom: 4px;
+    box-shadow: var(--dga-shadow-md);
+}
+
+.ckan-taxo-item-ktl924:hover .ckan-taxo-tooltip-ktl924 {
+    opacity: 1;
+}
+
+/* Compact mode class */
+.ckan-taxo-container-ktl924.is-compact .ckan-taxo-content-ktl924 {
+    max-height: 200px;
+}
+
+.ckan-taxo-container-ktl924.is-compact .ckan-taxo-item-ktl924 {
+    padding: 8px 12px;
+}
+
+.ckan-taxo-container-ktl924.is-compact .ckan-taxo-header-ktl924 {
+    padding: 8px 12px;
+}
