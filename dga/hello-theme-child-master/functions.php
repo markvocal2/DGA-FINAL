@@ -849,7 +849,7 @@ function dga_translate_render_english_flag() {
  * Helper function: Render loading spinner
  */
 function dga_translate_render_loading_spinner() {
-    return '<div class="dga-translate-loading-abc456" role="status" aria-live="polite" aria-busy="false">
+    return '<output class="dga-translate-loading-abc456" aria-live="polite" aria-busy="false">
                 <div class="dga-spinner-abc456" aria-hidden="true"></div>
                 <div class="dga-loading-text-abc456"></div>
             </div>';
@@ -8667,7 +8667,7 @@ function dga_display_reset_password_form_def456($key, $login) {
                         </div>
                     </div>
                     
-                    <div class="dga-password-strength-cfz357" id="password-strength" style="display:none;" role="status" aria-live="polite"></div>
+                    <output class="dga-password-strength-cfz357" id="password-strength" style="display:none;" aria-live="polite"></output>
                     
                     <button type=DGA_SUBMIT_TYPE class="dga-btn-primary-cfz357 dga-btn-block-cfz357">
                         <span class="button-text"><?php _e('ตั้งค่ารหัสผ่านใหม่', DGA_TEXT_DOMAIN); ?></span>
@@ -12555,7 +12555,7 @@ function thai_calendar_shortcode_tc24() {
                     aria-describedby="current-month-year-tc24">
                 <span aria-hidden="true">‹</span>
             </button>
-            <h2 class="current-month-year-tc24" id="current-month-year-tc24" aria-live="polite"></h2>
+            <h2 class="current-month-year-tc24" id="current-month-year-tc24" aria-live="polite">ปฏิทินกิจกรรม</h2>
             <button class="nav-btn-tc24 next-month-tc24" 
                     aria-label="<?php esc_attr_e('เดือนถัดไป', DGA_TEXT_DOMAIN); ?>"
                     aria-describedby="current-month-year-tc24">
@@ -12564,7 +12564,7 @@ function thai_calendar_shortcode_tc24() {
         </div>
         
         <div class="calendar-body-tc24">
-            <div class="weekdays-tc24" role="row">
+            <div class="weekdays-tc24">
                 <?php
                 $weekdays = array(
                     __('อาทิตย์', DGA_TEXT_DOMAIN),
@@ -12603,7 +12603,7 @@ function thai_calendar_shortcode_tc24() {
                 <div class="popup-body-tc24">
                     <div class="posts-summary-tc24" aria-live="polite"></div>
                     <div class="posts-list-wrapper-tc24">
-                        <ul class="posts-list-tc24" role="list"></ul>
+                        <ul class="posts-list-tc24"></ul>
                     </div>
                     <div class="popup-actions-tc24">
                         <button class="view-all-posts-tc24" style="display: none;">
@@ -14332,7 +14332,7 @@ function custom_ajax_search_shortcode_mxz789($atts = array()) {
                         </option>
                     </select>
                 </div>
-                <div class="search-divider-mxz789" role="separator" aria-hidden="true"></div>
+                <hr class="search-divider-mxz789" aria-hidden="true">
                 <?php endif; ?>
                 
                 <div class="search-input-wrapper-mxz789">
@@ -14354,6 +14354,7 @@ function custom_ajax_search_shortcode_mxz789($atts = array()) {
                                role="combobox"
                                aria-autocomplete="list"
                                aria-expanded="false"
+                               aria-controls="search-results-content-<?php echo esc_attr($instance_id); ?>"
                                aria-owns="search-results-content-<?php echo esc_attr($instance_id); ?>">
                         <button type=DGA_SUBMIT_TYPE 
                                 class="search-button-mxz789" 
@@ -14378,7 +14379,6 @@ function custom_ajax_search_shortcode_mxz789($atts = array()) {
              aria-live="polite" 
              role="region" 
              aria-label="<?php esc_attr_e('ผลการค้นหา', DGA_TEXT_DOMAIN); ?>"
-             aria-expanded="false"
              data-instance="<?php echo esc_attr($instance_id); ?>">
             
             <div class="search-skeleton-mxz789 hidden-mxz789" aria-hidden="true">
@@ -15191,7 +15191,7 @@ function pplist_ppl738_shortcode($atts) {
         <?php endif; ?>
         
         <!-- Results Summary -->
-        <div class="pplist-summary-ppl738" role="status" aria-live="polite">
+        <output class="pplist-summary-ppl738" aria-live="polite">
             <span class="pplist-result-count-ppl738"></span>
             <span class="pplist-active-filters-ppl738"></span>
         </div>
@@ -25242,7 +25242,7 @@ function org_links_shortcode($atts) {
             <!-- Skeleton loading placeholders -->
             <div class="org-links-skeleton">
                 <div class="org-links-skeleton-section">
-                    <h3 class="org-links-skeleton-section-title"></h3>
+                    <h3 class="org-links-skeleton-section-title"><span class="screen-reader-text">กำลังโหลดลิงก์องค์กร</span></h3>
                     <div class="org-links-skeleton-grid">
                         <?php for ($i = 0; $i < 3; $i++) : ?>
                         <div class="org-links-skeleton-card">
@@ -25253,7 +25253,7 @@ function org_links_shortcode($atts) {
                     </div>
                 </div>
                 <div class="org-links-skeleton-section">
-                    <h3 class="org-links-skeleton-section-title"></h3>
+                    <h3 class="org-links-skeleton-section-title"><span class="screen-reader-text">กำลังโหลดลิงก์องค์กร</span></h3>
                     <div class="org-links-skeleton-grid">
                         <?php for ($i = 0; $i < 3; $i++) : ?>
                         <div class="org-links-skeleton-card">
@@ -35798,7 +35798,7 @@ function ckan_edit_taxo_term_modern_wkp789() {
             <div class="ckan-modal-backdrop-wkp789"></div>
             <div class="ckan-modal-content-wkp789">
                 <div class="ckan-modal-header-wkp789">
-                    <h3 class="ckan-modal-title-wkp789"></h3>
+                    <h3 class="ckan-modal-title-wkp789"><span class="screen-reader-text">หัวข้อโมดอล</span></h3>
                     <button class="ckan-modal-close-wkp789">
                         <svg viewBox="0 0 24 24">
                             <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -39580,7 +39580,7 @@ function std_looppost_shortcode($atts) {
         </div>
         
         <!-- Accessible table header -->
-        <div class="std-looppost-table-header" role="row">
+        <div class="std-looppost-table-header">
             <div role="columnheader" aria-sort="none">
                 <?php _e('เลขที่', DGA_TEXT_DOMAIN); ?>
             </div>
@@ -39727,7 +39727,6 @@ function std_render_accessible_post_row($post_id, $row_index = 1) {
     ?>
     <div class="std-looppost-table-row" 
          data-post-id="<?php echo esc_attr($post_id); ?>" 
-         role="row" 
          aria-rowindex="<?php echo esc_attr($row_index); ?>"
          tabindex="0">
         <a href="<?php echo esc_url($permalink); ?>" 
@@ -46435,7 +46434,7 @@ function render_acf_modern_ui_mfs582() {
             <div class="acf-modal-backdrop-mfs582"></div>
             <div class="acf-modal-content-mfs582">
                 <div class="acf-modal-header-mfs582">
-                    <h3 class="acf-modal-title-mfs582"></h3>
+                    <h3 class="acf-modal-title-mfs582"><span class="screen-reader-text">หัวข้อโมดอล</span></h3>
                     <button class="acf-modal-close-mfs582">
                         <svg viewBox="0 0 24 24">
                             <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
