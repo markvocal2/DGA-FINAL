@@ -196,7 +196,7 @@ function dga_login2_admin_styles() {
         .language-switcher-links,
         div:has(select[name="language"]),
         div:has(select[id*="language"]),
-        a:contains("เปลี่ยนภาษา"),
+        a[href*="lang"]:not([href*="javascript"]),
         .login > form + div,
         .login > #loginform + div,
         .login-footer-local,
@@ -315,7 +315,7 @@ function dga_language_switcher_remove_js() {
             'select[name="language"]',
             '[id*="language"]',
             '[class*="language"]',
-            'a:contains("เปลี่ยนภาษา")',
+            'a[href*="lang"]:not([href*="javascript"])',
             'form + div select',
             '.login-footer-local',
             '.login-header-language'
@@ -35502,7 +35502,7 @@ add_action('admin_head', function() {
             font-weight: 600;
         }
         
-        .role-group-title:contains("แผนก/หน่วยงาน") {
+        .role-group-title[data-title*="แผนก"], .role-group-title[title*="แผนก"] {
             color: #1976d2;
             font-size: 14px;
             border-bottom: 2px solid #2196f3;
