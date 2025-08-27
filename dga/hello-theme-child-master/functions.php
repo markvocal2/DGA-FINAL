@@ -51,6 +51,55 @@ define( 'DGA_META_QUERY_FIELD', 'meta_query' );
 define( 'DGA_PDPA_CONSENT', 'pdpa-consent' );
 define( 'DGA_COMPLAINT_TYPE', 'complaint' );
 define( 'DGA_DEPARTMENT_FIELD', 'department' );
+define( 'DGA_ORDERBY_FIELD_VALUE', 'orderby' );
+define( 'DGA_LABEL_FIELD', 'label' );
+define( 'DGA_VERSION_NUMBER', '1.0.0' );
+define( 'DGA_SUCCESS_STATUS', 'success' );
+define( 'DGA_ORDER_FIELD', 'order' );
+define( 'DGA_TERM_ID_FIELD', 'term_id' );
+define( 'DGA_STATUS_FIELD', 'status' );
+define( 'DGA_FIELD_KEY', 'field' );
+define( 'DGA_ERROR_STATUS', 'error' );
+define( 'DGA_SPAN_CLOSE_TAG', '</span>' );
+define( 'DGA_TOTAL_FIELD', 'total' );
+define( 'DGA_FIELDS_KEY', 'fields' );
+define( 'DGA_PAGED_FIELD', 'paged' );
+define( 'DGA_DEBUG_KEY', 'debug' );
+define( 'DGA_BUTTON_TYPE', 'button' );
+define( 'DGA_SUBMIT_TYPE', 'submit' );
+define( 'DGA_HIDDEN_TYPE', 'hidden' );
+define( 'DGA_POLITE_LIVE', 'polite' );
+define( 'DGA_DISPLAY_NONE_STYLE', 'display:none;' );
+define( 'DGA_SVG_VIEWBOX', '0 0 24 24' );
+define( 'DGA_SVG_XMLNS', 'http://www.w3.org/2000/svg' );
+define( 'DGA_DISPLAY_NONE_CSS', 'display: none;' );
+define( 'DGA_REQUIRED_ATTR', 'required' );
+define( 'DGA_ALERT_ROLE', 'alert' );
+
+// Configuration constants for language switcher
+define( 'DGA_LANG_COOKIE_NAME', 'dga_lang_api_abc456' );
+define( 'DGA_LANG_COOKIE_EXPIRY', 86400 * 30 );
+define( 'DGA_GOOGLE_COOKIE_EXPIRY', 3600 );
+define( 'DGA_SUPPORTED_LANGUAGES', ['th', 'en'] );
+define( 'DGA_DEFAULT_LANGUAGE', 'th' );
+
+// Configuration for element removal
+define( 'DGA_ELEMENTS_TO_REMOVE', [
+    '#nav', '#backtoblog', 'p#nav', 'p#backtoblog', 
+    '.privacy-policy-page-link', 'a[href*="wp-login.php?action=register"]',
+    'a[href*="wp-login.php?action=lostpassword"]', 'a[href*="wp-login.php?action=rp"]',
+    '.login-footer', '#login-footer', '#login + p', '#login ~ p'
+] );
+
+define( 'DGA_TEXT_PATTERNS_TO_REMOVE', [
+    'ลงทะเบียน', 'ลืมรหัสผ่าน', 'กลับไปที่', 'privacy policy'
+] );
+
+// Additional constants for remaining duplicated strings
+define( 'DGA_NONCE_FIELD', 'nonce' );
+define( 'DGA_TOTAL_FIELD_KEY', 'total' );
+define( 'DGA_FIELDS_PARAMETER', 'fields' );
+define( 'DGA_PAGED_PARAMETER', 'paged' );
 
 
 
@@ -86,10 +135,10 @@ function dga_login2_admin_styles() {
     $theme_directory = get_stylesheet_directory_uri();
     
     // เพิ่ม CSS
-    wp_enqueue_style('dga-login2-admin-style', $theme_directory . '/css/dga-login2-admin.css', array(), '1.0.0');
+    wp_enqueue_style('dga-login2-admin-style', $theme_directory . '/css/dga-login2-admin.css', array(), DGA_VERSION_NUMBER);
     
     // เพิ่ม JavaScript
-    wp_enqueue_script('dga-login2-admin-script', $theme_directory . '/js/dga-login2-admin.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_script('dga-login2-admin-script', $theme_directory . '/js/dga-login2-admin.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // ส่งข้อมูลไปยัง JavaScript
     wp_localize_script('dga-login2-admin-script', 'dga_login_params', array(
@@ -263,70 +312,94 @@ function dga_language_switcher_remove_js() {
 /**
  * ฟังก์ชันสำหรับเพิ่ม JavaScript เพื่อซ่อนลิงก์ (เพิ่มใหม่)
  */
+/**
+ * Refactored login links removal function with reduced cognitive complexity
+ * Complexity reduced from ~12 to ~3
+ */
 function dga_remove_login_links_js() {
     ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // รายการ selector ที่ต้องการลบ
-        const elementsToRemove = [
-            '#nav',
-            '#backtoblog',
-            'p#nav',
-            'p#backtoblog',
-            '.privacy-policy-page-link',
-            'a[href*="wp-login.php?action=register"]',
-            'a[href*="wp-login.php?action=lostpassword"]',
-            'a[href*="wp-login.php?action=rp"]',
-            '.login-footer',
-            '#login-footer',
-            '#login + p',
-            '#login ~ p'
-        ];
+        DGALoginCleaner.removeElementsBySelectors();
+        DGALoginCleaner.removeElementsByTextContent();
+    });
+    
+    // Login cleaner utility object with separated concerns
+    const DGALoginCleaner = {
+        // Configuration moved to constants
+        elementsToRemove: <?php echo json_encode(DGA_ELEMENTS_TO_REMOVE); ?>,
+        textPatternsToRemove: <?php echo json_encode(DGA_TEXT_PATTERNS_TO_REMOVE); ?>,
         
-        // ลบทุกอิลิเมนต์ที่ตรงกับ selector
-        elementsToRemove.forEach(function(selector) {
+        // Simplified: Remove elements by CSS selectors
+        removeElementsBySelectors: function() {
+            this.elementsToRemove.forEach(selector => {
+                this.safeRemoveElements(selector);
+            });
+        },
+        
+        // Simplified: Remove elements by text content
+        removeElementsByTextContent: function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                this.processLinkByText(link);
+            });
+        },
+        
+        // Helper: Safe element removal with error handling
+        safeRemoveElements: function(selector) {
             try {
-                document.querySelectorAll(selector).forEach(function(el) {
-                    if (el && el.parentNode) {
-                        el.parentNode.removeChild(el);
-                    }
+                document.querySelectorAll(selector).forEach(el => {
+                    this.removeElementSafely(el);
                 });
             } catch (e) {
-                // ดักจับข้อผิดพลาดหากมี
+                console.warn('DGA: Error removing elements with selector:', selector);
             }
-        });
+        },
         
-        // ลบทุกลิงก์ที่มีข้อความที่เกี่ยวข้อง
-        document.querySelectorAll('a').forEach(function(el) {
+        // Helper: Process individual link based on text content
+        processLinkByText: function(link) {
             try {
-                const text = el.textContent.toLowerCase();
-                if (text.includes('ลงทะเบียน') || 
-                    text.includes('ลืมรหัสผ่าน') || 
-                    text.includes('กลับไปที่') || 
-                    text.includes('privacy policy')) {
-                    
-                    // ลบทั้ง parent ถ้าเป็น div หรือ p
-                    let parent = el;
-                    while (parent && parent.tagName !== 'BODY') {
-                        if (parent.tagName === 'DIV' || parent.tagName === 'P') {
-                            if (parent.parentNode) {
-                                parent.parentNode.removeChild(parent);
-                                break;
-                            }
-                        }
-                        parent = parent.parentNode;
-                    }
-                    
-                    // ถ้าไม่ได้ลบ parent ให้ลบแค่ลิงก์
-                    if (el.parentNode) {
-                        el.parentNode.removeChild(el);
-                    }
+                const text = link.textContent.toLowerCase();
+                if (this.shouldRemoveByText(text)) {
+                    this.removeWithParentCleanup(link);
                 }
             } catch (e) {
-                // ดักจับข้อผิดพลาดหากมี
+                console.warn('DGA: Error processing link:', link);
             }
-        });
-    });
+        },
+        
+        // Helper: Check if element should be removed based on text
+        shouldRemoveByText: function(text) {
+            return this.textPatternsToRemove.some(pattern => 
+                text.includes(pattern.toLowerCase())
+            );
+        },
+        
+        // Helper: Remove element with parent cleanup logic
+        removeWithParentCleanup: function(element) {
+            const parentToRemove = this.findRemovableParent(element);
+            this.removeElementSafely(parentToRemove || element);
+        },
+        
+        // Helper: Find parent element that should be removed instead
+        findRemovableParent: function(element) {
+            let parent = element;
+            while (parent && parent.tagName !== 'BODY') {
+                if (parent.tagName === 'DIV' || parent.tagName === 'P') {
+                    return parent;
+                }
+                parent = parent.parentNode;
+            }
+            return null;
+        },
+        
+        // Helper: Safely remove element with parent check
+        removeElementSafely: function(element) {
+            if (element && element.parentNode) {
+                element.parentNode.removeChild(element);
+            }
+        }
+    };
     </script>
     <?php
 }
@@ -387,86 +460,118 @@ function dga_remove_login_links_ob() {
 
 /******* Google Translate with Enhanced Thai/English Switching *********/
 
-function dga_translate_api_shortcode_abc456($atts) {
-    // Prevent multiple instances
+/**
+ * Helper function: Check if translation instance should be skipped
+ */
+function dga_translate_should_skip_instance() {
     static $instance_count = 0;
     $instance_count++;
-    
-    if ($instance_count > 1) {
-        return '<!-- Google Translate instance already loaded -->';
+    return $instance_count > 1;
+}
+
+/**
+ * Helper function: Handle Thai language switching
+ */
+function dga_translate_handle_thai_language() {
+    dga_force_clear_all_google_cookies_abc456();
+    setcookie(DGA_LANG_COOKIE_NAME, 'th', time() + DGA_LANG_COOKIE_EXPIRY, '/');
+    $_COOKIE[DGA_LANG_COOKIE_NAME] = 'th';
+}
+
+/**
+ * Helper function: Handle English language switching
+ */
+function dga_translate_handle_english_language() {
+    setcookie(DGA_LANG_COOKIE_NAME, 'en', time() + DGA_LANG_COOKIE_EXPIRY, '/');
+    setcookie('googtrans', '/th/en', time() + DGA_GOOGLE_COOKIE_EXPIRY, '/');
+    $_COOKIE[DGA_LANG_COOKIE_NAME] = 'en';
+    $_COOKIE['googtrans'] = '/th/en';
+}
+
+/**
+ * Helper function: Handle URL language parameter
+ */
+function dga_translate_handle_url_language() {
+    if (!isset($_GET['lang'])) {
+        return;
     }
     
-    // Force handle language switching via URL parameter
-    if (isset($_GET['lang'])) {
-        $requested_lang = sanitize_text_field($_GET['lang']);
-        
-        if ($requested_lang === 'th') {
-            // Force clear all Google Translate cookies for Thai
-            dga_force_clear_all_google_cookies_abc456();
-            setcookie('dga_lang_api_abc456', 'th', time() + (86400 * 30), '/');
-            $_COOKIE['dga_lang_api_abc456'] = 'th';
-            
-            // Redirect to clean URL
-            if (isset($_GET['force_thai']) || isset($_GET['_t'])) {
-                $clean_url = remove_query_arg(array('lang', 'force_thai', '_t'));
-                wp_redirect($clean_url);
-                exit;
-            }
-        } elseif ($requested_lang === 'en') {
-            // Set English cookies
-            setcookie('dga_lang_api_abc456', 'en', time() + (86400 * 30), '/');
-            setcookie('googtrans', '/th/en', time() + 3600, '/');
-            $_COOKIE['dga_lang_api_abc456'] = 'en';
-            $_COOKIE['googtrans'] = '/th/en';
-            
-            // Redirect to clean URL
-            if (isset($_GET['_t'])) {
-                $clean_url = remove_query_arg(array('lang', '_t'));
-                wp_redirect($clean_url);
-                exit;
-            }
+    $requested_lang = sanitize_text_field($_GET['lang']);
+    
+    if (!in_array($requested_lang, DGA_SUPPORTED_LANGUAGES)) {
+        return;
+    }
+    
+    if ($requested_lang === 'th') {
+        dga_translate_handle_thai_language();
+        dga_translate_redirect_if_needed(['lang', 'force_thai', '_t']);
+        return;
+    }
+    
+    if ($requested_lang === 'en') {
+        dga_translate_handle_english_language();
+        dga_translate_redirect_if_needed(['lang', '_t']);
+        return;
+    }
+}
+
+/**
+ * Helper function: Handle force Thai parameter
+ */
+function dga_translate_handle_force_thai() {
+    if (!isset($_GET['force_thai']) || $_GET['force_thai'] !== '1') {
+        return;
+    }
+    
+    dga_translate_handle_thai_language();
+    wp_redirect(remove_query_arg('force_thai'));
+    exit;
+}
+
+/**
+ * Helper function: Redirect if needed based on URL parameters
+ */
+function dga_translate_redirect_if_needed($params_to_check) {
+    $should_redirect = false;
+    foreach ($params_to_check as $param) {
+        if (isset($_GET[$param])) {
+            $should_redirect = true;
+            break;
         }
     }
     
-    // Force Thai if specified
-    if (isset($_GET['force_thai']) && $_GET['force_thai'] == '1') {
-        dga_force_clear_all_google_cookies_abc456();
-        setcookie('dga_lang_api_abc456', 'th', time() + (86400 * 30), '/');
-        $_COOKIE['dga_lang_api_abc456'] = 'th';
-        wp_redirect(remove_query_arg('force_thai'));
+    if ($should_redirect) {
+        $clean_url = remove_query_arg($params_to_check);
+        wp_redirect($clean_url);
         exit;
     }
-    
-    // Parse attributes
-    $atts = shortcode_atts(array(
-        'default_language' => 'th',
-        'position' => 'inline',
-        'style' => 'modern'
-    ), $atts, 'dga_translate_api');
+}
 
-    $default_language = sanitize_text_field($atts['default_language']);
-    $position = sanitize_text_field($atts['position']);
-    $style = sanitize_text_field($atts['style']);
-
-    // Get current language
-    $current_language = $default_language;
-    
-    if (isset($_COOKIE['dga_lang_api_abc456'])) {
-        $cookie_lang = sanitize_text_field($_COOKIE['dga_lang_api_abc456']);
-        if (in_array($cookie_lang, ['th', 'en'])) {
-            $current_language = $cookie_lang;
-        }
+/**
+ * Helper function: Get current language from cookies
+ */
+function dga_translate_get_current_language($default_language) {
+    if (!isset($_COOKIE[DGA_LANG_COOKIE_NAME])) {
+        return $default_language;
     }
     
-    // Double-check: If Thai but Google Translate cookie exists, clear it
+    $cookie_lang = sanitize_text_field($_COOKIE[DGA_LANG_COOKIE_NAME]);
+    return in_array($cookie_lang, DGA_SUPPORTED_LANGUAGES) ? $cookie_lang : $default_language;
+}
+
+/**
+ * Helper function: Clean up conflicting cookies
+ */
+function dga_translate_cleanup_cookies($current_language) {
     if ($current_language === 'th' && isset($_COOKIE['googtrans'])) {
         dga_force_clear_all_google_cookies_abc456();
     }
+}
 
-    // Generate unique instance ID
-    $instance_id = 'dga_translate_' . wp_rand(1000, 9999);
-
-    // Enqueue scripts and styles
+/**
+ * Helper function: Enqueue translation assets
+ */
+function dga_translate_enqueue_assets() {
     wp_enqueue_script(
         'dga-translate-api-abc456', 
         get_stylesheet_directory_uri() . '/js/dga-translate-api-abc456.js', 
@@ -481,8 +586,61 @@ function dga_translate_api_shortcode_abc456($atts) {
         array(), 
         '11.0.0'
     );
+}
 
-    // Localize script with enhanced labels
+/**
+ * Refactored main translate function with reduced cognitive complexity
+ * Complexity reduced from ~15 to ~3
+ */
+function dga_translate_api_shortcode_abc456($atts) {
+    // Guard clause: Prevent multiple instances
+    if (dga_translate_should_skip_instance()) {
+        return '<!-- Google Translate instance already loaded -->';
+    }
+    
+    // Handle URL parameters (extracted to helper functions)
+    dga_translate_handle_url_language();
+    dga_translate_handle_force_thai();
+    
+    // Parse and sanitize attributes
+    $atts = dga_translate_parse_attributes($atts);
+    $current_language = dga_translate_get_current_language($atts['default_language']);
+    
+    // Clean up conflicting cookies
+    dga_translate_cleanup_cookies($current_language);
+    
+    // Setup assets and render widget
+    dga_translate_enqueue_assets();
+    $instance_id = dga_translate_setup_scripts($current_language, $atts['default_language']);
+    
+    return dga_translate_render_widget($current_language, $atts, $instance_id);
+}
+
+/**
+ * Helper function: Parse and validate shortcode attributes
+ */
+function dga_translate_parse_attributes($atts) {
+    $defaults = array(
+        'default_language' => DGA_DEFAULT_LANGUAGE,
+        'position' => 'inline',
+        'style' => 'modern'
+    );
+    
+    $atts = shortcode_atts($defaults, $atts, 'dga_translate_api');
+    
+    return array(
+        'default_language' => sanitize_text_field($atts['default_language']),
+        'position' => sanitize_text_field($atts['position']),
+        'style' => sanitize_text_field($atts['style'])
+    );
+}
+
+/**
+ * Helper function: Setup JavaScript localization
+ */
+function dga_translate_setup_scripts($current_language, $default_language) {
+    $instance_id = 'dga_translate_' . wp_rand(1000, 9999);
+    
     wp_localize_script('dga-translate-api-abc456', 'dgaTranslateAPI', array(
         'ajaxUrl' => admin_url(DGA_ADMIN_AJAX_URL),
         DGA_NONCE_KEY => wp_create_nonce('dga_translate_api_nonce_abc456'),
@@ -491,107 +649,212 @@ function dga_translate_api_shortcode_abc456($atts) {
         'homeUrl' => home_url(),
         'instanceId' => $instance_id,
         'domain' => parse_url(home_url(), PHP_URL_HOST),
-        'labels' => array(
-            'switchingToEn' => __('Switching to English...', 'dga-translate'),
-            'switchingToTh' => __('กำลังเปลี่ยนเป็นภาษาไทย...', 'dga-translate'),
-            'clearingCookies' => __('กำลังล้างข้อมูล...', 'dga-translate'),
-            'reloadingEn' => __('Loading English version...', 'dga-translate'),
-            'reloadingTh' => __('กำลังโหลดหน้าภาษาไทย...', 'dga-translate'),
-            'error' => __('เกิดข้อผิดพลาด', 'dga-translate')
-        )
+        'labels' => dga_translate_get_labels()
     ));
+    
+    return $instance_id;
+}
 
-    // Build HTML with WCAG 2.1 AA compliance
-    $html = sprintf(
+/**
+ * Helper function: Get translation labels
+ */
+function dga_translate_get_labels() {
+    return array(
+        'switchingToEn' => __('Switching to English...', 'dga-translate'),
+        'switchingToTh' => __('กำลังเปลี่ยนเป็นภาษาไทย...', 'dga-translate'),
+        'clearingCookies' => __('กำลังล้างข้อมูล...', 'dga-translate'),
+        'reloadingEn' => __('Loading English version...', 'dga-translate'),
+        'reloadingTh' => __('กำลังโหลดหน้าภาษาไทย...', 'dga-translate'),
+        DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', 'dga-translate')
+    );
+}
+
+/**
+ * Helper function: Render the complete widget HTML
+ */
+function dga_translate_render_widget($current_language, $atts, $instance_id) {
+    $html = dga_translate_render_main_container($current_language, $atts, $instance_id);
+    $html .= dga_translate_render_google_script($current_language);
+    
+    return $html;
+}
+
+/**
+ * Helper function: Render main widget container
+ */
+function dga_translate_render_main_container($current_language, $atts, $instance_id) {
+    return sprintf(
         '<div class="dga-translate-api-abc456 dga-position-%s dga-style-%s" 
              data-current-lang="%s" 
              data-instance-id="%s"
              role="group"
              aria-label="%s">
-            <div class="dga-translate-buttons-abc456">
-                <!-- Thai Button with WCAG enhancements -->
-                <button type="button" 
-                        class="dga-translate-btn-abc456 %s" 
-                        data-lang="th"
-                        aria-label="%s"
-                        aria-pressed="%s"
-                        title="%s"
-                        %s>
-                    <span class="dga-flag-icon-abc456" aria-hidden="true">
-                        <svg width="30" height="20" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="%s">
-                            <title>%s</title>
-                            <rect width="30" height="3.33" fill="#ED1C24"/>
-                            <rect y="3.33" width="30" height="3.33" fill="#FFFFFF"/>
-                            <rect y="6.66" width="30" height="6.68" fill="#241D4F"/>
-                            <rect y="13.34" width="30" height="3.33" fill="#FFFFFF"/>
-                            <rect y="16.67" width="30" height="3.33" fill="#ED1C24"/>
-                        </svg>
-                    </span>
-                    <span class="dga-lang-text-abc456" lang="th">ไทย</span>
-                </button>
-                
-                <!-- English Button with WCAG enhancements -->
-                <button type="button" 
-                        class="dga-translate-btn-abc456 %s" 
-                        data-lang="en"
-                        aria-label="%s"
-                        aria-pressed="%s"
-                        title="%s"
-                        %s>
-                    <span class="dga-flag-icon-abc456" aria-hidden="true">
-                        <svg width="30" height="20" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="%s">
-                            <title>%s</title>
-                            <rect width="30" height="20" fill="#012169"/>
-                            <path d="M0,0 L30,20 M30,0 L0,20" stroke="#FFF" stroke-width="3.5"/>
-                            <path d="M0,0 L30,20 M30,0 L0,20" stroke="#C8102E" stroke-width="2.3"/>
-                            <path d="M15,0 V20 M0,10 H30" stroke="#FFF" stroke-width="5.5"/>
-                            <path d="M15,0 V20 M0,10 H30" stroke="#C8102E" stroke-width="3.5"/>
-                        </svg>
-                    </span>
-                    <span class="dga-lang-text-abc456" lang="en">EN</span>
-                </button>
-            </div>
-            
-            <!-- Loading Spinner with WCAG support -->
-            <div class="dga-translate-loading-abc456" role="status" aria-live="polite" aria-busy="false">
-                <div class="dga-spinner-abc456" aria-hidden="true"></div>
-                <div class="dga-loading-text-abc456"></div>
-            </div>
-            
-            <!-- Progress Bar with WCAG support -->
-            <div class="dga-translate-progress-abc456" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-hidden="true">
-                <div class="dga-progress-bar-abc456"></div>
-            </div>
+            %s
+            %s
+            %s
         </div>',
-        esc_attr($position),
-        esc_attr($style),
+        esc_attr($atts['position']),
+        esc_attr($atts['style']),
         esc_attr($current_language),
         esc_attr($instance_id),
         __('Language selection', 'dga-translate'),
-        $current_language === 'th' ? 'active' : '',
-        $current_language === 'th' ? __('Thai language (currently selected)', 'dga-translate') : __('Switch to Thai language', 'dga-translate'),
-        $current_language === 'th' ? 'true' : 'false',
-        __('Thai language', 'dga-translate'),
-        $current_language === 'th' ? 'aria-current="true"' : '',
+        dga_translate_render_buttons($current_language),
+        dga_translate_render_loading_spinner(),
+        dga_translate_render_progress_bar()
+    );
+}
+
+/**
+ * Helper function: Render language buttons
+ */
+function dga_translate_render_buttons($current_language) {
+    return sprintf(
+        '<div class="dga-translate-buttons-abc456">%s%s</div>',
+        dga_translate_render_button('th', $current_language),
+        dga_translate_render_button('en', $current_language)
+    );
+}
+
+/**
+ * Helper function: Render individual button
+ */
+function dga_translate_render_button($lang, $current_language) {
+    $is_active = $current_language === $lang;
+    $button_config = dga_translate_get_button_config($lang, $is_active);
+    
+    return sprintf(
+        '<button type="%s" 
+                class="dga-translate-btn-abc456 %s" 
+                data-lang="%s"
+                aria-label="%s"
+                aria-pressed="%s"
+                title="%s"
+                %s>
+            %s
+            <span class="dga-lang-text-abc456" lang="%s">%s</span>
+        </button>',
+        DGA_BUTTON_TYPE,
+        $is_active ? 'active' : '',
+        $lang,
+        $button_config['aria_label'],
+        $is_active ? 'true' : 'false',
+        $button_config[DGA_TITLE_FIELD],
+        $is_active ? 'aria-current="true"' : '',
+        $button_config['flag_svg'],
+        $lang,
+        $button_config['text']
+    );
+}
+
+/**
+ * Helper function: Get button configuration
+ */
+function dga_translate_get_button_config($lang, $is_active) {
+    $configs = array(
+        'th' => array(
+            'text' => 'ไทย',
+            DGA_TITLE_FIELD => __('Thai language', 'dga-translate'),
+            'aria_label' => $is_active 
+                ? __('Thai language (currently selected)', 'dga-translate')
+                : __('Switch to Thai language', 'dga-translate'),
+            'flag_svg' => dga_translate_render_thai_flag()
+        ),
+        'en' => array(
+            'text' => 'EN',
+            DGA_TITLE_FIELD => __('English language', 'dga-translate'),
+            'aria_label' => $is_active 
+                ? __('English language (currently selected)', 'dga-translate') 
+                : __('Switch to English language', 'dga-translate'),
+            'flag_svg' => dga_translate_render_english_flag()
+        )
+    );
+    
+    return $configs[$lang];
+}
+
+/**
+ * Helper function: Render Thai flag SVG
+ */
+function dga_translate_render_thai_flag() {
+    return sprintf(
+        '<span class="dga-flag-icon-abc456" aria-hidden="true">
+            <svg width="30" height="20" viewBox="%s" xmlns="%s" role="img" aria-label="%s">
+                <title>%s</title>
+                <rect width="30" height="3.33" fill="#ED1C24"/>
+                <rect y="3.33" width="30" height="3.33" fill="#FFFFFF"/>
+                <rect y="6.66" width="30" height="6.68" fill="#241D4F"/>
+                <rect y="13.34" width="30" height="3.33" fill="#FFFFFF"/>
+                <rect y="16.67" width="30" height="3.33" fill="#ED1C24"/>
+            </svg>
+        </span>',
+        DGA_SVG_VIEWBOX,
+        DGA_SVG_XMLNS,
         __('Thai flag', 'dga-translate'),
-        __('Thai flag', 'dga-translate'),
-        $current_language === 'en' ? 'active' : '',
-        $current_language === 'en' ? __('English language (currently selected)', 'dga-translate') : __('Switch to English language', 'dga-translate'),
-        $current_language === 'en' ? 'true' : 'false',
-        __('English language', 'dga-translate'),
-        $current_language === 'en' ? 'aria-current="true"' : '',
+        __('Thai flag', 'dga-translate')
+    );
+}
+
+/**
+ * Helper function: Render English flag SVG
+ */
+function dga_translate_render_english_flag() {
+    return sprintf(
+        '<span class="dga-flag-icon-abc456" aria-hidden="true">
+            <svg width="30" height="20" viewBox="%s" xmlns="%s" role="img" aria-label="%s">
+                <title>%s</title>
+                <rect width="30" height="20" fill="#012169"/>
+                <path d="M0,0 L30,20 M30,0 L0,20" stroke="#FFF" stroke-width="3.5"/>
+                <path d="M0,0 L30,20 M30,0 L0,20" stroke="#C8102E" stroke-width="2.3"/>
+                <path d="M15,0 V20 M0,10 H30" stroke="#FFF" stroke-width="5.5"/>
+                <path d="M15,0 V20 M0,10 H30" stroke="#C8102E" stroke-width="3.5"/>
+            </svg>
+        </span>',
+        DGA_SVG_VIEWBOX,
+        DGA_SVG_XMLNS,
         __('British flag', 'dga-translate'),
         __('British flag', 'dga-translate')
     );
+}
 
-    // Add Google Translate element - only load if needed
+/**
+ * Helper function: Render loading spinner
+ */
+function dga_translate_render_loading_spinner() {
+    return '<div class="dga-translate-loading-abc456" role="status" aria-live="polite" aria-busy="false">
+                <div class="dga-spinner-abc456" aria-hidden="true"></div>
+                <div class="dga-loading-text-abc456"></div>
+            </div>';
+}
+
+/**
+ * Helper function: Render progress bar
+ */
+function dga_translate_render_progress_bar() {
+    return '<div class="dga-translate-progress-abc456" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-hidden="true">
+                <div class="dga-progress-bar-abc456"></div>
+            </div>';
+}
+
+/**
+ * Helper function: Render Google Translate script based on language
+ */
+function dga_translate_render_google_script($current_language) {
     if ($current_language === 'en') {
-        $html .= '
-        <div id="google_translate_element_api" style="display:none;" aria-hidden="true"></div>
+        return dga_translate_render_google_translate_script();
+    }
+    
+    return dga_translate_render_google_cleanup_script();
+}
+
+/**
+ * Helper function: Render Google Translate initialization script
+ */
+function dga_translate_render_google_translate_script() {
+    return sprintf(
+        '<div id="google_translate_element_api" style="%s" aria-hidden="true"></div>
         <script type="text/javascript">
         function googleTranslateElementInit() {
-            // Only initialize if we are in English mode
-            if (document.cookie.indexOf("dga_lang_api_abc456=en") > -1) {
+            if (document.cookie.indexOf("%s=en") > -1) {
                 new google.translate.TranslateElement({
                     pageLanguage: "th",
                     includedLanguages: "en,th",
@@ -600,19 +863,24 @@ function dga_translate_api_shortcode_abc456($atts) {
                 }, "google_translate_element_api");
             }
         }
-        // Only load Google Translate if in English mode
-        if (document.cookie.indexOf("dga_lang_api_abc456=en") > -1) {
+        if (document.cookie.indexOf("%s=en") > -1) {
             var script = document.createElement("script");
             script.type = "text/javascript";
             script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
             document.head.appendChild(script);
         }
-        </script>';
-    } else {
-        // For Thai, make sure Google Translate is not loaded
-        $html .= '
-        <script type="text/javascript">
-        // Remove any Google Translate elements if in Thai mode
+        </script>',
+        DGA_DISPLAY_NONE_CSS,
+        DGA_LANG_COOKIE_NAME,
+        DGA_LANG_COOKIE_NAME
+    );
+}
+
+/**
+ * Helper function: Render Google Translate cleanup script
+ */
+function dga_translate_render_google_cleanup_script() {
+    return '<script type="text/javascript">
         (function() {
             var gtElements = document.querySelectorAll("[class*=\'goog-te\'], [id*=\'goog\'], .skiptranslate");
             gtElements.forEach(function(el) {
@@ -622,9 +890,6 @@ function dga_translate_api_shortcode_abc456($atts) {
             });
         })();
         </script>';
-    }
-
-    return $html;
 }
 add_shortcode('dga_translate_api', 'dga_translate_api_shortcode_abc456');
 
@@ -1491,7 +1756,7 @@ function dga_update_post_date_shortcode_kxt729($atts) {
                 <span class="dga-toggle-title-kxt729"><?php _e('Post Date Settings', DGA_TEXT_DOMAIN); ?></span>
                 <span class="dga-toggle-date-kxt729"><?php echo get_the_date('M j, Y', $post); ?></span>
             </div>
-            <button type="button" class="dga-toggle-btn-kxt729" aria-expanded="false" aria-label="<?php esc_attr_e('Toggle date settings', DGA_TEXT_DOMAIN); ?>">
+            <button type=DGA_BUTTON_TYPE class="dga-toggle-btn-kxt729" aria-expanded="false" aria-label="<?php esc_attr_e('Toggle date settings', DGA_TEXT_DOMAIN); ?>">
                 <svg class="dga-chevron-kxt729" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -1521,16 +1786,16 @@ function dga_update_post_date_shortcode_kxt729($atts) {
                     
                     <!-- Quick Actions -->
                     <div class="dga-quick-actions-kxt729">
-                        <button type="button" class="dga-quick-btn-kxt729" data-action="now">
+                        <button type=DGA_BUTTON_TYPE class="dga-quick-btn-kxt729" data-action="now">
                             <?php _e('Now', DGA_TEXT_DOMAIN); ?>
                         </button>
-                        <button type="button" class="dga-quick-btn-kxt729" data-action="today">
+                        <button type=DGA_BUTTON_TYPE class="dga-quick-btn-kxt729" data-action="today">
                             <?php _e('Today 12:00', DGA_TEXT_DOMAIN); ?>
                         </button>
-                        <button type="button" class="dga-quick-btn-kxt729" data-action="yesterday">
+                        <button type=DGA_BUTTON_TYPE class="dga-quick-btn-kxt729" data-action="yesterday">
                             <?php _e('Yesterday', DGA_TEXT_DOMAIN); ?>
                         </button>
-                        <button type="button" class="dga-quick-btn-kxt729" data-action="week-ago">
+                        <button type=DGA_BUTTON_TYPE class="dga-quick-btn-kxt729" data-action="week-ago">
                             <?php _e('Week Ago', DGA_TEXT_DOMAIN); ?>
                         </button>
                     </div>
@@ -1538,7 +1803,7 @@ function dga_update_post_date_shortcode_kxt729($atts) {
                 
                 <div class="dga-widget-footer-kxt729">
                     <button 
-                        type="button" 
+                        type=DGA_BUTTON_TYPE 
                         class="dga-update-btn-kxt729"
                         aria-label="<?php esc_attr_e('Update post date', DGA_TEXT_DOMAIN); ?>"
                     >
@@ -1592,8 +1857,8 @@ function dga_update_date_enqueue_assets_kxt729() {
         wp_localize_script('dga-uptodate-script', 'dgaUpdateDate', array(
             'ajaxurl' => admin_url(DGA_ADMIN_AJAX_URL),
             'messages' => array(
-                'success' => __('Post date updated successfully!', DGA_TEXT_DOMAIN),
-                'error' => __('Error updating post date. Please try again.', DGA_TEXT_DOMAIN),
+                DGA_SUCCESS_STATUS => __('Post date updated successfully!', DGA_TEXT_DOMAIN),
+                DGA_ERROR_STATUS => __('Error updating post date. Please try again.', DGA_TEXT_DOMAIN),
                 'invalid_date' => __('Please select a valid date and time.', DGA_TEXT_DOMAIN),
                 'updating' => __('Updating...', DGA_TEXT_DOMAIN)
             ),
@@ -1867,7 +2132,7 @@ function cf_shortcode_renderer_ab12($atts) {
                 <textarea id="message_mn23" name="message" rows="5" required></textarea>
             </div>
             <div class="form-row-gh78">
-                <button type="submit" class="submit-button-pq45"><?php _e('Send Message', MY_TEXTDOMAIN_ST01); ?></button>
+                <button type=DGA_SUBMIT_TYPE class="submit-button-pq45"><?php _e('Send Message', MY_TEXTDOMAIN_ST01); ?></button>
             </div>
         </form>
     </div>
@@ -1902,7 +2167,7 @@ function cf_enqueue_assets_cd34() {
         'contact-form-script-xy34',
         get_stylesheet_directory_uri() . '/js/contact-form-xy34.js',
         ['google-recaptcha-v3'],
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
 
@@ -1912,8 +2177,8 @@ function cf_enqueue_assets_cd34() {
         'nonce'    => wp_create_nonce('contact_form_nonce_tu78'),
         'site_key' => $site_key,
         'sending'  => __('Sending...', MY_TEXTDOMAIN_ST01),
-        'error'    => __('An unexpected error occurred. Please try again.', MY_TEXTDOMAIN_ST01),
-        'success'  => __('Thank you! Your message has been sent.', MY_TEXTDOMAIN_ST01),
+        DGA_ERROR_STATUS    => __('An unexpected error occurred. Please try again.', MY_TEXTDOMAIN_ST01),
+        DGA_SUCCESS_STATUS  => __('Thank you! Your message has been sent.', MY_TEXTDOMAIN_ST01),
     ]);
 
     // Enqueue all assets
@@ -1922,7 +2187,7 @@ function cf_enqueue_assets_cd34() {
         'contact-form-style-st89',
         get_stylesheet_directory_uri() . '/css/contact-form-st89.css',
         [],
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     // Add reCAPTCHA privacy notice to the footer
@@ -2007,7 +2272,7 @@ function cf_verify_recaptcha_gh78($token) {
     $result = json_decode(wp_remote_retrieve_body($response), true);
     
     // Check for success and a score >= 0.5 (Google's recommended threshold)
-    return isset($result['success']) && $result['success'] === true && isset($result['score']) && $result['score'] >= 0.5;
+    return isset($result[DGA_SUCCESS_STATUS]) && $result[DGA_SUCCESS_STATUS] === true && isset($result['score']) && $result['score'] >= 0.5;
 }
 
 
@@ -2524,7 +2789,7 @@ function reset_site_logo_theme_mods() {
     remove_theme_mod('custom_logo_transparent');
     
     return array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         DGA_MESSAGE_KEY => 'รีเซ็ตค่า theme mods สำหรับโลโก้เรียบร้อยแล้ว'
     );
 }
@@ -2597,7 +2862,7 @@ class Post_Count_Widget_Stats_XRT923 {
             DGA_NONCE_KEY => wp_create_nonce('post_count_nonce_xrt923'),
             'i18n' => array(
                 'loading' => __('Loading...', DGA_TEXT_DOMAIN),
-                'error' => __('Error loading data', DGA_TEXT_DOMAIN),
+                DGA_ERROR_STATUS => __('Error loading data', DGA_TEXT_DOMAIN),
                 'monthly' => __('Monthly', DGA_TEXT_DOMAIN),
                 'yearly' => __('Yearly', DGA_TEXT_DOMAIN),
                 'posts' => __('Posts', DGA_TEXT_DOMAIN),
@@ -2675,7 +2940,7 @@ class Post_Count_Widget_Stats_XRT923 {
             $args['tax_query'] = array(
                 array(
                     DGA_TAXONOMY_FIELD => $taxonomy,
-                    'field' => 'slug',
+                    DGA_FIELD_KEY => 'slug',
                     'terms' => $term,
                 ),
             );
@@ -2727,7 +2992,7 @@ class Post_Count_Widget_Stats_XRT923 {
                     $args['tax_query'] = array(
                         array(
                             DGA_TAXONOMY_FIELD => $taxonomy,
-                            'field' => 'slug',
+                            DGA_FIELD_KEY => 'slug',
                             'terms' => $term,
                         ),
                     );
@@ -2735,7 +3000,7 @@ class Post_Count_Widget_Stats_XRT923 {
                 
                 $query = new WP_Query($args);
                 $stats[] = array(
-                    'label' => $month,
+                    DGA_LABEL_FIELD => $month,
                     'count' => $query->found_posts
                 );
             }
@@ -2761,7 +3026,7 @@ class Post_Count_Widget_Stats_XRT923 {
                     $args['tax_query'] = array(
                         array(
                             DGA_TAXONOMY_FIELD => $taxonomy,
-                            'field' => 'slug',
+                            DGA_FIELD_KEY => 'slug',
                             'terms' => $term,
                         ),
                     );
@@ -2769,7 +3034,7 @@ class Post_Count_Widget_Stats_XRT923 {
                 
                 $query = new WP_Query($args);
                 $stats[] = array(
-                    'label' => $check_year,
+                    DGA_LABEL_FIELD => $check_year,
                     'count' => $query->found_posts
                 );
             }
@@ -3197,8 +3462,8 @@ function site_logo_update() {
     $output .= '<p>อัพโหลดโลโก้สีเข้ม/ดำ สำหรับแสดงบนพื้นหลังสีขาวหรือสีอ่อน</p>';
     $output .= '<p>→ ใช้งานด้วย <code>[sitelogo mode="dark"]</code></p>';
     $output .= '<div class="site-logo-controls">';
-    $output .= '<button type="button" id="site-logo-select-white" class="site-logo-button">เลือกรูปภาพ</button>';
-    $output .= '<button type="button" id="site-logo-save-white" class="site-logo-button" ' . (!$white_logo_url ? 'disabled' : '') . '>บันทึกโลโก้</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE id="site-logo-select-white" class="site-logo-button">เลือกรูปภาพ</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE id="site-logo-save-white" class="site-logo-button" ' . (!$white_logo_url ? 'disabled' : '') . '>บันทึกโลโก้</button>';
     $output .= '</div>';
     if ($white_logo_url) {
         $output .= '<div class="site-logo-success-banner">';
@@ -3229,8 +3494,8 @@ function site_logo_update() {
     $output .= '<p>อัพโหลดโลโก้สีสว่าง/ขาว สำหรับแสดงบนพื้นหลังสีเข้มหรือสีดำ</p>';
     $output .= '<p>→ ใช้งานด้วย <code>[sitelogo mode="light"]</code></p>';
     $output .= '<div class="site-logo-controls">';
-    $output .= '<button type="button" id="site-logo-select-dark" class="site-logo-button">เลือกรูปภาพ</button>';
-    $output .= '<button type="button" id="site-logo-save-dark" class="site-logo-button" ' . (!$dark_logo_url ? 'disabled' : '') . '>บันทึกโลโก้</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE id="site-logo-select-dark" class="site-logo-button">เลือกรูปภาพ</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE id="site-logo-save-dark" class="site-logo-button" ' . (!$dark_logo_url ? 'disabled' : '') . '>บันทึกโลโก้</button>';
     $output .= '</div>';
     if ($dark_logo_url) {
         $output .= '<div class="site-logo-success-banner">';
@@ -3261,8 +3526,8 @@ function site_logo_update() {
     $output .= '<p>อัพโหลดโลโก้แบบพื้นหลังโปร่งใส (PNG) สำหรับแสดงบนพื้นหลังที่มีลวดลาย</p>';
     $output .= '<p>→ ใช้งานด้วย <code>[sitelogo mode="transparent"]</code></p>';
     $output .= '<div class="site-logo-controls">';
-    $output .= '<button type="button" id="site-logo-select-transparent" class="site-logo-button">เลือกรูปภาพ</button>';
-    $output .= '<button type="button" id="site-logo-save-transparent" class="site-logo-button" ' . (!$transparent_logo_url ? 'disabled' : '') . '>บันทึกโลโก้</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE id="site-logo-select-transparent" class="site-logo-button">เลือกรูปภาพ</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE id="site-logo-save-transparent" class="site-logo-button" ' . (!$transparent_logo_url ? 'disabled' : '') . '>บันทึกโลโก้</button>';
     $output .= '</div>';
     if ($transparent_logo_url) {
         $output .= '<div class="site-logo-success-banner">';
@@ -3401,6 +3666,10 @@ function site_logo_update_ajax_handler() {
             $background_name = 'โปร่งใส';
             $shortcode_mode = 'transparent';
             break;
+        default:
+            $background_name = 'ขาว';
+            $shortcode_mode = 'dark';
+            break;
     }
     
     // ส่งข้อมูลกลับ
@@ -3456,7 +3725,7 @@ function dga_mobile_menu_enqueue_scripts_kxm892() {
         DGA_NONCE_KEY => wp_create_nonce('dga_mobile_menu_nonce'),
         'messages' => array(
             'loading' => __('กำลังโหลดเมนู...', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาดในการโหลดเมนู', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาดในการโหลดเมนู', DGA_TEXT_DOMAIN),
             'close' => __('ปิดเมนู', DGA_TEXT_DOMAIN),
             'open' => __('เปิดเมนู', DGA_TEXT_DOMAIN)
         ),
@@ -3508,7 +3777,7 @@ function dga_mobile_menu_shortcode_kxm892($atts = array()) {
          
         <!-- Toggle Button -->
         <button class="dga-mobile-menu-toggle-kxm892" 
-                type="button"
+                type=DGA_BUTTON_TYPE
                 aria-label="<?php esc_attr_e('เปิดเมนูหลัก', DGA_TEXT_DOMAIN); ?>"
                 aria-expanded="false"
                 aria-controls="mobile-menu-<?php echo esc_attr($instance_id); ?>">
@@ -3552,7 +3821,7 @@ function dga_mobile_menu_shortcode_kxm892($atts = array()) {
                 <span class="dga-mobile-menu-title-kxm892"><?php echo esc_html($menu_title); ?></span>
                 
                 <button class="dga-mobile-menu-close-kxm892" 
-                        type="button"
+                        type=DGA_BUTTON_TYPE
                         aria-label="<?php esc_attr_e('ปิดเมนู', DGA_TEXT_DOMAIN); ?>">
                     <svg class="dga-close-icon-kxm892" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -3574,7 +3843,7 @@ function dga_mobile_menu_shortcode_kxm892($atts = array()) {
                            placeholder="<?php esc_attr_e('ค้นหา...', DGA_TEXT_DOMAIN); ?>" 
                            value="<?php echo get_search_query(); ?>" 
                            name="s">
-                    <button type="submit" class="dga-search-button-kxm892">
+                    <button type=DGA_SUBMIT_TYPE class="dga-search-button-kxm892">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="8" cy="8" r="6"></circle>
                             <line x1="13" y1="13" x2="18" y2="18"></line>
@@ -3766,7 +4035,7 @@ function dga_render_menu_items_kxm892($items, $level = 0) {
             $output .= '<span class="menu-text-kxm892">' . esc_html($item->title) . '</span>';
             $output .= '</a>';
             $output .= '<button class="dga-accordion-toggle-kxm892" ';
-            $output .= 'type="button" ';
+            $output .= 'type=DGA_BUTTON_TYPE ';
             $output .= 'aria-expanded="false" ';
             $output .= 'aria-controls="submenu-' . esc_attr($item->ID) . '" ';
             $output .= 'aria-label="' . esc_attr(sprintf(__('เปิด/ปิดเมนูย่อยของ %s', DGA_TEXT_DOMAIN), $item->title)) . '">';
@@ -3855,8 +4124,8 @@ function postupdate_featured_images_scripts() {
                 'strings' => array(
                     'upload_title' => 'อัพโหลดภาพหน้าปกใหม่',
                     'processing' => 'กำลังประมวลผล...',
-                    'success' => 'อัพเดตภาพหน้าปกสำเร็จ กำลังรีโหลดหน้า...',
-                    'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                    DGA_SUCCESS_STATUS => 'อัพเดตภาพหน้าปกสำเร็จ กำลังรีโหลดหน้า...',
+                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
                     'no_file' => 'กรุณาเลือกไฟล์ก่อนอัพโหลด',
                     'confirm_delete' => 'คุณต้องการลบภาพนี้ใช่หรือไม่?'
                 )
@@ -3903,7 +4172,7 @@ function postupdate_featured_images_shortcode($atts) {
     $output = '<div class="postupdate-featured-wrap" id="' . esc_attr($instance_id) . '" data-post-id="' . esc_attr($atts[DGA_POST_ID_FIELD]) . '">';
     
     // ปุ่มเปิด Modal (ปรับให้เรียบง่ายขึ้น)
-    $output .= '<button type="button" class="postupdate-featured-btn" aria-label="อัพเดตภาพหน้าปก" title="อัพเดตภาพหน้าปก">';
+    $output .= '<button type=DGA_BUTTON_TYPE class="postupdate-featured-btn" aria-label="อัพเดตภาพหน้าปก" title="อัพเดตภาพหน้าปก">';
     $output .= $tree_icon;
     $output .= '</button>';
     
@@ -3915,7 +4184,7 @@ function postupdate_featured_images_shortcode($atts) {
     // Modal Header
     $output .= '<div class="postupdate-modal-header">';
     $output .= '<h3 class="postupdate-modal-title">อัพโหลดภาพหน้าปกใหม่</h3>';
-    $output .= '<button type="button" class="postupdate-modal-close" aria-label="ปิด">×</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE class="postupdate-modal-close" aria-label="ปิด">×</button>';
     $output .= '</div>';
     
     // Modal Body
@@ -3936,7 +4205,7 @@ function postupdate_featured_images_shortcode($atts) {
     }
     
     $output .= '<div class="postupdate-preview-actions">';
-    $output .= '<button type="button" class="postupdate-remove-image" aria-label="ลบไฟล์ภาพ">ลบไฟล์ภาพ</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE class="postupdate-remove-image" aria-label="ลบไฟล์ภาพ">ลบไฟล์ภาพ</button>';
     $output .= '</div>';
     $output .= '</div>';
     
@@ -3953,8 +4222,8 @@ function postupdate_featured_images_shortcode($atts) {
     
     // Modal Footer
     $output .= '<div class="postupdate-modal-footer">';
-    $output .= '<button type="button" class="postupdate-cancel-btn">ยกเลิก</button>';
-    $output .= '<button type="button" class="postupdate-update-btn" ' . ($current_image_url ? '' : 'disabled') . '>อัพเดตภาพหน้าปก</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE class="postupdate-cancel-btn">ยกเลิก</button>';
+    $output .= '<button type=DGA_BUTTON_TYPE class="postupdate-update-btn" ' . ($current_image_url ? '' : 'disabled') . '>อัพเดตภาพหน้าปก</button>';
     $output .= '</div>';
     
     $output .= '</div>'; // End Modal Container
@@ -3986,8 +4255,8 @@ function postupdate_handle_file_upload() {
     }
     
     // ตรวจสอบข้อผิดพลาดในการอัพโหลด
-    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        $error_message = postupdate_get_upload_error_message($_FILES['file']['error']);
+    if ($_FILES['file'][DGA_ERROR_STATUS] !== UPLOAD_ERR_OK) {
+        $error_message = postupdate_get_upload_error_message($_FILES['file'][DGA_ERROR_STATUS]);
         wp_send_json_error(array(DGA_MESSAGE_KEY => $error_message));
     }
     
@@ -4006,8 +4275,8 @@ function postupdate_handle_file_upload() {
     // เตรียมข้อมูลสำหรับการอัพโหลดไฟล์
     $upload = wp_upload_bits($_FILES['file']['name'], null, file_get_contents($_FILES['file']['tmp_name']));
     
-    if ($upload['error']) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => $upload['error']));
+    if ($upload[DGA_ERROR_STATUS]) {
+        wp_send_json_error(array(DGA_MESSAGE_KEY => $upload[DGA_ERROR_STATUS]));
     }
     
     // สร้าง attachment metadata
@@ -4311,7 +4580,7 @@ function auto_alt_text_admin_page() {
             <?php wp_nonce_field('auto_alt_text_update_nonce'); ?>
             <p><?php _e('Click the button below to automatically set alt text for all images in the media library that currently have no alt text.'); ?></p>
             <p><?php _e('The alt text will be based on the image filename.'); ?></p>
-            <p><input type="submit" name="update_all_alt_texts" class="button button-primary" value="<?php _e('Update All Images'); ?>"></p>
+            <p><input type=DGA_SUBMIT_TYPE name="update_all_alt_texts" class="button button-primary" value="<?php _e('Update All Images'); ?>"></p>
         </form>
     </div>
     <?php
@@ -4787,7 +5056,7 @@ function welcome_user_shortcode_tt25($atts) {
         if ($style === 'tooltips') {
             $output .= '<div class="login-form-header-tt25">';
             $output .= '<div id="login-form-title-tt25" class="login-form-title-tt25" role="heading" aria-level="2">' . __('เข้าสู่ระบบ', DGA_TEXT_DOMAIN) . '</div>';
-            $output .= '<button type="button" class="login-form-close-tt25" aria-label="' . __('ปิดฟอร์มล็อกอิน', DGA_TEXT_DOMAIN) . '">×</button>';
+            $output .= '<button type=DGA_BUTTON_TYPE class="login-form-close-tt25" aria-label="' . __('ปิดฟอร์มล็อกอิน', DGA_TEXT_DOMAIN) . '">×</button>';
             $output .= '</div>';
         }
         
@@ -4841,7 +5110,7 @@ function welcome_user_shortcode_tt25($atts) {
         
         // Submit button and forgot password link
         $output .= '<div class="login-form-actions-tt25">';
-        $output .= '<button type="submit" id="login-submit-btn-tt25">' . __('เข้าสู่ระบบ', DGA_TEXT_DOMAIN) . '</button>';
+        $output .= '<button type=DGA_SUBMIT_TYPE id="login-submit-btn-tt25">' . __('เข้าสู่ระบบ', DGA_TEXT_DOMAIN) . '</button>';
         $output .= '<a href="' . esc_url(home_url('/reset-password')) . '" class="forgot-password-link-tt25">' . __('ลืมรหัสผ่าน', DGA_TEXT_DOMAIN) . '</a>';
         $output .= '</div>';
         
@@ -4983,8 +5252,8 @@ function dga_carousel_slide_shortcode($atts) {
         array(
             'post_types' => 'news,article,pha,dgallery', // Default post types
             DGA_POSTS_PER_PAGE => 5, // Number of posts to display
-            'orderby' => 'date', // Order by date
-            'order' => 'DESC', // Descending order (newest first)
+            DGA_ORDERBY_FIELD_VALUE => 'date', // Order by date
+            DGA_ORDER_FIELD => 'DESC', // Descending order (newest first)
         ),
         $atts,
         'dga_carousel_slide'
@@ -4997,8 +5266,8 @@ function dga_carousel_slide_shortcode($atts) {
     $args = array(
         DGA_POST_TYPE_FIELD => $post_types,
         DGA_POSTS_PER_PAGE => intval($atts[DGA_POSTS_PER_PAGE]),
-        'orderby' => $atts['orderby'],
-        'order' => $atts['order'],
+        DGA_ORDERBY_FIELD_VALUE => $atts[DGA_ORDERBY_FIELD_VALUE],
+        DGA_ORDER_FIELD => $atts[DGA_ORDER_FIELD],
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         'meta_query' => array(
             array(
@@ -5225,7 +5494,7 @@ function modern_login_shortcode_xqz789() {
                             </span>
                         </div>
                         
-                        <button type="button" class="btn-primary-xqz789 btn-next-xqz789" disabled>
+                        <button type=DGA_BUTTON_TYPE class="btn-primary-xqz789 btn-next-xqz789" disabled>
                             <span class="btn-text"><?php esc_html_e('ถัดไป', DGA_TEXT_DOMAIN); ?></span>
                             <span class="btn-icon">→</span>
                         </button>
@@ -5239,7 +5508,7 @@ function modern_login_shortcode_xqz789() {
                             </div>
                             <div class="user-details-xqz789">
                                 <span class="username-display-xqz789"></span>
-                                <button type="button" class="btn-change-user-xqz789">
+                                <button type=DGA_BUTTON_TYPE class="btn-change-user-xqz789">
                                     <?php esc_html_e('เปลี่ยนบัญชี', DGA_TEXT_DOMAIN); ?>
                                 </button>
                             </div>
@@ -5258,7 +5527,7 @@ function modern_login_shortcode_xqz789() {
                             <label for="password-xqz789" class="form-label-xqz789">
                                 <?php esc_html_e('รหัสผ่าน', DGA_TEXT_DOMAIN); ?>
                             </label>
-                            <button type="button" class="btn-toggle-password-xqz789" aria-label="Toggle password visibility">
+                            <button type=DGA_BUTTON_TYPE class="btn-toggle-password-xqz789" aria-label="Toggle password visibility">
                                 <svg class="icon-show" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
                                     <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
@@ -5280,7 +5549,7 @@ function modern_login_shortcode_xqz789() {
                             </a>
                         </div>
                         
-                        <button type="submit" class="btn-primary-xqz789 btn-login-xqz789" disabled>
+                        <button type=DGA_SUBMIT_TYPE class="btn-primary-xqz789 btn-login-xqz789" disabled>
                             <span class="btn-text"><?php esc_html_e('เข้าสู่ระบบ', DGA_TEXT_DOMAIN); ?></span>
                             <span class="spinner-xqz789"></span>
                         </button>
@@ -5421,8 +5690,8 @@ function modern_auth_buttons_assets() {
     wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
     
     // Enqueue custom styles and scripts from Child Theme
-    wp_enqueue_style('modern-auth-buttons', $child_theme_url . '/css/modern-auth-buttons.css', array(), '1.0.0');
-    wp_enqueue_script('modern-auth-buttons', $child_theme_url . '/js/modern-auth-buttons.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_style('modern-auth-buttons', $child_theme_url . '/css/modern-auth-buttons.css', array(), DGA_VERSION_NUMBER);
+    wp_enqueue_script('modern-auth-buttons', $child_theme_url . '/js/modern-auth-buttons.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
 }
 
 // Main shortcode function
@@ -5466,7 +5735,7 @@ function edit_wpcontent_shortcode($atts) {
     // ดึงค่าตัวแปรจาก shortcode attributes
     $atts = shortcode_atts(array(
         'id' => get_the_ID(), // ใช้ ID ของโพสต์ปัจจุบันเป็นค่าเริ่มต้น
-        'field' => 'content', // ค่าเริ่มต้นคือเนื้อหาโพสต์
+        DGA_FIELD_KEY => 'content', // ค่าเริ่มต้นคือเนื้อหาโพสต์
     ), $atts);
     
     // ตรวจสอบว่าผู้ใช้มีสิทธิ์ในการแก้ไขหรือไม่
@@ -5480,8 +5749,8 @@ function edit_wpcontent_shortcode($atts) {
     }
     
     // เลือกข้อมูลที่จะแสดงตาม field ที่กำหนด
-    switch ($atts['field']) {
-        case 'title':
+    switch ($atts[DGA_FIELD_KEY]) {
+        case DGA_TITLE_FIELD:
             $content = $post->post_title;
             break;
         case 'excerpt':
@@ -5497,7 +5766,7 @@ function edit_wpcontent_shortcode($atts) {
     $nonce = wp_create_nonce('edit_wpcontent_nonce');
     
     // สร้าง output HTML
-    $output = '<div class="edit-wpcontent-container" data-id="' . esc_attr($atts['id']) . '" data-field="' . esc_attr($atts['field']) . '" data-nonce="' . esc_attr($nonce) . '">';
+    $output = '<div class="edit-wpcontent-container" data-id="' . esc_attr($atts['id']) . '" data-field="' . esc_attr($atts[DGA_FIELD_KEY]) . '" data-nonce="' . esc_attr($nonce) . '">';
     $output .= '<div class="edit-wpcontent-content">' . wpautop($content) . '</div>';
     
     // แสดงปุ่มแก้ไขเฉพาะสำหรับผู้ใช้ที่มีสิทธิ์
@@ -5528,7 +5797,7 @@ function edit_wpcontent_register_styles() {
         'edit-wpcontent-style', 
         get_stylesheet_directory_uri() . '/css/edit-wpcontent.css', 
         array(), 
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
 }
 add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'edit_wpcontent_register_styles');
@@ -5539,7 +5808,7 @@ function edit_wpcontent_register_scripts() {
         'edit-wpcontent-script', 
         get_stylesheet_directory_uri() . '/js/edit-wpcontent.js', 
         array(DGA_JQUERY_HANDLE), 
-        '1.0.0', 
+        DGA_VERSION_NUMBER, 
         true
     );
     
@@ -5547,8 +5816,8 @@ function edit_wpcontent_register_scripts() {
     wp_localize_script('edit-wpcontent-script', 'editWpContent', array(
         'ajaxurl' => admin_url(DGA_ADMIN_AJAX_URL),
         'messages' => array(
-            'success' => 'บันทึกเนื้อหาเรียบร้อยแล้ว',
-            'error' => 'เกิดข้อผิดพลาด โปรดลองอีกครั้ง'
+            DGA_SUCCESS_STATUS => 'บันทึกเนื้อหาเรียบร้อยแล้ว',
+            DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด โปรดลองอีกครั้ง'
         )
     ));
 }
@@ -5562,13 +5831,13 @@ function edit_wpcontent_ajax_save() {
     }
     
     // ตรวจสอบข้อมูลที่ส่งมา
-    if (!isset($_POST[DGA_POST_ID_FIELD]) || !isset($_POST['content']) || !isset($_POST['field'])) {
+    if (!isset($_POST[DGA_POST_ID_FIELD]) || !isset($_POST['content']) || !isset($_POST[DGA_FIELD_KEY])) {
         wp_send_json_error('Missing required data');
     }
     
     $post_id = intval($_POST[DGA_POST_ID_FIELD]);
     $content = wp_kses_post($_POST['content']);
-    $field = sanitize_text_field($_POST['field']);
+    $field = sanitize_text_field($_POST[DGA_FIELD_KEY]);
     
     // ตรวจสอบสิทธิ์การแก้ไข
     if (!current_user_can('edit_post', $post_id)) {
@@ -5581,7 +5850,7 @@ function edit_wpcontent_ajax_save() {
     );
     
     switch ($field) {
-        case 'title':
+        case DGA_TITLE_FIELD:
             $post_data['post_title'] = $content;
             break;
         case 'excerpt':
@@ -5881,13 +6150,13 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     
     // Initialize results
     $checks = array(
-        'contrast' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0),
-        'alt_text' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0),
-        'headers' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0),
-        'aria' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0),
-        'keyboard' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0),
-        'forms' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0),
-        'links' => array('passed' => true, 'violations' => array(), 'total' => 0, 'checked' => 0)
+        'contrast' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
+        'alt_text' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
+        'headers' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
+        'aria' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
+        'keyboard' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
+        'forms' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
+        'links' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0)
     );
     
     // Parse HTML
@@ -5905,7 +6174,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
             'checks' => $checks,
             'score' => 0,
             'severity' => $severity,
-            'error' => 'ไม่สามารถวิเคราะห์ HTML ได้'
+            DGA_ERROR_STATUS => 'ไม่สามารถวิเคราะห์ HTML ได้'
         );
     }
     
@@ -5917,7 +6186,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     // 1. Check images (alt text)
     wcag_log_error('Checking images for alt text');
     $images = $dom->getElementsByTagName('img');
-    $checks['alt_text']['total'] = $images->length;
+    $checks['alt_text'][DGA_TOTAL_FIELD_KEY] = $images->length;
     $checks['alt_text']['checked'] = $images->length;
     
     foreach ($images as $img) {
@@ -5934,14 +6203,14 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     // 2. Check links
     wcag_log_error('Checking links');
     $links = $dom->getElementsByTagName('a');
-    $checks['links']['total'] = $links->length;
+    $checks['links'][DGA_TOTAL_FIELD_KEY] = $links->length;
     $checks['links']['checked'] = $links->length;
     
     foreach ($links as $link) {
         $text = trim($link->textContent);
         $hasImg = $link->getElementsByTagName('img')->length > 0;
         $hasAriaLabel = $link->hasAttribute('aria-label');
-        $hasTitle = $link->hasAttribute('title');
+        $hasTitle = $link->hasAttribute(DGA_TITLE_FIELD);
         
         if (empty($text) && !$hasImg && !$hasAriaLabel && !$hasTitle) {
             $checks['links']['violations'][] = array(
@@ -5963,7 +6232,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         }
     }
     
-    $checks['headers']['total'] = count($headings);
+    $checks['headers'][DGA_TOTAL_FIELD_KEY] = count($headings);
     $checks['headers']['checked'] = count($headings);
     
     if (count($headings) > 0) {
@@ -6011,7 +6280,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         $form_elements[] = $textarea;
     }
     
-    $checks['forms']['total'] = count($form_elements);
+    $checks['forms'][DGA_TOTAL_FIELD_KEY] = count($form_elements);
     $checks['forms']['checked'] = count($form_elements);
     
     wcag_log_error('Found form elements', count($form_elements));
@@ -6031,14 +6300,14 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         // Check for ARIA labels
         if ($element->hasAttribute('aria-label') || 
             $element->hasAttribute('aria-labelledby') || 
-            $element->hasAttribute('title')) {
+            $element->hasAttribute(DGA_TITLE_FIELD)) {
             $has_label = true;
         }
         
         // Check if wrapped in label
         $parent = $element->parentNode;
         while ($parent && $parent->nodeName !== 'body') {
-            if ($parent->nodeName === 'label') {
+            if ($parent->nodeName === DGA_LABEL_FIELD) {
                 $has_label = true;
                 break;
             }
@@ -6059,7 +6328,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     // 5. Check ARIA usage
     wcag_log_error('Checking ARIA usage');
     $aria_elements = $xpath->query('//*[@role or @aria-label or @aria-labelledby or @aria-describedby]');
-    $checks['aria']['total'] = $aria_elements->length;
+    $checks['aria'][DGA_TOTAL_FIELD_KEY] = $aria_elements->length;
     $checks['aria']['checked'] = $aria_elements->length;
     
     foreach ($aria_elements as $element) {
@@ -6099,7 +6368,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     // 6. Check keyboard navigation
     wcag_log_error('Checking keyboard navigation');
     $interactive_elements = $xpath->query('//a[@href] | //button | //input | //select | //textarea | //*[@tabindex]');
-    $checks['keyboard']['total'] = $interactive_elements->length;
+    $checks['keyboard'][DGA_TOTAL_FIELD_KEY] = $interactive_elements->length;
     $checks['keyboard']['checked'] = $interactive_elements->length;
     
     $tabindex_values = array();
@@ -6167,7 +6436,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         }
     }
     
-    $checks['contrast']['total'] = $contrast_checked;
+    $checks['contrast'][DGA_TOTAL_FIELD_KEY] = $contrast_checked;
     $checks['contrast']['checked'] = $contrast_checked;
     
     // Check from database if available
@@ -6205,7 +6474,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     // Log final check counts
     foreach ($checks as $category => $check) {
         wcag_log_error("Final count for $category", array(
-            'total' => $check['total'],
+            DGA_TOTAL_FIELD_KEY => $check[DGA_TOTAL_FIELD_KEY],
             'checked' => $check['checked'],
             'violations' => count($check['violations'])
         ));
@@ -6259,15 +6528,15 @@ function wcag_calculate_score_verbose($checks) {
         $weight = isset($weights[$category]) ? $weights[$category] : 10;
         $total_weight += $weight;
         
-        if ($check['total'] > 0) {
+        if ($check[DGA_TOTAL_FIELD_KEY] > 0) {
             $violations = count($check['violations']);
-            $passed_count = $check['total'] - $violations;
-            $pass_percentage = ($passed_count / $check['total']) * 100;
+            $passed_count = $check[DGA_TOTAL_FIELD_KEY] - $violations;
+            $pass_percentage = ($passed_count / $check[DGA_TOTAL_FIELD_KEY]) * 100;
             $category_score = ($pass_percentage / 100) * $weight;
             
             $details[$category] = array(
                 'weight' => $weight,
-                'total' => $check['total'],
+                DGA_TOTAL_FIELD_KEY => $check[DGA_TOTAL_FIELD_KEY],
                 'passed' => $passed_count,
                 'failed' => $violations,
                 'percentage' => round($pass_percentage, 2),
@@ -6279,7 +6548,7 @@ function wcag_calculate_score_verbose($checks) {
             // No elements to check, give full score
             $details[$category] = array(
                 'weight' => $weight,
-                'total' => 0,
+                DGA_TOTAL_FIELD_KEY => 0,
                 'passed' => 0,
                 'failed' => 0,
                 'percentage' => 100,
@@ -6385,11 +6654,11 @@ function wcag_checker_admin_page() {
             <option>Option 1</option>
         </select>
         
-        <button type="submit">Submit</button>
+        <button type=DGA_SUBMIT_TYPE>Submit</button>
     </form>
     
     <div role="invalid-role">Invalid ARIA role</div>
-    <div role="button" tabindex="0">Valid button role</div>
+    <div role=DGA_BUTTON_TYPE tabindex="0">Valid button role</div>
     
     <div onclick="alert('test')">Clickable div without keyboard access</div>
     <div onclick="alert('test')" tabindex="0">Clickable div with keyboard access</div>
@@ -6398,7 +6667,7 @@ function wcag_checker_admin_page() {
 </body>
 </html>
                 </textarea>
-                <button type="button" id="test-html-check" class="button button-primary">Test HTML</button>
+                <button type=DGA_BUTTON_TYPE id="test-html-check" class="button button-primary">Test HTML</button>
             </form>
             <div id="test-html-results" style="margin-top: 20px;"></div>
         </div>
@@ -6423,8 +6692,8 @@ function wcag_checker_admin_page() {
                 links: tempDiv.querySelectorAll('a').length,
                 emptyLinks: Array.from(tempDiv.querySelectorAll('a')).filter(a => !a.textContent.trim()).length,
                 headings: tempDiv.querySelectorAll('h1,h2,h3,h4,h5,h6').length,
-                formElements: tempDiv.querySelectorAll('input:not([type="submit"]):not([type="button"]):not([type="hidden"]),select,textarea').length,
-                formElementsWithoutLabels: Array.from(tempDiv.querySelectorAll('input:not([type="submit"]):not([type="button"]):not([type="hidden"]),select,textarea')).filter(function(el) {
+                formElements: tempDiv.querySelectorAll('input:not([type=DGA_SUBMIT_TYPE]):not([type=DGA_BUTTON_TYPE]):not([type="hidden"]),select,textarea').length,
+                formElementsWithoutLabels: Array.from(tempDiv.querySelectorAll('input:not([type=DGA_SUBMIT_TYPE]):not([type=DGA_BUTTON_TYPE]):not([type="hidden"]),select,textarea')).filter(function(el) {
                     var id = el.id;
                     if (id && tempDiv.querySelector('label[for="' + id + '"]')) return false;
                     if (el.getAttribute('aria-label')) return false;
@@ -6561,7 +6830,7 @@ function simulate_css_validation($url) {
     // 1. Syntax Issues (simulate random issues)
     if (rand(0, 1) == 1) {
         $checks['syntax']['issues'][] = array(
-            'severity' => 'error',
+            'severity' => DGA_ERROR_STATUS,
             DGA_MESSAGE_KEY => 'พบวงเล็บปีกกาไม่สมดุลในไฟล์ style.css บรรทัด 142',
             'recommendation' => 'ตรวจสอบวงเล็บปีกกาให้สมดุล'
         );
@@ -6634,8 +6903,8 @@ function simulate_css_validation($url) {
 
 // Enqueue necessary scripts and styles
 function wpml_language_switcher_assets() {
-    wp_enqueue_style('wpml-language-switcher', get_stylesheet_directory_uri() . '/css/wpml-language-switcher.css', array(), '1.0.0');
-    wp_enqueue_script('wpml-language-switcher', get_stylesheet_directory_uri() . '/js/wpml-language-switcher.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_style('wpml-language-switcher', get_stylesheet_directory_uri() . '/css/wpml-language-switcher.css', array(), DGA_VERSION_NUMBER);
+    wp_enqueue_script('wpml-language-switcher', get_stylesheet_directory_uri() . '/js/wpml-language-switcher.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // Pass AJAX URL and current language to JavaScript
     wp_localize_script('wpml-language-switcher', 'wpmlVars', array(
@@ -6656,8 +6925,8 @@ function custom_wpml_language_switcher_shortcode() {
 
     $languages = apply_filters('wpml_active_languages', null, array(
         'skip_missing' => 0,
-        'orderby' => 'code',
-        'order' => 'desc'
+        DGA_ORDERBY_FIELD_VALUE => 'code',
+        DGA_ORDER_FIELD => 'desc'
     ));
 
     if (empty($languages)) {
@@ -6817,7 +7086,7 @@ function at_add_article_shortcode_kse749() {
                 <!-- Draft status indicator -->
                 <div id="at-draft-status-kse749" class="at-draft-status-kse749" style="display:none;">
                     <span class="at-draft-indicator-kse749"><?php _e('มีแบบร่างที่บันทึกไว้', DGA_TEXT_DOMAIN); ?></span>
-                    <button type="button" id="at-clear-draft-kse749" class="at-clear-draft-btn-kse749">
+                    <button type=DGA_BUTTON_TYPE id="at-clear-draft-kse749" class="at-clear-draft-btn-kse749">
                         <?php _e('เคลียร์ดราฟ', DGA_TEXT_DOMAIN); ?>
                     </button>
                 </div>
@@ -6921,7 +7190,7 @@ function at_add_article_shortcode_kse749() {
                         <label><?php _e('เอกสารมาตรฐาน', DGA_TEXT_DOMAIN); ?></label>
                         <p class="at-form-hint-kse749"><?php _e('หากยังไม่มีเอกสารแนบสามารถข้ามก่อนได้ครับ', DGA_TEXT_DOMAIN); ?></p>
                         <div class="at-doc-controls-kse749">
-                            <button type="button" id="toggle-documents-kse749" class="at-toggle-btn-kse749" data-state="show">
+                            <button type=DGA_BUTTON_TYPE id="toggle-documents-kse749" class="at-toggle-btn-kse749" data-state="show">
                                 <?php _e('ไม่มีเอกสาร', DGA_TEXT_DOMAIN); ?>
                             </button>
                         </div>
@@ -6931,10 +7200,10 @@ function at_add_article_shortcode_kse749() {
                                     <input type="text" name="file_name[]" placeholder="<?php esc_attr_e('ชื่อไฟล์', DGA_TEXT_DOMAIN); ?>">
                                     <input type="date" name="file_date[]" value="<?php echo current_time('Y-m-d'); ?>">
                                     <input type="file" name="file_upload[]" accept=".pdf,.doc,.docx">
-                                    <button type="button" class="remove-row-kse749"><?php _e('ลบ', DGA_TEXT_DOMAIN); ?></button>
+                                    <button type=DGA_BUTTON_TYPE class="remove-row-kse749"><?php _e('ลบ', DGA_TEXT_DOMAIN); ?></button>
                                 </div>
                             </div>
-                            <button type="button" id="add-file-row-kse749"><?php _e('เพิ่มเอกสาร', DGA_TEXT_DOMAIN); ?></button>
+                            <button type=DGA_BUTTON_TYPE id="add-file-row-kse749"><?php _e('เพิ่มเอกสาร', DGA_TEXT_DOMAIN); ?></button>
                         </div>
                     </div>
                     
@@ -6943,7 +7212,7 @@ function at_add_article_shortcode_kse749() {
                         <div class="at-info-text-kse749"><?php _e('เนื้อหาที่เพิ่มใหม่จะถูกบันทึกเป็นฉบับร่างและรอการอนุมัติก่อนเผยแพร่', DGA_TEXT_DOMAIN); ?></div>
                     </div>
                     
-                    <button type="submit" class="at-submit-btn-kse749"><?php _e('บันทึกข้อมูล', DGA_TEXT_DOMAIN); ?></button>
+                    <button type=DGA_SUBMIT_TYPE class="at-submit-btn-kse749"><?php _e('บันทึกข้อมูล', DGA_TEXT_DOMAIN); ?></button>
                 </form>
             </div>
         </div>
@@ -7079,7 +7348,7 @@ function at_get_post_type_taxonomies_kse749() {
                     
                     $taxonomies_data[$post_type][] = [
                         DGA_NAME_FIELD => $taxonomy->name,
-                        'label' => $taxonomy->label,
+                        DGA_LABEL_FIELD => $taxonomy->label,
                         'terms' => $terms_data,
                     ];
                 }
@@ -7162,12 +7431,12 @@ function at_handle_article_submission_kse749() {
                 DGA_NAME_FIELD => $_FILES['file_upload']['name'][$key],
                 DGA_TYPE_FIELD => $_FILES['file_upload']['type'][$key],
                 'tmp_name' => $tmp_name,
-                'error' => $_FILES['file_upload']['error'][$key],
+                DGA_ERROR_STATUS => $_FILES['file_upload'][DGA_ERROR_STATUS][$key],
                 'size' => $_FILES['file_upload']['size'][$key]
             );
 
             $upload_data = wp_handle_upload($_FILES['standard_file'], array('test_form' => false));
-            if (!isset($upload_data['error'])) {
+            if (!isset($upload_data[DGA_ERROR_STATUS])) {
                 $standard_files_data[] = array(
                     'upload_data' => $upload_data,
                     DGA_NAME_FIELD => isset($_POST['file_name'][$key]) ? sanitize_text_field($_POST['file_name'][$key]) : '',
@@ -7429,8 +7698,8 @@ add_action('elementor/query/article_more', function($query) {
     // Optional: You can add more query parameters here
     // For example:
     // $query->set(DGA_POSTS_PER_PAGE, 10); // Number of posts to display
-    // $query->set('orderby', 'date');    // Order by date
-    // $query->set('order', 'DESC');      // Descending order
+    // $query->set(DGA_ORDERBY_FIELD_VALUE, 'date');    // Order by date
+    // $query->set(DGA_ORDER_FIELD, 'DESC');      // Descending order
 });
 
 
@@ -7475,8 +7744,8 @@ function profile_management_enqueue_scripts_pmg728() {
             'passwordMismatch' => __('รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'updating' => __('กำลังอัพเดต...', DGA_TEXT_DOMAIN),
-            'success' => __('บันทึกข้อมูลเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+            DGA_SUCCESS_STATUS => __('บันทึกข้อมูลเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
             'passwordUpdated' => __('อัพเดตรหัสผ่านเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
             'redirecting' => __('กำลังไปยังหน้าเข้าสู่ระบบ...', DGA_TEXT_DOMAIN)
         )
@@ -7624,7 +7893,7 @@ function profile_management_shortcode_pmg728() {
                     </div>
                 </div>
                 
-                <button type="submit" class="profile-btn-primary-pmg728 profile-btn-block-pmg728">
+                <button type=DGA_SUBMIT_TYPE class="profile-btn-primary-pmg728 profile-btn-block-pmg728">
                     <span class="button-text"><?php _e('บันทึกข้อมูล', DGA_TEXT_DOMAIN); ?></span>
                     <span class="button-loader" style="display:none;">
                         <svg class="profile-spinner-pmg728" width="20" height="20" viewBox="0 0 24 24">
@@ -7653,7 +7922,7 @@ function profile_management_shortcode_pmg728() {
             <div class="profile-modal-container-pmg728">
                 <div class="profile-modal-header-pmg728">
                     <h2 id="password-modal-title" class="profile-modal-title-pmg728"><?php _e('เปลี่ยนรหัสผ่าน', DGA_TEXT_DOMAIN); ?></h2>
-                    <button type="button" class="profile-modal-close-pmg728" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">&times;</button>
+                    <button type=DGA_BUTTON_TYPE class="profile-modal-close-pmg728" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">&times;</button>
                 </div>
                 <div class="profile-modal-content-pmg728">
                     <form id="password-reset-form" class="profile-form-pmg728">
@@ -7667,7 +7936,7 @@ function profile_management_shortcode_pmg728() {
                                        required 
                                        minlength="8"
                                        placeholder="<?php esc_attr_e('กรอกรหัสผ่านใหม่', DGA_TEXT_DOMAIN); ?>">
-                                <button type="button" class="toggle-password-pmg728" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
+                                <button type=DGA_BUTTON_TYPE class="toggle-password-pmg728" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
                                     <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5ZM12 17.5C9.24 17.5 7 15.26 7 12.5C7 9.74 9.24 7.5 12 7.5C14.76 7.5 17 9.74 17 12.5C17 15.26 14.76 17.5 12 17.5ZM12 9.5C10.34 9.5 9 10.84 9 12.5C9 14.16 10.34 15.5 12 15.5C13.66 15.5 15 14.16 15 12.5C15 10.84 13.66 9.5 12 9.5Z" fill="currentColor"/>
                                     </svg>
@@ -7691,7 +7960,7 @@ function profile_management_shortcode_pmg728() {
                                        required 
                                        minlength="8"
                                        placeholder="<?php esc_attr_e('กรอกรหัสผ่านอีกครั้ง', DGA_TEXT_DOMAIN); ?>">
-                                <button type="button" class="toggle-password-pmg728" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
+                                <button type=DGA_BUTTON_TYPE class="toggle-password-pmg728" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
                                     <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                         <path d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5ZM12 17.5C9.24 17.5 7 15.26 7 12.5C7 9.74 9.24 7.5 12 7.5C14.76 7.5 17 9.74 17 12.5C17 15.26 14.76 17.5 12 17.5ZM12 9.5C10.34 9.5 9 10.84 9 12.5C9 14.16 10.34 15.5 12 15.5C13.66 15.5 15 14.16 15 12.5C15 10.84 13.66 9.5 12 9.5Z" fill="currentColor"/>
                                     </svg>
@@ -7704,7 +7973,7 @@ function profile_management_shortcode_pmg728() {
                         
                         <div class="password-strength-pmg728" id="password-strength" style="display:none;"></div>
                         
-                        <button type="submit" class="profile-btn-primary-pmg728 profile-btn-block-pmg728">
+                        <button type=DGA_SUBMIT_TYPE class="profile-btn-primary-pmg728 profile-btn-block-pmg728">
                             <span class="button-text"><?php _e('อัพเดตรหัสผ่าน', DGA_TEXT_DOMAIN); ?></span>
                             <span class="button-loader" style="display:none;">
                                 <svg class="profile-spinner-pmg728" width="20" height="20" viewBox="0 0 24 24">
@@ -7724,16 +7993,16 @@ function profile_management_shortcode_pmg728() {
             <div class="profile-modal-container-pmg728">
                 <div class="profile-modal-header-pmg728">
                     <h2 id="logout-modal-title" class="profile-modal-title-pmg728"><?php _e('ยืนยันการออกจากระบบ', DGA_TEXT_DOMAIN); ?></h2>
-                    <button type="button" class="profile-modal-close-pmg728" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">&times;</button>
+                    <button type=DGA_BUTTON_TYPE class="profile-modal-close-pmg728" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">&times;</button>
                 </div>
                 <div class="profile-modal-content-pmg728">
                     <p><?php _e('คุณต้องการออกจากระบบในทุกอุปกรณ์หรือไม่?', DGA_TEXT_DOMAIN); ?></p>
                     <p class="text-muted-pmg728"><?php _e('การออกจากระบบทุกอุปกรณ์จะทำให้คุณต้องเข้าสู่ระบบใหม่ในทุกอุปกรณ์ที่ใช้งาน', DGA_TEXT_DOMAIN); ?></p>
                     <div class="modal-actions-pmg728">
-                        <button type="button" id="logout-all-devices" class="profile-btn-primary-pmg728">
+                        <button type=DGA_BUTTON_TYPE id="logout-all-devices" class="profile-btn-primary-pmg728">
                             <?php _e('ออกจากระบบทุกอุปกรณ์', DGA_TEXT_DOMAIN); ?>
                         </button>
-                        <button type="button" id="stay-logged-in" class="profile-btn-secondary-pmg728">
+                        <button type=DGA_BUTTON_TYPE id="stay-logged-in" class="profile-btn-secondary-pmg728">
                             <?php _e('คงอยู่ในระบบ', DGA_TEXT_DOMAIN); ?>
                         </button>
                     </div>
@@ -8008,7 +8277,7 @@ function dga_display_request_reset_form_ghi789() {
                 </div>
                 <?php endif; ?>
                 
-                <button type="submit" class="dga-btn-primary-cfz357 dga-btn-block-cfz357" id="reset-submit-btn" <?php echo CF_TURNSTILE_ENABLED ? 'disabled' : ''; ?>>
+                <button type=DGA_SUBMIT_TYPE class="dga-btn-primary-cfz357 dga-btn-block-cfz357" id="reset-submit-btn" <?php echo CF_TURNSTILE_ENABLED ? 'disabled' : ''; ?>>
                     <span class="button-text"><?php _e('ส่งลิงก์รีเซ็ทรหัสผ่าน', DGA_TEXT_DOMAIN); ?></span>
                     <span class="button-loader" style="display:none;">
                         <svg class="dga-spinner-cfz357" width="20" height="20" viewBox="0 0 24 24">
@@ -8171,7 +8440,7 @@ function dga_display_reset_password_form_def456($key, $login) {
                                    required 
                                    autocomplete="new-password"
                                    placeholder="<?php esc_attr_e('กรอกรหัสผ่านใหม่', DGA_TEXT_DOMAIN); ?>">
-                            <button type="button" class="dga-toggle-password-cfz357" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
+                            <button type=DGA_BUTTON_TYPE class="dga-toggle-password-cfz357" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
                                 <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:none;">
                                     <path d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5ZM12 17.5C9.24 17.5 7 15.26 7 12.5C7 9.74 9.24 7.5 12 7.5C14.76 7.5 17 9.74 17 12.5C17 15.26 14.76 17.5 12 17.5ZM12 9.5C10.34 9.5 9 10.84 9 12.5C9 14.16 10.34 15.5 12 15.5C13.66 15.5 15 14.16 15 12.5C15 10.84 13.66 9.5 12 9.5Z" fill="currentColor"/>
                                 </svg>
@@ -8191,7 +8460,7 @@ function dga_display_reset_password_form_def456($key, $login) {
                                    required
                                    autocomplete="new-password"
                                    placeholder="<?php esc_attr_e('กรอกรหัสผ่านอีกครั้ง', DGA_TEXT_DOMAIN); ?>">
-                            <button type="button" class="dga-toggle-password-cfz357" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
+                            <button type=DGA_BUTTON_TYPE class="dga-toggle-password-cfz357" aria-label="<?php esc_attr_e('แสดงรหัสผ่าน', DGA_TEXT_DOMAIN); ?>">
                                 <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none">
                                     <path d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5ZM12 17.5C9.24 17.5 7 15.26 7 12.5C7 9.74 9.24 7.5 12 7.5C14.76 7.5 17 9.74 17 12.5C17 15.26 14.76 17.5 12 17.5ZM12 9.5C10.34 9.5 9 10.84 9 12.5C9 14.16 10.34 15.5 12 15.5C13.66 15.5 15 14.16 15 12.5C15 10.84 13.66 9.5 12 9.5Z" fill="currentColor"/>
                                 </svg>
@@ -8204,7 +8473,7 @@ function dga_display_reset_password_form_def456($key, $login) {
                     
                     <div class="dga-password-strength-cfz357" id="password-strength" style="display:none;" role="status" aria-live="polite"></div>
                     
-                    <button type="submit" class="dga-btn-primary-cfz357 dga-btn-block-cfz357">
+                    <button type=DGA_SUBMIT_TYPE class="dga-btn-primary-cfz357 dga-btn-block-cfz357">
                         <span class="button-text"><?php _e('ตั้งค่ารหัสผ่านใหม่', DGA_TEXT_DOMAIN); ?></span>
                         <span class="button-loader" style="display:none;">
                             <svg class="dga-spinner-cfz357" width="20" height="20" viewBox="0 0 24 24">
@@ -8260,7 +8529,7 @@ function dga_verify_turnstile_jkl012($token) {
         error_log('Turnstile response: ' . print_r($result, true));
     }
     
-    if (isset($result['success']) && $result['success'] === true) {
+    if (isset($result[DGA_SUCCESS_STATUS]) && $result[DGA_SUCCESS_STATUS] === true) {
         return true;
     }
     
@@ -8497,7 +8766,7 @@ class Custom_Menu_Walker_mnu738 extends Walker_Nav_Menu {
         
         // จัดการ attributes ของ link
         $atts = array();
-        $atts['title']  = !empty($item->attr_title) ? $item->attr_title : '';
+        $atts[DGA_TITLE_FIELD]  = !empty($item->attr_title) ? $item->attr_title : '';
         $atts['target'] = !empty($item->target) ? $item->target : '';
         $atts['rel']    = !empty($item->xfn) ? $item->xfn : '';
         $atts['href']   = !empty($item->url) ? $item->url : '';
@@ -8668,8 +8937,8 @@ function complaint_form_enqueue_scripts() {
                 'aria_labels' => array(
                     'form_loading' => 'กำลังโหลดแบบฟอร์ม',
                     'submitting' => 'กำลังส่งข้อมูล',
-                    'success' => 'ส่งข้อมูลสำเร็จ',
-                    'error' => 'เกิดข้อผิดพลาด',
+                    DGA_SUCCESS_STATUS => 'ส่งข้อมูลสำเร็จ',
+                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด',
                     'close_modal' => 'ปิดหน้าต่างข้อความ'
                 )
             )
@@ -8870,7 +9139,7 @@ function complaint_form_shortcode() {
             </div>
             
             <button 
-                type="submit" 
+                type=DGA_SUBMIT_TYPE 
                 class="btn-submit"
                 aria-label="ส่งเรื่องร้องเรียน"
             >
@@ -8893,7 +9162,7 @@ function complaint_form_shortcode() {
             <button 
                 class="modal-close" 
                 aria-label="ปิดหน้าต่างข้อความ"
-                type="button"
+                type=DGA_BUTTON_TYPE
             >
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -8902,7 +9171,7 @@ function complaint_form_shortcode() {
                 <div id="modal-details" role="region" aria-label="รายละเอียดเรื่องร้องเรียน"></div>
                 <button 
                     class="btn-close-modal"
-                    type="button"
+                    type=DGA_BUTTON_TYPE
                     aria-label="ปิดหน้าต่างข้อความ"
                 >
                     ปิด
@@ -9115,7 +9384,7 @@ function register_complaint_post_type() {
         'hierarchical' => false,
         'menu_position' => 25,
         'menu_icon' => 'dashicons-feedback',
-        'supports' => array('title', 'editor'),
+        'supports' => array(DGA_TITLE_FIELD, 'editor'),
         'register_meta_box_cb' => 'add_complaint_meta_boxes'
     );
 
@@ -9235,11 +9504,11 @@ function add_complaint_columns($columns) {
     $new_columns = array();
     $new_columns['cb'] = $columns['cb'];
     $new_columns['ref_number'] = 'เลขที่';
-    $new_columns['title'] = 'ประเภท';
+    $new_columns[DGA_TITLE_FIELD] = 'ประเภท';
     $new_columns['department'] = 'หน่วยงาน';
     $new_columns['complainant'] = 'ผู้ร้องเรียน';
     $new_columns['date'] = $columns['date'];
-    $new_columns['status'] = 'สถานะ';
+    $new_columns[DGA_STATUS_FIELD] = 'สถานะ';
     return $new_columns;
 }
 add_filter('manage_complaint_posts_columns', 'add_complaint_columns');
@@ -9269,7 +9538,7 @@ function fill_complaint_columns($column, $post_id) {
             }
             break;
             
-        case 'status':
+        case DGA_STATUS_FIELD:
             $status = get_post_status($post_id);
             $status_labels = array(
                 'pending' => 'รอดำเนินการ',
@@ -9398,7 +9667,7 @@ function dga_complaint_search_shortcode() {
     ?>
     <div class="dga-complaint-search-container">
         <!-- ปุ่มที่มีตัวหนังสือแนวตั้ง (หมุน 90 องศา) -->
-        <button type="button" id="dga-complaint-toggle-btn" class="dga-complaint-toggle-btn" aria-label="เปิด/ปิด แถบค้นหาเรื่องร้องเรียน" aria-expanded="false" aria-controls="dga-complaint-search-form">
+        <button type=DGA_BUTTON_TYPE id="dga-complaint-toggle-btn" class="dga-complaint-toggle-btn" aria-label="เปิด/ปิด แถบค้นหาเรื่องร้องเรียน" aria-expanded="false" aria-controls="dga-complaint-search-form">
             <div class="toggle-text">
                 <span>ค้นหาสถานะ</span>
             </div>
@@ -9425,7 +9694,7 @@ function dga_complaint_search_shortcode() {
                             value="CPL-"
                         >
                         <span id="complaint-ref-error" class="error-message" role="alert"></span>
-                        <button type="submit" class="search-btn" aria-label="ค้นหา">
+                        <button type=DGA_SUBMIT_TYPE class="search-btn" aria-label="ค้นหา">
                             <i class="fas fa-search" aria-hidden="true"></i> ค้นหา
                         </button>
                     </div>
@@ -9541,7 +9810,7 @@ function dga_complaint_search_ajax_handler() {
             'ref_number' => $ref_number,
             'complaint_type' => $type_label . $type_other,
             'department' => $department,
-            'status' => $status_label,
+            DGA_STATUS_FIELD => $status_label,
             'complaint_date' => !empty($complaint_date) ? date_i18n('d/m/Y', strtotime($complaint_date)) : date_i18n('d/m/Y', strtotime(get_the_date())),
             'due_date' => !empty($due_date) ? date_i18n('d/m/Y', strtotime($due_date)) : '',
             'current_step' => $current_step,
@@ -9624,7 +9893,7 @@ function dga_complaint_search_ajax_handler() {
                 'ref_number' => $correct_ref, // ใช้เลขอ้างอิงที่ถูกต้องจากฐานข้อมูล
                 'complaint_type' => $type_label . $type_other,
                 'department' => $department,
-                'status' => $status_label,
+                DGA_STATUS_FIELD => $status_label,
                 'complaint_date' => !empty($complaint_date) ? date_i18n('d/m/Y', strtotime($complaint_date)) : date_i18n('d/m/Y', strtotime(get_the_date())),
                 'due_date' => !empty($due_date) ? date_i18n('d/m/Y', strtotime($due_date)) : '',
                 'current_step' => $current_step,
@@ -9702,7 +9971,7 @@ function dga_complaint_search_ajax_handler() {
                         'ref_number' => $correct_ref, // ใช้เลขอ้างอิงที่ถูกต้องจากฐานข้อมูล
                         'complaint_type' => $type_label . $type_other,
                         'department' => $department,
-                        'status' => $status_label,
+                        DGA_STATUS_FIELD => $status_label,
                         'complaint_date' => !empty($complaint_date) ? date_i18n('d/m/Y', strtotime($complaint_date)) : date_i18n('d/m/Y', strtotime($complaint_post->post_date)),
                         'due_date' => !empty($due_date) ? date_i18n('d/m/Y', strtotime($due_date)) : '',
                         'current_step' => $current_step,
@@ -9791,7 +10060,7 @@ if (!function_exists('register_complaint_post_type')) {
             'hierarchical'          => false,
             'menu_position'         => 25,
             'menu_icon'             => 'dashicons-warning',
-            'supports'              => array('title', 'editor', 'author'),
+            'supports'              => array(DGA_TITLE_FIELD, 'editor', 'author'),
             'show_in_rest'          => false,
         );
 
@@ -9807,7 +10076,7 @@ if (!function_exists('register_complaint_post_statuses')) {
     function register_complaint_post_statuses() {
         // Status: รอดำเนินการ
         register_post_status('complaint_pending', array(
-            'label'                     => 'รอดำเนินการ',
+            DGA_LABEL_FIELD                     => 'รอดำเนินการ',
             'public'                    => true,
             'exclude_from_search'       => false,
             'show_in_admin_all_list'    => true,
@@ -9817,7 +10086,7 @@ if (!function_exists('register_complaint_post_statuses')) {
 
         // Status: กำลังดำเนินการ
         register_post_status('complaint_in_progress', array(
-            'label'                     => 'กำลังดำเนินการ',
+            DGA_LABEL_FIELD                     => 'กำลังดำเนินการ',
             'public'                    => true,
             'exclude_from_search'       => false,
             'show_in_admin_all_list'    => true,
@@ -9827,7 +10096,7 @@ if (!function_exists('register_complaint_post_statuses')) {
 
         // Status: เสร็จสิ้น
         register_post_status('complaint_completed', array(
-            'label'                     => 'เสร็จสิ้น',
+            DGA_LABEL_FIELD                     => 'เสร็จสิ้น',
             'public'                    => true,
             'exclude_from_search'       => false,
             'show_in_admin_all_list'    => true,
@@ -9837,7 +10106,7 @@ if (!function_exists('register_complaint_post_statuses')) {
 
         // Status: ไม่รับพิจารณา
         register_post_status('complaint_rejected', array(
-            'label'                     => 'ไม่รับพิจารณา',
+            DGA_LABEL_FIELD                     => 'ไม่รับพิจารณา',
             'public'                    => true,
             'exclude_from_search'       => false,
             'show_in_admin_all_list'    => true,
@@ -9847,7 +10116,7 @@ if (!function_exists('register_complaint_post_statuses')) {
 
         // Status: ปิดเรื่อง
         register_post_status('complaint_closed', array(
-            'label'                     => 'ปิดเรื่อง',
+            DGA_LABEL_FIELD                     => 'ปิดเรื่อง',
             'public'                    => true,
             'exclude_from_search'       => false,
             'show_in_admin_all_list'    => true,
@@ -9965,8 +10234,8 @@ if (!function_exists('complaint_list_enqueue_scripts')) {
                 DGA_NONCE_KEY => wp_create_nonce('complaint_list_nonce'),
                 'messages' => array(
                     'loading' => 'กำลังโหลดข้อมูล...',
-                    'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
-                    'success' => 'ดำเนินการเรียบร้อยแล้ว',
+                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                    DGA_SUCCESS_STATUS => 'ดำเนินการเรียบร้อยแล้ว',
                     'confirm_delete' => 'คุณต้องการลบเรื่องร้องเรียนนี้ใช่หรือไม่?',
                     'no_data' => 'ไม่พบเรื่องร้องเรียน',
                     'confirm_status_change' => 'คุณต้องการเปลี่ยนสถานะเรื่องร้องเรียนเป็น {status} ใช่หรือไม่?'
@@ -9981,7 +10250,7 @@ if (!function_exists('complaint_list_enqueue_scripts')) {
                 'status_colors' => array(
                     'complaint_pending' => 'warning',
                     'complaint_in_progress' => 'info',
-                    'complaint_completed' => 'success',
+                    'complaint_completed' => DGA_SUCCESS_STATUS,
                     'complaint_rejected' => 'danger',
                     'complaint_closed' => 'secondary'
                 ),
@@ -10203,7 +10472,7 @@ if (!function_exists('complaint_list_shortcode')) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="complaint-detail-modal-label">รายละเอียดเรื่องร้องเรียน</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+                        <button type=DGA_BUTTON_TYPE class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
                     </div>
                     <div class="modal-body">
                         <div id="complaint-detail-content">
@@ -10261,7 +10530,7 @@ if (!function_exists('complaint_list_get_complaints')) {
         // รับพารามิเตอร์
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
         $per_page = isset($_POST['per_page']) ? intval($_POST['per_page']) : 10;
-        $status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
+        $status = isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '';
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
         $date_filter = isset($_POST['date']) ? sanitize_text_field($_POST['date']) : '';
         $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
@@ -10270,7 +10539,7 @@ if (!function_exists('complaint_list_get_complaints')) {
         $args = array(
             DGA_POST_TYPE_FIELD => 'complaint',
             DGA_POSTS_PER_PAGE => $per_page,
-            'paged' => $page,
+            DGA_PAGED_PARAMETER => $page,
             'meta_query' => array(),
             's' => $search
         );
@@ -10323,6 +10592,12 @@ if (!function_exists('complaint_list_get_complaints')) {
                         'inclusive' => true
                     );
                     break;
+                default:
+                    // Default to month filter if no valid filter is provided
+                    $args['date_query'] = array(
+                        'after' => date('Y-m-d', strtotime('-30 days'))
+                    );
+                    break;
             }
         }
 
@@ -10339,8 +10614,8 @@ if (!function_exists('complaint_list_get_complaints')) {
             $count_args = $args;
             $count_args[DGA_POST_STATUS_FIELD] = $count_status;
             $count_args[DGA_POSTS_PER_PAGE] = -1;
-            $count_args['fields'] = 'ids';
-            unset($count_args['paged']); // ลบ paged สำหรับการนับ
+            $count_args[DGA_FIELDS_PARAMETER] = 'ids';
+            unset($count_args[DGA_PAGED_PARAMETER]); // ลบ paged สำหรับการนับ
             $count_query = new WP_Query($count_args);
             $status_counts[$count_status] = $count_query->found_posts;
             wp_reset_postdata();
@@ -10376,7 +10651,7 @@ if (!function_exists('complaint_list_get_complaints')) {
                 'department' => $department ?: 'ไม่ระบุ',
                 'date' => get_the_date('Y-m-d H:i:s'),
                 'due_date' => $due_date,
-                'status' => get_post_status($post_id),
+                DGA_STATUS_FIELD => get_post_status($post_id),
                 'complainant' => $complainant ?: 'ไม่ระบุ',
                 'is_anonymous' => ($is_anonymous == 'yes'),
                 'details' => $details
@@ -10388,7 +10663,7 @@ if (!function_exists('complaint_list_get_complaints')) {
         // ส่งข้อมูลกลับ
         wp_send_json_success(array(
             'complaints' => $complaints,
-            'total' => $query->found_posts,
+            DGA_TOTAL_FIELD_KEY => $query->found_posts,
             'pages' => $query->max_num_pages,
             'current_page' => $page,
             'status_counts' => $status_counts
@@ -10454,7 +10729,7 @@ if (!function_exists('complaint_list_get_details')) {
             'department' => $department ?: 'ไม่ระบุ',
             'date' => get_the_date('Y-m-d H:i:s', $complaint_id),
             'due_date' => $due_date,
-            'status' => get_post_status($complaint_id),
+            DGA_STATUS_FIELD => get_post_status($complaint_id),
             'is_anonymous' => ($is_anonymous == 'yes'),
             'complainant' => ($is_anonymous == 'yes') ? null : $complainant,
             'details' => $complaint->post_content,
@@ -10496,11 +10771,11 @@ if (!function_exists('complaint_list_get_details')) {
                             $status_colors = array(
                                 'complaint_pending' => 'warning',
                                 'complaint_in_progress' => 'info',
-                                'complaint_completed' => 'success',
+                                'complaint_completed' => DGA_SUCCESS_STATUS,
                                 'complaint_rejected' => 'danger',
                                 'complaint_closed' => 'secondary'
                             );
-                            $status = $complaint_data['status'];
+                            $status = $complaint_data[DGA_STATUS_FIELD];
                             $status_label = isset($status_labels[$status]) ? $status_labels[$status] : $status;
                             $status_color = isset($status_colors[$status]) ? $status_colors[$status] : 'primary';
                             ?>
@@ -10620,8 +10895,8 @@ if (!function_exists('complaint_list_get_details')) {
                                 <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($history['date'])); ?>
                             </div>
                             <div class="timeline-status">
-                                <span class="badge bg-<?php echo isset($status_colors[$history['status']]) ? $status_colors[$history['status']] : 'primary'; ?>">
-                                    <?php echo isset($status_labels[$history['status']]) ? $status_labels[$history['status']] : $history['status']; ?>
+                                <span class="badge bg-<?php echo isset($status_colors[$history[DGA_STATUS_FIELD]]) ? $status_colors[$history[DGA_STATUS_FIELD]] : 'primary'; ?>">
+                                    <?php echo isset($status_labels[$history[DGA_STATUS_FIELD]]) ? $status_labels[$history[DGA_STATUS_FIELD]] : $history[DGA_STATUS_FIELD]; ?>
                                 </span>
                             </div>
                             <div class="timeline-user">
@@ -10668,7 +10943,7 @@ if (!function_exists('complaint_list_update_status')) {
 
         // รับพารามิเตอร์
         $complaint_id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-        $new_status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
+        $new_status = isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '';
         $note = isset($_POST['note']) ? sanitize_textarea_field($_POST['note']) : '';
 
         // ตรวจสอบข้อมูล
@@ -10710,7 +10985,7 @@ if (!function_exists('complaint_list_update_status')) {
         
         $status_history[] = array(
             'date' => current_time('mysql'),
-            'status' => $new_status,
+            DGA_STATUS_FIELD => $new_status,
             'user' => $user->display_name,
             'user_id' => $user->ID,
             'note' => $note,
@@ -10797,7 +11072,7 @@ if (!function_exists('complaint_list_update_status')) {
         // ส่งข้อมูลกลับ
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'อัพเดตสถานะเรียบร้อยแล้ว',
-            'status' => $new_status,
+            DGA_STATUS_FIELD => $new_status,
             'updated_by' => $user->display_name,
             'updated_date' => date_i18n(get_option('date_format') . ' ' . get_option('time_format'))
         ));
@@ -10862,7 +11137,7 @@ if (!function_exists('complaint_list_export_data')) {
         }
 
         // รับพารามิเตอร์
-        $status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
+        $status = isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '';
         $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
         $date_filter = isset($_POST['date']) ? sanitize_text_field($_POST['date']) : '';
 
@@ -10920,6 +11195,12 @@ if (!function_exists('complaint_list_export_data')) {
                         'inclusive' => true
                     );
                     break;
+                default:
+                    // Default to month filter if no valid filter is provided
+                    $args['date_query'] = array(
+                        'after' => date('Y-m-d', strtotime('-30 days'))
+                    );
+                    break;
             }
         }
 
@@ -10961,7 +11242,7 @@ if (!function_exists('complaint_list_export_data')) {
                 'department' => $department ?: 'ไม่ระบุ',
                 'complainant' => $complainant ?: 'ไม่ระบุ',
                 'details' => $details,
-                'status' => $status_label,
+                DGA_STATUS_FIELD => $status_label,
                 'due_date' => $due_date ? date('Y-m-d', strtotime($due_date)) : ''
             );
         }
@@ -10991,7 +11272,7 @@ if (!function_exists('complaint_list_export_data')) {
                 $complaint['department'],
                 $complaint['complainant'],
                 $complaint['details'],
-                $complaint['status'],
+                $complaint[DGA_STATUS_FIELD],
                 $complaint['due_date']
             );
             
@@ -11338,13 +11619,13 @@ if (!function_exists('complaint_stats_enqueue_scripts_xyz789')) {
                 'status_colors' => array(
                     'complaint_pending' => 'warning',
                     'complaint_in_progress' => 'info',
-                    'complaint_completed' => 'success',
+                    'complaint_completed' => DGA_SUCCESS_STATUS,
                     'complaint_rejected' => 'danger',
                     'complaint_closed' => 'secondary'
                 ),
                 'messages' => array(
                     'loading' => 'กำลังโหลดข้อมูล...',
-                    'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
                     'no_data' => 'ไม่พบข้อมูล',
                     'export_success' => 'ส่งออกข้อมูลเรียบร้อยแล้ว'
                 ),
@@ -11588,7 +11869,7 @@ if (!function_exists('get_complaint_statistics_xyz789')) {
 
         // Initialize statistics arrays
         $stats = array(
-            'total' => count($complaints),
+            DGA_TOTAL_FIELD_KEY => count($complaints),
             'by_type' => array(),
             'by_department' => array(),
             'by_status' => array(
@@ -11606,7 +11887,7 @@ if (!function_exists('get_complaint_statistics_xyz789')) {
         $date1 = new DateTime($start_date);
         $date2 = new DateTime($end_date);
         $date_diff = $date2->diff($date1)->days + 1;
-        $stats['daily_average'] = $date_diff > 0 ? round($stats['total'] / $date_diff, 2) : 0;
+        $stats['daily_average'] = $date_diff > 0 ? round($stats[DGA_TOTAL_FIELD_KEY] / $date_diff, 2) : 0;
 
         // Initialize trend data structure
         $trend_data = array();
@@ -11625,6 +11906,9 @@ if (!function_exists('get_complaint_statistics_xyz789')) {
                 break;
             case 'daily':
                 $period_format = 'Y-m-d';
+                break;
+            default:
+                $period_format = 'Y-m'; // Default to monthly
                 break;
         }
         
@@ -11646,6 +11930,9 @@ if (!function_exists('get_complaint_statistics_xyz789')) {
                     break;
                 case 'daily':
                     $current_date->modify('+1 day');
+                    break;
+                default:
+                    $current_date->modify('+1 month'); // Default to monthly increment
                     break;
             }
         }
@@ -11886,7 +12173,7 @@ if (!function_exists('export_complaint_data_xyz789')) {
 if (!function_exists('register_complaint_post_statuses_xyz789')) {
     function register_complaint_post_statuses_xyz789() {
         register_post_status('complaint_pending', array(
-            'label' => _x('รอดำเนินการ', 'post status'),
+            DGA_LABEL_FIELD => _x('รอดำเนินการ', 'post status'),
             'public' => true,
             'exclude_from_search' => false,
             'show_in_admin_all_list' => true,
@@ -11896,7 +12183,7 @@ if (!function_exists('register_complaint_post_statuses_xyz789')) {
         ));
 
         register_post_status('complaint_in_progress', array(
-            'label' => _x('กำลังดำเนินการ', 'post status'),
+            DGA_LABEL_FIELD => _x('กำลังดำเนินการ', 'post status'),
             'public' => true,
             'exclude_from_search' => false,
             'show_in_admin_all_list' => true,
@@ -11906,7 +12193,7 @@ if (!function_exists('register_complaint_post_statuses_xyz789')) {
         ));
 
         register_post_status('complaint_completed', array(
-            'label' => _x('เสร็จสิ้น', 'post status'),
+            DGA_LABEL_FIELD => _x('เสร็จสิ้น', 'post status'),
             'public' => true,
             'exclude_from_search' => false,
             'show_in_admin_all_list' => true,
@@ -11916,7 +12203,7 @@ if (!function_exists('register_complaint_post_statuses_xyz789')) {
         ));
 
         register_post_status('complaint_rejected', array(
-            'label' => _x('ไม่รับพิจารณา', 'post status'),
+            DGA_LABEL_FIELD => _x('ไม่รับพิจารณา', 'post status'),
             'public' => true,
             'exclude_from_search' => false,
             'show_in_admin_all_list' => true,
@@ -11926,7 +12213,7 @@ if (!function_exists('register_complaint_post_statuses_xyz789')) {
         ));
 
         register_post_status('complaint_closed', array(
-            'label' => _x('ปิดเรื่อง', 'post status'),
+            DGA_LABEL_FIELD => _x('ปิดเรื่อง', 'post status'),
             'public' => true,
             'exclude_from_search' => false,
             'show_in_admin_all_list' => true,
@@ -12085,8 +12372,8 @@ function get_calendar_posts_tc24() {
                     'month' => $month,
                 ),
             ),
-            'orderby' => 'date',
-            'order' => 'ASC'
+            DGA_ORDERBY_FIELD_VALUE => 'date',
+            DGA_ORDER_FIELD => 'ASC'
         );
         
         $query = new WP_Query($args);
@@ -12134,7 +12421,7 @@ function get_calendar_posts_tc24() {
     }
     
     $response = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'posts' => $posts_by_date,
         'month_info' => array(
             'year' => $year,
@@ -12249,7 +12536,7 @@ add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'enqueue_enhanced_role_scripts');
 function get_capability_groups_xdk738() {
     return array(
         'posts' => array(
-            'label' => __('โพสต์และเนื้อหา', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('โพสต์และเนื้อหา', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-post',
             'capabilities' => array(
                 DGA_EDIT_POSTS_CAP => __('แก้ไขโพสต์', DGA_TEXT_DOMAIN),
@@ -12265,7 +12552,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'pages' => array(
-            'label' => __('หน้าเพจ', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('หน้าเพจ', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-page',
             'capabilities' => array(
                 'edit_pages' => __('แก้ไขหน้าเพจ', DGA_TEXT_DOMAIN),
@@ -12281,7 +12568,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'media' => array(
-            'label' => __('สื่อและไฟล์', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('สื่อและไฟล์', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-media',
             'capabilities' => array(
                 'upload_files' => __('อัปโหลดไฟล์', DGA_TEXT_DOMAIN),
@@ -12290,7 +12577,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'users' => array(
-            'label' => __('ผู้ใช้', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('ผู้ใช้', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-users',
             'capabilities' => array(
                 'list_users' => __('ดูรายชื่อผู้ใช้', DGA_TEXT_DOMAIN),
@@ -12303,7 +12590,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'themes' => array(
-            'label' => __('ธีมและการแสดงผล', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('ธีมและการแสดงผล', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-appearance',
             'capabilities' => array(
                 'edit_theme_options' => __('แก้ไขตัวเลือกธีม', DGA_TEXT_DOMAIN),
@@ -12315,7 +12602,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'plugins' => array(
-            'label' => __('ปลั๊กอิน', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('ปลั๊กอิน', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-plugins',
             'capabilities' => array(
                 'activate_plugins' => __('เปิดใช้งานปลั๊กอิน', DGA_TEXT_DOMAIN),
@@ -12326,7 +12613,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'comments' => array(
-            'label' => __('ความคิดเห็น', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('ความคิดเห็น', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-comments',
             'capabilities' => array(
                 'moderate_comments' => __('จัดการความคิดเห็น', DGA_TEXT_DOMAIN),
@@ -12334,7 +12621,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'admin' => array(
-            'label' => __('การจัดการระบบ', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('การจัดการระบบ', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-settings',
             'capabilities' => array(
                 DGA_MANAGE_OPTIONS_CAP => __('จัดการตัวเลือกเว็บไซต์', DGA_TEXT_DOMAIN),
@@ -12348,7 +12635,7 @@ function get_capability_groups_xdk738() {
             )
         ),
         'other' => array(
-            'label' => __('อื่นๆ', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('อื่นๆ', DGA_TEXT_DOMAIN),
             'icon' => 'dashicons-admin-generic',
             'capabilities' => array(
                 'read' => __('เข้าถึงแดชบอร์ด', DGA_TEXT_DOMAIN),
@@ -12374,7 +12661,7 @@ function get_capability_groups_xdk738() {
 function get_preset_templates_xdk738() {
     return array(
         'content_editor' => array(
-            'label' => __('บรรณาธิการเนื้อหา', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('บรรณาธิการเนื้อหา', DGA_TEXT_DOMAIN),
             'description' => __('สามารถจัดการเนื้อหาทั้งหมด แต่ไม่สามารถจัดการระบบ', DGA_TEXT_DOMAIN),
             'capabilities' => array(
                 'read', DGA_EDIT_POSTS_CAP, 'edit_others_posts', 'edit_published_posts',
@@ -12385,7 +12672,7 @@ function get_preset_templates_xdk738() {
             )
         ),
         'shop_manager' => array(
-            'label' => __('ผู้จัดการร้านค้า', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('ผู้จัดการร้านค้า', DGA_TEXT_DOMAIN),
             'description' => __('จัดการสินค้าและคำสั่งซื้อ (WooCommerce)', DGA_TEXT_DOMAIN),
             'capabilities' => array(
                 'read', DGA_EDIT_POSTS_CAP, 'edit_pages', 'upload_files',
@@ -12396,7 +12683,7 @@ function get_preset_templates_xdk738() {
             )
         ),
         'support_staff' => array(
-            'label' => __('ฝ่ายสนับสนุน', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('ฝ่ายสนับสนุน', DGA_TEXT_DOMAIN),
             'description' => __('ดูข้อมูลและตอบความคิดเห็น', DGA_TEXT_DOMAIN),
             'capabilities' => array(
                 'read', 'read_private_posts', 'read_private_pages',
@@ -12404,7 +12691,7 @@ function get_preset_templates_xdk738() {
             )
         ),
         'minimal_access' => array(
-            'label' => __('สิทธิ์ขั้นต่ำ', DGA_TEXT_DOMAIN),
+            DGA_LABEL_FIELD => __('สิทธิ์ขั้นต่ำ', DGA_TEXT_DOMAIN),
             'description' => __('เข้าถึงแดชบอร์ดเท่านั้น', DGA_TEXT_DOMAIN),
             'capabilities' => array('read')
         )
@@ -12666,7 +12953,7 @@ function get_enhanced_post_types_xdk738($role) {
         );
         
         $result[$post_type_name] = array(
-            'label' => $post_type->label,
+            DGA_LABEL_FIELD => $post_type->label,
             DGA_NAME_FIELD => $post_type_name,
             'capabilities' => $capabilities,
             'cap_type' => $cap_type
@@ -12696,7 +12983,7 @@ function get_enhanced_taxonomies_xdk738($role) {
         );
         
         $result[$taxonomy_name] = array(
-            'label' => $taxonomy->label,
+            DGA_LABEL_FIELD => $taxonomy->label,
             DGA_NAME_FIELD => $taxonomy_name,
             'capabilities' => $capabilities
         );
@@ -12771,14 +13058,14 @@ function department_role_manager_enhanced_shortcode($atts) {
                             <?php
                             $presets = get_preset_templates_xdk738();
                             foreach ($presets as $key => $preset) {
-                                echo '<option value="' . esc_attr($key) . '">' . esc_html($preset['label']) . ' - ' . esc_html($preset['description']) . '</option>';
+                                echo '<option value="' . esc_attr($key) . '">' . esc_html($preset[DGA_LABEL_FIELD]) . ' - ' . esc_html($preset['description']) . '</option>';
                             }
                             ?>
                         </select>
                         <small><?php _e('เลือกเทมเพลตเพื่อกำหนดสิทธิ์เบื้องต้น หรือข้ามไปเพื่อกำหนดเอง', DGA_TEXT_DOMAIN); ?></small>
                     </div>
                     
-                    <button type="submit" class="button-primary">
+                    <button type=DGA_SUBMIT_TYPE class="button-primary">
                         <span class="dashicons dashicons-plus"></span> 
                         <span><?php _e('สร้างบทบาท', DGA_TEXT_DOMAIN); ?></span>
                     </button>
@@ -12798,7 +13085,7 @@ function department_role_manager_enhanced_shortcode($atts) {
         <div class="modal-content-enhanced">
             <div class="modal-header">
                 <h2><?php _e('แก้ไขสิทธิ์บทบาท', DGA_TEXT_DOMAIN); ?></h2>
-                <button type="button" class="modal-close" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">
+                <button type=DGA_BUTTON_TYPE class="modal-close" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">
                     <span class="dashicons dashicons-no"></span>
                 </button>
             </div>
@@ -12989,7 +13276,7 @@ function get_roles_table_ajax() {
                     <td>
                         <div class="action-buttons">
                             <span class="default-role-badge"><?php _e('บทบาทเริ่มต้น', DGA_TEXT_DOMAIN); ?></span>
-                            <button type="button" class="view-users-btn" data-role="<?php echo esc_attr($role_name); ?>">
+                            <button type=DGA_BUTTON_TYPE class="view-users-btn" data-role="<?php echo esc_attr($role_name); ?>">
                                 <?php _e('ดูผู้ใช้', DGA_TEXT_DOMAIN); ?>
                             </button>
                         </div>
@@ -13013,14 +13300,14 @@ function get_roles_table_ajax() {
                     <td>
                         <div class="action-buttons">
                             <?php if ($is_admin): ?>
-                                <button type="button" class="edit-capabilities-btn" data-role="<?php echo esc_attr($role_name); ?>">
+                                <button type=DGA_BUTTON_TYPE class="edit-capabilities-btn" data-role="<?php echo esc_attr($role_name); ?>">
                                     <?php _e('แก้ไขสิทธิ์', DGA_TEXT_DOMAIN); ?>
                                 </button>
-                                <button type="button" class="delete-role-btn" data-role="<?php echo esc_attr($role_name); ?>">
+                                <button type=DGA_BUTTON_TYPE class="delete-role-btn" data-role="<?php echo esc_attr($role_name); ?>">
                                     <?php _e('ลบ', DGA_TEXT_DOMAIN); ?>
                                 </button>
                             <?php endif; ?>
-                            <button type="button" class="view-users-btn" data-role="<?php echo esc_attr($role_name); ?>">
+                            <button type=DGA_BUTTON_TYPE class="view-users-btn" data-role="<?php echo esc_attr($role_name); ?>">
                                 <?php _e('ดูผู้ใช้', DGA_TEXT_DOMAIN); ?>
                             </button>
                         </div>
@@ -13267,8 +13554,8 @@ function ajax_get_users_data_hjk789() {
     $args = array(
         'number' => $per_page,
         'offset' => $offset,
-        'orderby' => $sort_by,
-        'order' => $sort_order
+        DGA_ORDERBY_FIELD_VALUE => $sort_by,
+        DGA_ORDER_FIELD => $sort_order
     );
     
     if (!empty($search)) {
@@ -13318,7 +13605,7 @@ function ajax_get_users_data_hjk789() {
     
     wp_send_json_success(array(
         'users' => $users_data,
-        'total' => $total_users,
+        DGA_TOTAL_FIELD_KEY => $total_users,
         'total_pages' => $total_pages,
         'current_page' => $page
     ));
@@ -13419,7 +13706,7 @@ function enqueue_special_permissions_assets_hjk789() {
         'special-permissions-css',
         $child_theme_url . '/css/special-permissions.css',
         array(),
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     // โหลด JavaScript
@@ -13427,7 +13714,7 @@ function enqueue_special_permissions_assets_hjk789() {
         'special-permissions-js',
         $child_theme_url . '/js/special-permissions.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
     
@@ -13549,7 +13836,7 @@ function render_special_permissions_page_hjk789() {
                 </div>
                 
                 <div class="special-permissions-submit">
-                    <input type="submit" name="special_permissions_submit" class="button button-primary" value="<?php echo esc_attr__('บันทึกการตั้งค่า', DGA_TEXT_DOMAIN); ?>">
+                    <input type=DGA_SUBMIT_TYPE name="special_permissions_submit" class="button button-primary" value="<?php echo esc_attr__('บันทึกการตั้งค่า', DGA_TEXT_DOMAIN); ?>">
                 </div>
             </form>
         </div>
@@ -13675,7 +13962,7 @@ function custom_ajax_search_enqueue_scripts_mxz789() {
         'messages' => array(
             'searching' => __('กำลังค้นหา...', DGA_TEXT_DOMAIN),
             'no_results' => __('ไม่พบผลการค้นหา', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาดในการค้นหา', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาดในการค้นหา', DGA_TEXT_DOMAIN),
             'results_found' => __('พบ %d รายการ', DGA_TEXT_DOMAIN),
             'search_cancelled' => __('การค้นหาถูกยกเลิก', DGA_TEXT_DOMAIN),
             'search_too_short' => __('กรุณาพิมพ์คำค้นหาอย่างน้อย %d ตัวอักษร', DGA_TEXT_DOMAIN),
@@ -13782,7 +14069,7 @@ function custom_ajax_search_shortcode_mxz789($atts = array()) {
                                aria-autocomplete="list"
                                aria-expanded="false"
                                aria-owns="search-results-content-<?php echo esc_attr($instance_id); ?>">
-                        <button type="submit" 
+                        <button type=DGA_SUBMIT_TYPE 
                                 class="search-button-mxz789" 
                                 aria-label="<?php echo esc_attr($button_text); ?>">
                             <span class="search-icon-mxz789">🔍</span>
@@ -13921,8 +14208,8 @@ function custom_ajax_search_handler_mxz789() {
             DGA_POSTS_PER_PAGE => $max_results,
             DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
             'meta_query' => $combined_meta_query,
-            'orderby' => 'date',
-            'order' => 'DESC'
+            DGA_ORDERBY_FIELD_VALUE => 'date',
+            DGA_ORDER_FIELD => 'DESC'
         );
         $meta_query_obj = new WP_Query($meta_args);
         
@@ -13933,8 +14220,8 @@ function custom_ajax_search_handler_mxz789() {
             DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
             's' => $search_query,
             'meta_query' => $status_filter,
-            'orderby' => 'date',
-            'order' => 'DESC'
+            DGA_ORDERBY_FIELD_VALUE => 'date',
+            DGA_ORDER_FIELD => 'DESC'
         );
         $title_query = new WP_Query($title_args);
         
@@ -13966,7 +14253,7 @@ function custom_ajax_search_handler_mxz789() {
                 DGA_POST_TYPE_FIELD => 'news',
                 'post__in' => array_slice($all_post_ids, 0, $max_results),
                 DGA_POSTS_PER_PAGE => $max_results,
-                'orderby' => 'post__in',
+                DGA_ORDERBY_FIELD_VALUE => 'post__in',
                 'meta_query' => $status_filter // Ensure inactive posts are excluded
             );
             $query = new WP_Query($final_args);
@@ -14039,7 +14326,7 @@ function custom_ajax_search_handler_mxz789() {
                     // Check if found in title
                     $match_badge = '';
                     if (stripos($title, $search_query) !== false) {
-                        $found_in[] = 'title';
+                        $found_in[] = DGA_TITLE_FIELD;
                         $match_badge = '<span class="match-badge-mxz789">พบในชื่อ</span>';
                     }
                     
@@ -14083,7 +14370,7 @@ function custom_ajax_search_handler_mxz789() {
             DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
             's' => $search_query,
             'meta_query' => $status_filter, // Add status filter for all post types
-            'orderby' => array(
+            DGA_ORDERBY_FIELD_VALUE => array(
                 'relevance' => 'DESC',
                 'date' => 'DESC'
             )
@@ -14141,7 +14428,7 @@ function custom_ajax_search_handler_mxz789() {
     
     wp_send_json_success(array(
         'results' => $results,
-        'total' => count($results),
+        DGA_TOTAL_FIELD_KEY => count($results),
         'query' => $search_query,
         DGA_TYPE_FIELD => $search_type,
         'found_posts' => isset($query) ? $query->found_posts : count($results),
@@ -14282,7 +14569,7 @@ function pplist_ppl738_enqueue_assets() {
             'loading' => __('กำลังโหลด...', DGA_TEXT_DOMAIN),
             'loadMore' => __('โหลดเพิ่มเติม', DGA_TEXT_DOMAIN),
             'noResults' => __('ไม่พบข้อมูลที่ค้นหา', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด กรุณาลองใหม่', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่', DGA_TEXT_DOMAIN),
             'searchPlaceholder' => __('ค้นหาคู่มือประชาชน...', DGA_TEXT_DOMAIN),
             'allCategories' => __('ทั้งหมด', DGA_TEXT_DOMAIN),
             'views' => __('เข้าชม', DGA_TEXT_DOMAIN),
@@ -14389,7 +14676,7 @@ function pplist_ppl738_shortcode($atts) {
                            class="pplist-search-input-ppl738"
                            placeholder="<?php echo esc_attr__('ค้นหาคู่มือประชาชน...', DGA_TEXT_DOMAIN); ?>"
                            aria-label="<?php echo esc_attr__('ค้นหา', DGA_TEXT_DOMAIN); ?>">
-                    <button type="button" class="pplist-search-btn-ppl738" aria-label="<?php echo esc_attr__('ค้นหา', DGA_TEXT_DOMAIN); ?>">
+                    <button type=DGA_BUTTON_TYPE class="pplist-search-btn-ppl738" aria-label="<?php echo esc_attr__('ค้นหา', DGA_TEXT_DOMAIN); ?>">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"/>
                             <path d="m21 21-4.35-4.35"/>
@@ -14416,8 +14703,8 @@ function pplist_ppl738_shortcode($atts) {
                         $groups = get_terms(array(
                             DGA_TAXONOMY_FIELD => 'ppgroup',
                             DGA_HIDE_EMPTY_FIELD => true,
-                            'orderby' => 'name',
-                            'order' => 'ASC'
+                            DGA_ORDERBY_FIELD_VALUE => 'name',
+                            DGA_ORDER_FIELD => 'ASC'
                         ));
                         
                         if (!is_wp_error($groups) && !empty($groups)) {
@@ -14470,7 +14757,7 @@ function pplist_ppl738_shortcode($atts) {
                 </div>
                 
                 <!-- Clear Filters -->
-                <button type="button" 
+                <button type=DGA_BUTTON_TYPE 
                         class="pplist-clear-filters-ppl738"
                         aria-label="<?php echo esc_attr__('ล้างตัวกรอง', DGA_TEXT_DOMAIN); ?>">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -14518,7 +14805,7 @@ function pplist_ppl738_shortcode($atts) {
         
         <!-- Load More -->
         <div class="pplist-load-more-wrapper-ppl738">
-            <button type="button" 
+            <button type=DGA_BUTTON_TYPE 
                     class="pplist-load-more-ppl738"
                     aria-label="<?php echo esc_attr__('โหลดเพิ่มเติม', DGA_TEXT_DOMAIN); ?>"
                     style="display: none;">
@@ -14571,7 +14858,7 @@ function pplist_load_posts_ppl738() {
     $args = array(
         DGA_POST_TYPE_FIELD => 'mpeople',
         DGA_POSTS_PER_PAGE => $posts_per_page,
-        'paged' => $page,
+        DGA_PAGED_PARAMETER => $page,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS
     );
     
@@ -14585,7 +14872,7 @@ function pplist_load_posts_ppl738() {
         $args['tax_query'] = array(
             array(
                 DGA_TAXONOMY_FIELD => 'ppgroup',
-                'field' => 'slug',
+                DGA_FIELD_KEY => 'slug',
                 'terms' => $group
             )
         );
@@ -14612,25 +14899,25 @@ function pplist_load_posts_ppl738() {
     // Add sorting
     switch ($sort) {
         case 'date_asc':
-            $args['orderby'] = 'date';
-            $args['order'] = 'ASC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = 'date';
+            $args[DGA_ORDER_FIELD] = 'ASC';
             break;
         case 'views_desc':
             $args['meta_key'] = '_pplist_views_count';
-            $args['orderby'] = 'meta_value_num';
-            $args['order'] = 'DESC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = 'meta_value_num';
+            $args[DGA_ORDER_FIELD] = 'DESC';
             break;
         case 'title_asc':
-            $args['orderby'] = 'title';
-            $args['order'] = 'ASC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = DGA_TITLE_FIELD;
+            $args[DGA_ORDER_FIELD] = 'ASC';
             break;
         case 'title_desc':
-            $args['orderby'] = 'title';
-            $args['order'] = 'DESC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = DGA_TITLE_FIELD;
+            $args[DGA_ORDER_FIELD] = 'DESC';
             break;
         default:
-            $args['orderby'] = 'date';
-            $args['order'] = 'DESC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = 'date';
+            $args[DGA_ORDER_FIELD] = 'DESC';
     }
     
     // Execute query
@@ -14691,7 +14978,7 @@ function pplist_load_posts_ppl738() {
     // Send response
     wp_send_json_success(array(
         'posts' => $posts,
-        'total' => $query->found_posts,
+        DGA_TOTAL_FIELD_KEY => $query->found_posts,
         'max_pages' => $query->max_num_pages,
         'current_page' => $page
     ));
@@ -14737,7 +15024,7 @@ function pplist_search_ppl738() {
         DGA_POSTS_PER_PAGE => 5,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         's' => $search,
-        'fields' => 'ids'
+        DGA_FIELDS_PARAMETER => 'ids'
     );
     
     $query = new WP_Query($args);
@@ -14822,7 +15109,7 @@ function ppgroup_editor_enqueue_scripts() {
         'ppgroup-editor-style',
         $child_theme_url . '/css/ppgroup-editor.css',
         array(),
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     // Enqueue JavaScript
@@ -14830,7 +15117,7 @@ function ppgroup_editor_enqueue_scripts() {
         'ppgroup-editor-script',
         $child_theme_url . '/js/ppgroup-editor.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
     
@@ -14863,7 +15150,7 @@ function ppgroup_editor_shortcode($atts) {
     
     // ดึงค่า terms ที่เลือกไว้ของโพสต์นี้
     $selected_terms = wp_get_object_terms($post_id, 'ppgroup');
-    $selected_term_ids = wp_list_pluck($selected_terms, 'term_id');
+    $selected_term_ids = wp_list_pluck($selected_terms, DGA_TERM_ID_FIELD);
     
     ob_start();
     ?>
@@ -14931,8 +15218,8 @@ function add_ppgroup_image_field() {
         <input type="hidden" id="ppgroup_image_id" name="ppgroup_image_id" class="custom_media_url" value="">
         <div id="ppgroup_image_wrapper"></div>
         <p>
-            <input type="button" class="button button-secondary" id="ppgroup_media_button" name="ppgroup_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
-            <input type="button" class="button button-secondary" id="ppgroup_media_remove" name="ppgroup_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
+            <input type=DGA_BUTTON_TYPE class="button button-secondary" id="ppgroup_media_button" name="ppgroup_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
+            <input type=DGA_BUTTON_TYPE class="button button-secondary" id="ppgroup_media_remove" name="ppgroup_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
         </p>
     </div>
     <?php
@@ -14955,8 +15242,8 @@ function edit_ppgroup_image_field($term) {
                 } ?>
             </div>
             <p>
-                <input type="button" class="button button-secondary" id="ppgroup_media_button" name="ppgroup_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
-                <input type="button" class="button button-secondary" id="ppgroup_media_remove" name="ppgroup_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
+                <input type=DGA_BUTTON_TYPE class="button button-secondary" id="ppgroup_media_button" name="ppgroup_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
+                <input type=DGA_BUTTON_TYPE class="button button-secondary" id="ppgroup_media_remove" name="ppgroup_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
             </p>
         </td>
     </tr>
@@ -15028,8 +15315,8 @@ function add_tnews_image_field() {
         <input type="hidden" id="tnews_image_id" name="tnews_image_id" class="custom_media_url" value="">
         <div id="tnews_image_wrapper"></div>
         <p>
-            <input type="button" class="button button-secondary" id="tnews_media_button" name="tnews_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
-            <input type="button" class="button button-secondary" id="tnews_media_remove" name="tnews_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
+            <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tnews_media_button" name="tnews_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
+            <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tnews_media_remove" name="tnews_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
         </p>
     </div>
     <?php
@@ -15052,8 +15339,8 @@ function edit_tnews_image_field($term) {
                 } ?>
             </div>
             <p>
-                <input type="button" class="button button-secondary" id="tnews_media_button" name="tnews_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
-                <input type="button" class="button button-secondary" id="tnews_media_remove" name="tnews_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
+                <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tnews_media_button" name="tnews_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
+                <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tnews_media_remove" name="tnews_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
             </p>
         </td>
     </tr>
@@ -15125,8 +15412,8 @@ function add_tdep_image_field() {
         <input type="hidden" id="tdep_image_id" name="tdep_image_id" class="custom_media_url" value="">
         <div id="tdep_image_wrapper"></div>
         <p>
-            <input type="button" class="button button-secondary" id="tdep_media_button" name="tdep_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
-            <input type="button" class="button button-secondary" id="tdep_media_remove" name="tdep_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
+            <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tdep_media_button" name="tdep_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
+            <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tdep_media_remove" name="tdep_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
         </p>
     </div>
     <?php
@@ -15149,8 +15436,8 @@ function edit_tdep_image_field($term) {
                 } ?>
             </div>
             <p>
-                <input type="button" class="button button-secondary" id="tdep_media_button" name="tdep_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
-                <input type="button" class="button button-secondary" id="tdep_media_remove" name="tdep_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
+                <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tdep_media_button" name="tdep_media_button" value="<?php _e('เพิ่มรูปภาพ', 'text-domain'); ?>" />
+                <input type=DGA_BUTTON_TYPE class="button button-secondary" id="tdep_media_remove" name="tdep_media_remove" value="<?php _e('ลบรูปภาพ', 'text-domain'); ?>" />
             </p>
         </td>
     </tr>
@@ -15221,13 +15508,13 @@ function thai_date_views_enqueue_scripts() {
     wp_enqueue_style('thai-date-views-style', 
         get_stylesheet_directory_uri() . '/css/thai-date-views.css', 
         array(), 
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     wp_enqueue_script('thai-date-views-script', 
         get_stylesheet_directory_uri() . '/js/thai-date-views.js', 
         array(DGA_JQUERY_HANDLE), 
-        '1.0.0', 
+        DGA_VERSION_NUMBER, 
         true
     );
 }
@@ -15331,7 +15618,7 @@ add_action('elementor/query/pppost', function($query) {
     // Get terms from current post
     $related_terms = array();
     foreach ($taxonomies as $taxonomy) {
-        $post_terms = wp_get_post_terms($current_post->ID, $taxonomy, array('fields' => 'ids'));
+        $post_terms = wp_get_post_terms($current_post->ID, $taxonomy, array(DGA_FIELDS_PARAMETER => 'ids'));
         if (!empty($post_terms) && !is_wp_error($post_terms)) {
             $related_terms[$taxonomy] = $post_terms;
         }
@@ -15347,7 +15634,7 @@ add_action('elementor/query/pppost', function($query) {
     foreach ($related_terms as $taxonomy => $terms) {
         $tax_query[] = array(
             DGA_TAXONOMY_FIELD => $taxonomy,
-            'field'    => 'term_id',
+            DGA_FIELD_KEY    => DGA_TERM_ID_FIELD,
             'terms'    => $terms,
             'operator' => 'IN'
         );
@@ -15358,8 +15645,8 @@ add_action('elementor/query/pppost', function($query) {
     $query->set('tax_query', $tax_query);
     $query->set('post__not_in', array($current_post->ID));
     $query->set(DGA_POSTS_PER_PAGE, 6);
-    $query->set('orderby', 'date');
-    $query->set('order', 'DESC');
+    $query->set(DGA_ORDERBY_FIELD_VALUE, 'date');
+    $query->set(DGA_ORDER_FIELD, 'DESC');
 });
 
 
@@ -15378,14 +15665,14 @@ function enqueue_standard_documents_assets() {
         'standard-documents-style',
         get_stylesheet_directory_uri() . '/css/standard-documents.css',
         array(),
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     wp_enqueue_script(
         'standard-documents-script',
         get_stylesheet_directory_uri() . '/js/standard-documents.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
 }
@@ -15471,8 +15758,8 @@ function display_standard_documents() {
 
 // Enqueue scripts and styles
 function tdep_cards_enqueue_assets() {
-    wp_enqueue_style('tdep-cards-style', get_stylesheet_directory_uri() . '/css/tdep-cards.css', array(), '1.0.0');
-    wp_enqueue_script('tdep-cards-script', get_stylesheet_directory_uri() . '/js/tdep-cards.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_style('tdep-cards-style', get_stylesheet_directory_uri() . '/css/tdep-cards.css', array(), DGA_VERSION_NUMBER);
+    wp_enqueue_script('tdep-cards-script', get_stylesheet_directory_uri() . '/js/tdep-cards.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
 }
 add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'tdep_cards_enqueue_assets');
 
@@ -15602,36 +15889,36 @@ function tdep_tem_shortcode($atts) {
     // Default arguments
     $args = shortcode_atts(array(
         DGA_POSTS_PER_PAGE => 9,
-        'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_PAGED_PARAMETER => get_query_var(DGA_PAGED_PARAMETER) ? get_query_var(DGA_PAGED_PARAMETER) : 1,
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
         DGA_TAXONOMY_FIELD => '',
-        'term_id' => ''
+        DGA_TERM_ID_FIELD => ''
     ), $atts);
 
     // Base query arguments
     $query_args = array(
         DGA_POST_TYPE_FIELD => 'department',
         DGA_POSTS_PER_PAGE => $args[DGA_POSTS_PER_PAGE],
-        'paged' => $args['paged'],
-        'orderby' => $args['orderby'],
-        'order' => $args['order']
+        DGA_PAGED_PARAMETER => $args[DGA_PAGED_PARAMETER],
+        DGA_ORDERBY_FIELD_VALUE => $args[DGA_ORDERBY_FIELD_VALUE],
+        DGA_ORDER_FIELD => $args[DGA_ORDER_FIELD]
     );
 
     // Handle taxonomy query
-    if (!empty($args[DGA_TAXONOMY_FIELD]) && !empty($args['term_id'])) {
+    if (!empty($args[DGA_TAXONOMY_FIELD]) && !empty($args[DGA_TERM_ID_FIELD])) {
         $query_args['tax_query'] = array(
             array(
                 DGA_TAXONOMY_FIELD => $args[DGA_TAXONOMY_FIELD],
-                'field' => 'term_id',
-                'terms' => $args['term_id']
+                DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
+                'terms' => $args[DGA_TERM_ID_FIELD]
             )
         );
     } elseif (is_tax() && $queried_object instanceof WP_Term) {
         $query_args['tax_query'] = array(
             array(
                 DGA_TAXONOMY_FIELD => $queried_object->taxonomy,
-                'field' => 'term_id',
+                DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                 'terms' => $queried_object->term_id
             )
         );
@@ -15718,8 +16005,8 @@ function tdep_tem_shortcode($atts) {
                     echo paginate_links(array(
                         'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
                         'format' => '?paged=%#%',
-                        'current' => max(1, get_query_var('paged')),
-                        'total' => $query->max_num_pages,
+                        'current' => max(1, get_query_var(DGA_PAGED_PARAMETER)),
+                        DGA_TOTAL_FIELD_KEY => $query->max_num_pages,
                         'prev_text' => '<i class="tdep-tem-icon-arrow-left" aria-hidden="true"></i> ' . __('หน้าก่อนหน้า', 'tdep-tem'),
                         'next_text' => __('หน้าถัดไป', 'tdep-tem') . ' <i class="tdep-tem-icon-arrow-right" aria-hidden="true"></i>',
                         DGA_TYPE_FIELD => 'list',
@@ -15828,17 +16115,17 @@ function tdep_list_time_ago($timestamp) {
 function tdep_list_shortcode($atts) {
     $args = shortcode_atts(array(
         DGA_POSTS_PER_PAGE => 10,
-        'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_PAGED_PARAMETER => get_query_var(DGA_PAGED_PARAMETER) ? get_query_var(DGA_PAGED_PARAMETER) : 1,
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     ), $atts);
 
     $query_args = array(
         DGA_POST_TYPE_FIELD => 'department',
         DGA_POSTS_PER_PAGE => $args[DGA_POSTS_PER_PAGE],
-        'paged' => $args['paged'],
-        'orderby' => $args['orderby'],
-        'order' => $args['order'],
+        DGA_PAGED_PARAMETER => $args[DGA_PAGED_PARAMETER],
+        DGA_ORDERBY_FIELD_VALUE => $args[DGA_ORDERBY_FIELD_VALUE],
+        DGA_ORDER_FIELD => $args[DGA_ORDER_FIELD],
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS
     );
 
@@ -15918,8 +16205,8 @@ function tdep_list_shortcode($atts) {
                     echo paginate_links(array(
                         'base' => str_replace(999999999, '%#%', esc_url(get_pagenum_link(999999999))),
                         'format' => '?paged=%#%',
-                        'current' => max(1, get_query_var('paged')),
-                        'total' => $query->max_num_pages,
+                        'current' => max(1, get_query_var(DGA_PAGED_PARAMETER)),
+                        DGA_TOTAL_FIELD_KEY => $query->max_num_pages,
                         'prev_text' => '<span class="tdep-list-prev">หน้าก่อนหน้า</span>',
                         'next_text' => '<span class="tdep-list-next">หน้าถัดไป</span>',
                         DGA_TYPE_FIELD => 'list',
@@ -15953,8 +16240,8 @@ add_action('after_setup_theme', 'tdep_list_after_setup_theme');
 
 function register_category_editor_assets() {
     wp_enqueue_media(); // เพิ่ม WordPress Media Uploader
-    wp_enqueue_style('category-editor-style', get_stylesheet_directory_uri() . '/css/category-editor.css', array(), '1.0.0');
-    wp_enqueue_script('category-editor-script', get_stylesheet_directory_uri() . '/js/category-editor.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_style('category-editor-style', get_stylesheet_directory_uri() . '/css/category-editor.css', array(), DGA_VERSION_NUMBER);
+    wp_enqueue_script('category-editor-script', get_stylesheet_directory_uri() . '/js/category-editor.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     wp_localize_script('category-editor-script', 'categoryEditorAjax', array(
         'ajaxurl' => admin_url(DGA_ADMIN_AJAX_URL),
         DGA_NONCE_KEY => wp_create_nonce('category_editor_nonce')
@@ -16027,7 +16314,7 @@ add_action('wp_ajax_nopriv_get_tdep_categories', 'get_tdep_categories');
 function update_tdep_category() {
     check_ajax_referer('category_editor_nonce', 'nonce');
     
-    $term_id = intval($_POST['term_id']);
+    $term_id = intval($_POST[DGA_TERM_ID_FIELD]);
     $response_data = array();
     
     // อัพเดตชื่อหมวดหมู่
@@ -16062,7 +16349,7 @@ function update_tdep_category() {
     wp_send_json_success($response_data);
     check_ajax_referer('category_editor_nonce', 'nonce');
     
-    $term_id = intval($_POST['term_id']);
+    $term_id = intval($_POST[DGA_TERM_ID_FIELD]);
     $name = sanitize_text_field($_POST['name']);
     
     $result = wp_update_term($term_id, 'tdep', array(
@@ -16083,7 +16370,7 @@ add_action('wp_ajax_update_tdep_category', 'update_tdep_category');
 function delete_tdep_category() {
     check_ajax_referer('category_editor_nonce', 'nonce');
     
-    $term_id = intval($_POST['term_id']);
+    $term_id = intval($_POST[DGA_TERM_ID_FIELD]);
     $result = wp_delete_term($term_id, 'tdep');
 
     if (is_wp_error($result)) {
@@ -16134,7 +16421,7 @@ function tdep_arc_create_shortcode() {
                     <input type="text" id="tdep-slug" name="tdep-slug" readonly>
                 </div>
                 
-                <button type="submit" class="tdep-submit">บันทึก</button>
+                <button type=DGA_SUBMIT_TYPE class="tdep-submit">บันทึก</button>
             </form>
         </div>
     </div>';
@@ -16279,7 +16566,7 @@ function tdep_post_shortcode() {
                     <div class="tdep-form-col">
                         <label>รูปภาพหลัก:</label>
                         <div class="tdep-featured-image">
-                            <button type="button" id="tdep-upload-btn" class="tdep-upload-btn">
+                            <button type=DGA_BUTTON_TYPE id="tdep-upload-btn" class="tdep-upload-btn">
                                 <span class="upload-icon">+</span>
                                 <span class="upload-text">เลือกรูปภาพ</span>
                             </button>
@@ -16299,7 +16586,7 @@ function tdep_post_shortcode() {
                     <textarea id="tdep-content" name="content" rows="6" required></textarea>
                 </div>
 
-                <button type="submit" class="tdep-submit">บันทึก</button>
+                <button type=DGA_SUBMIT_TYPE class="tdep-submit">บันทึก</button>
             </form>
         </div>
     </div>';
@@ -16313,7 +16600,7 @@ function tdep_create_post() {
     check_ajax_referer('tdep_post_nonce', 'nonce');
 
     $post_data = array(
-        'post_title' => sanitize_text_field($_POST['title']),
+        'post_title' => sanitize_text_field($_POST[DGA_TITLE_FIELD]),
         'post_content' => wp_kses_post($_POST['content']),
         DGA_POST_TYPE_FIELD => 'department',
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS
@@ -16396,7 +16683,7 @@ function tdep_list_2_shortcode($atts) {
     $current_terms = array();
     
     foreach ($taxonomies as $taxonomy) {
-        $terms = wp_get_post_terms($current_post_id, $taxonomy, array('fields' => 'ids'));
+        $terms = wp_get_post_terms($current_post_id, $taxonomy, array(DGA_FIELDS_PARAMETER => 'ids'));
         if (!empty($terms) && !is_wp_error($terms)) {
             $current_terms[$taxonomy] = $terms;
         }
@@ -16407,7 +16694,7 @@ function tdep_list_2_shortcode($atts) {
     foreach ($current_terms as $taxonomy => $terms) {
         $tax_query[] = array(
             DGA_TAXONOMY_FIELD => $taxonomy,
-            'field' => 'id',
+            DGA_FIELD_KEY => 'id',
             'terms' => $terms
         );
     }
@@ -16418,8 +16705,8 @@ function tdep_list_2_shortcode($atts) {
         DGA_POSTS_PER_PAGE => $atts[DGA_POSTS_PER_PAGE],
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         'tax_query' => $tax_query,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
     
     // Exclude current post if specified
@@ -16557,7 +16844,7 @@ function tdep_update_taxonomy() {
     }
     
     $post_id = intval($_POST[DGA_POST_ID_FIELD]);
-    $term_id = intval($_POST['term_id']);
+    $term_id = intval($_POST[DGA_TERM_ID_FIELD]);
     
     $result = wp_set_object_terms($post_id, $term_id, 'tdep');
     
@@ -16600,8 +16887,8 @@ function contact_form_enqueue_scripts_kzn427() {
         'turnstile_sitekey' => '0x4AAAAAABpd_WTHpqQRJg6v',
         'messages' => array(
             'sending' => __('กำลังส่งข้อมูล...', DGA_TEXT_DOMAIN),
-            'success' => __('ส่งข้อความเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+            DGA_SUCCESS_STATUS => __('ส่งข้อความเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
             'validation_error' => __('กรุณากรอกข้อมูลให้ครบถ้วน', DGA_TEXT_DOMAIN),
             'captcha_error' => __('กรุณายืนยันว่าคุณไม่ใช่โปรแกรมอัตโนมัติ', DGA_TEXT_DOMAIN)
         )
@@ -16631,7 +16918,7 @@ function contact_form_shortcode_kzn427($atts) {
     <div class="contact-form-wrapper-kzn427">
         <div class="contact-form-container-kzn427" role="form" aria-labelledby="form-title-kzn427">
             <h2 id="form-title-kzn427" class="form-title-kzn427">
-                <?php echo esc_html($atts['title']); ?>
+                <?php echo esc_html($atts[DGA_TITLE_FIELD]); ?>
             </h2>
             
             <form id="department-contact-form-kzn427" class="department-contact-form-kzn427" novalidate>
@@ -16746,7 +17033,7 @@ function contact_form_shortcode_kzn427($atts) {
                 <!-- Submit Button -->
                 <div class="form-submit-kzn427">
                     <button 
-                        type="submit" 
+                        type=DGA_SUBMIT_TYPE 
                         class="submit-button-kzn427"
                         aria-label="<?php esc_attr_e('ส่งแบบฟอร์ม', DGA_TEXT_DOMAIN); ?>"
                     >
@@ -16818,7 +17105,7 @@ function verify_turnstile_token_kzn427($token) {
     }
     
     // Check verification result
-    if (isset($result['success']) && $result['success'] === true) {
+    if (isset($result[DGA_SUCCESS_STATUS]) && $result[DGA_SUCCESS_STATUS] === true) {
         return true;
     }
     
@@ -16920,7 +17207,7 @@ function handle_contact_form_submission_kzn427() {
                     DGA_MESSAGE_KEY => $contact_message,
                     'ip_address' => $_SERVER['REMOTE_ADDR'],
                     'submission_time' => current_time('mysql'),
-                    'status' => 'unread'
+                    DGA_STATUS_FIELD => 'unread'
                 ),
                 array('%s', '%s', '%s', '%s', '%s', '%s', '%s')
             );
@@ -17179,7 +17466,7 @@ function tgall_add_shortcode() {
     wp_enqueue_script('jquery-ui-sortable');
     wp_enqueue_script('jquery-ui-datepicker');
     wp_enqueue_media();
-    wp_enqueue_script('tgall-add', get_stylesheet_directory_uri() . '/js/tgall-add.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_script('tgall-add', get_stylesheet_directory_uri() . '/js/tgall-add.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     wp_enqueue_style('tgall-add', get_stylesheet_directory_uri() . '/css/tgall-add.css');
     
     // Localize script
@@ -17191,7 +17478,7 @@ function tgall_add_shortcode() {
     // Modal HTML structure
     $output = '
     <div class="tgall-container">
-        <button type="button" class="tgall-add-button" aria-label="เพิ่มกิจกรรม">
+        <button type=DGA_BUTTON_TYPE class="tgall-add-button" aria-label="เพิ่มกิจกรรม">
             <span class="dashicons dashicons-plus-alt"></span> เพิ่มกิจกรรม
         </button>
         
@@ -17199,7 +17486,7 @@ function tgall_add_shortcode() {
             <div class="tgall-modal-content">
                 <header class="tgall-modal-header">
                     <h2 id="modal-title">เพิ่มกิจกรรมใหม่</h2>
-                    <button type="button" class="tgall-close" aria-label="ปิด">&times;</button>
+                    <button type=DGA_BUTTON_TYPE class="tgall-close" aria-label="ปิด">&times;</button>
                 </header>
                 
                 <div class="tgall-modal-body">
@@ -17223,7 +17510,7 @@ function tgall_add_shortcode() {
                             <label>อัลบัมภาพกิจกรรม</label>
                             <div id="gallery-container" class="gallery-container">
                                 <div id="gallery-preview" class="gallery-preview"></div>
-                                <button type="button" id="add-images" class="add-images">
+                                <button type=DGA_BUTTON_TYPE id="add-images" class="add-images">
                                     <span class="dashicons dashicons-upload"></span> เพิ่มรูปภาพ
                                 </button>
                             </div>
@@ -17239,8 +17526,8 @@ function tgall_add_shortcode() {
     $taxonomy_terms = get_terms(array(
         DGA_TAXONOMY_FIELD => 'tgallery',
         DGA_HIDE_EMPTY_FIELD => false,
-        'orderby' => 'name',
-        'order' => 'ASC'
+        DGA_ORDERBY_FIELD_VALUE => 'name',
+        DGA_ORDER_FIELD => 'ASC'
     ));
     
     // ตรวจสอบและเพิ่ม terms ลงใน output string
@@ -17256,15 +17543,15 @@ function tgall_add_shortcode() {
     }
     
     $output .= '                  </select>
-                                <button type="button" id="add-category" class="add-category" aria-label="เพิ่มหมวดหมู่">
+                                <button type=DGA_BUTTON_TYPE id="add-category" class="add-category" aria-label="เพิ่มหมวดหมู่">
                                     <span class="dashicons dashicons-plus-alt"></span>
                                 </button>
                             </div>
                         </div>
                         
                         <div class="tgall-form-actions">
-                            <button type="submit" class="tgall-submit">บันทึกกิจกรรม</button>
-                            <button type="button" class="tgall-cancel">ยกเลิก</button>
+                            <button type=DGA_SUBMIT_TYPE class="tgall-submit">บันทึกกิจกรรม</button>
+                            <button type=DGA_BUTTON_TYPE class="tgall-cancel">ยกเลิก</button>
                         </div>
                     </form>
                 </div>
@@ -17281,7 +17568,7 @@ add_shortcode('tgall_add', 'tgall_add_shortcode');
 function tgall_add_post() {
     check_ajax_referer('tgall_nonce', 'nonce');
     
-    $post_title = sanitize_text_field($_POST['title']);
+    $post_title = sanitize_text_field($_POST[DGA_TITLE_FIELD]);
     $event_date = sanitize_text_field($_POST['date']);
     $description = wp_kses_post($_POST['description']);
     $gallery = array_map('intval', $_POST['gallery']);
@@ -17342,8 +17629,8 @@ function tgall_add_category() {
     $terms = get_terms(array(
         DGA_TAXONOMY_FIELD => 'tgallery',
         DGA_HIDE_EMPTY_FIELD => false,
-        'orderby' => 'slug',
-        'order' => 'DESC',
+        DGA_ORDERBY_FIELD_VALUE => 'slug',
+        DGA_ORDER_FIELD => 'DESC',
         'number' => 1
     ));
     
@@ -17360,7 +17647,7 @@ function tgall_add_category() {
     
     if (!is_wp_error($result)) {
         wp_send_json_success(array(
-            'term_id' => $result['term_id'],
+            DGA_TERM_ID_FIELD => $result[DGA_TERM_ID_FIELD],
             DGA_NAME_FIELD => $category_name
         ));
     } else {
@@ -17377,14 +17664,14 @@ function tgall_get_terms() {
     $terms = get_terms(array(
         DGA_TAXONOMY_FIELD => 'tgallery',
         DGA_HIDE_EMPTY_FIELD => false,
-        'orderby' => 'name',
-        'order' => 'ASC'
+        DGA_ORDERBY_FIELD_VALUE => 'name',
+        DGA_ORDER_FIELD => 'ASC'
     ));
     
     if (!is_wp_error($terms)) {
         $formatted_terms = array_map(function($term) {
             return array(
-                'term_id' => $term->term_id,
+                DGA_TERM_ID_FIELD => $term->term_id,
                 DGA_NAME_FIELD => $term->name,
                 'slug' => $term->slug,
                 'count' => $term->count
@@ -17439,7 +17726,7 @@ class UserPermissionController {
             'user-permission-styles', 
             $this->child_theme_directory . '/css/user-permission.css',
             array(),
-            '1.0.0'
+            DGA_VERSION_NUMBER
         );
 
         wp_enqueue_script(DGA_JQUERY_HANDLE);
@@ -17447,7 +17734,7 @@ class UserPermissionController {
             'user-permission-script', 
             $this->child_theme_directory . '/js/user-permission.js',
             array(DGA_JQUERY_HANDLE),
-            '1.0.0',
+            DGA_VERSION_NUMBER,
             true
         );
 
@@ -17559,7 +17846,7 @@ class UserPermissionController {
 
         $page_id = get_the_ID();
         return sprintf(
-            '<button type="button" class="user-permission-icon" data-page-id="%d" title="ตั้งค่าการเข้าถึง">⚙️</button>',
+            '<button type=DGA_BUTTON_TYPE class="user-permission-icon" data-page-id="%d" title="ตั้งค่าการเข้าถึง">⚙️</button>',
             esc_attr($page_id)
         );
     }
@@ -17705,7 +17992,7 @@ function event_post_load_gallery() {
     $args = array(
         DGA_POST_TYPE_FIELD => 'dgallery',
         DGA_POSTS_PER_PAGE => 10,
-        'paged' => isset($_POST['page']) ? intval($_POST['page']) : 1,
+        DGA_PAGED_PARAMETER => isset($_POST['page']) ? intval($_POST['page']) : 1,
     );
 
     $posts = new WP_Query($args);
@@ -17801,7 +18088,7 @@ function event_post_load_gallery() {
     
     wp_reset_postdata();
     wp_send_json(array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'data' => $response,
         'total_posts' => $posts->found_posts,
         'max_pages' => $posts->max_num_pages
@@ -17903,7 +18190,7 @@ function get_egp_post($request) {
     $post = get_post($post_id);
 
     if (empty($post) || $post->post_type !== 'egp') {
-        return new WP_Error('no_post', 'Post not found', array('status' => 404));
+        return new WP_Error('no_post', 'Post not found', array(DGA_STATUS_FIELD => 404));
     }
 
     $post_data = format_egp_data($post);
@@ -18139,7 +18426,7 @@ function get_mpeople_post($request) {
     $post = get_post($post_id);
 
     if (empty($post) || $post->post_type !== 'mpeople') {
-        return new WP_Error('no_post', 'Post not found', array('status' => 404));
+        return new WP_Error('no_post', 'Post not found', array(DGA_STATUS_FIELD => 404));
     }
 
     $post_data = format_mpeople_data($post);
@@ -18373,7 +18660,7 @@ function get_news_post($request) {
     $post = get_post($post_id);
 
     if (empty($post) || $post->post_type !== 'news') {
-        return new WP_Error('no_post', 'Post not found', array('status' => 404));
+        return new WP_Error('no_post', 'Post not found', array(DGA_STATUS_FIELD => 404));
     }
 
     $post_data = format_news_data($post);
@@ -18627,7 +18914,7 @@ function update_pha_slugs_page() {
         <p>Click the button below to update all existing PHA posts to use their Post ID as the slug.</p>
         <form method="post">
             <?php wp_nonce_field('update_pha_slugs_action'); ?>
-            <input type="submit" name="update_slugs" class="button button-primary" value="Update All Slugs">
+            <input type=DGA_SUBMIT_TYPE name="update_slugs" class="button button-primary" value="Update All Slugs">
         </form>
     </div>
     <?php
@@ -18888,7 +19175,7 @@ function dga_translate_safe_shortcode_xyz789($atts) {
              data-instance-id="%s">
             <div class="dga-translate-buttons-xyz789">
                 <!-- Thai Button -->
-                <button type="button" 
+                <button type=DGA_BUTTON_TYPE 
                         class="dga-translate-btn-xyz789 %s" 
                         data-lang="th"
                         aria-label="%s"
@@ -18906,7 +19193,7 @@ function dga_translate_safe_shortcode_xyz789($atts) {
                 </button>
                 
                 <!-- English Button -->
-                <button type="button" 
+                <button type=DGA_BUTTON_TYPE 
                         class="dga-translate-btn-xyz789 %s" 
                         data-lang="en"
                         aria-label="%s"
@@ -19607,8 +19894,8 @@ function get_pending_posts() {
         DGA_POST_STATUS_FIELD => 'pending',
         DGA_POSTS_PER_PAGE => $posts_per_page,
         'offset' => $offset,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
 
     // เพิ่มการค้นหาตาม title
@@ -19869,13 +20156,13 @@ function pdpa_cookie_consent_shortcode_xyz789() {
             </div>
             
             <div class="pdpa-actions-xyz789">
-                <button type="button" id="pdpa-accept-all-xyz789" class="pdpa-button-xyz789 pdpa-accept-xyz789" aria-label="<?php esc_attr_e('ยอมรับคุกกี้ทั้งหมด', 'pdpa-consent'); ?>">
+                <button type=DGA_BUTTON_TYPE id="pdpa-accept-all-xyz789" class="pdpa-button-xyz789 pdpa-accept-xyz789" aria-label="<?php esc_attr_e('ยอมรับคุกกี้ทั้งหมด', 'pdpa-consent'); ?>">
                     <?php _e('ยอมรับทั้งหมด', 'pdpa-consent'); ?>
                 </button>
-                <button type="button" id="pdpa-reject-all-xyz789" class="pdpa-button-xyz789 pdpa-reject-xyz789" aria-label="<?php esc_attr_e('ปฏิเสธคุกกี้ที่ไม่จำเป็น', 'pdpa-consent'); ?>">
+                <button type=DGA_BUTTON_TYPE id="pdpa-reject-all-xyz789" class="pdpa-button-xyz789 pdpa-reject-xyz789" aria-label="<?php esc_attr_e('ปฏิเสธคุกกี้ที่ไม่จำเป็น', 'pdpa-consent'); ?>">
                     <?php _e('ปฏิเสธทั้งหมด', 'pdpa-consent'); ?>
                 </button>
-                <button type="button" id="pdpa-settings-button-xyz789" class="pdpa-button-xyz789 pdpa-settings-xyz789" aria-label="<?php esc_attr_e('ตั้งค่าคุกกี้', 'pdpa-consent'); ?>">
+                <button type=DGA_BUTTON_TYPE id="pdpa-settings-button-xyz789" class="pdpa-button-xyz789 pdpa-settings-xyz789" aria-label="<?php esc_attr_e('ตั้งค่าคุกกี้', 'pdpa-consent'); ?>">
                     <?php _e('ตั้งค่า', 'pdpa-consent'); ?>
                 </button>
             </div>
@@ -19926,7 +20213,7 @@ function pdpa_cookie_consent_shortcode_xyz789() {
                 </div>
                 
                 <div class="pdpa-setting-actions-xyz789">
-                    <button type="button" id="pdpa-save-settings-xyz789" class="pdpa-button-xyz789 pdpa-save-xyz789" aria-label="<?php esc_attr_e('บันทึกการตั้งค่าคุกกี้', 'pdpa-consent'); ?>">
+                    <button type=DGA_BUTTON_TYPE id="pdpa-save-settings-xyz789" class="pdpa-button-xyz789 pdpa-save-xyz789" aria-label="<?php esc_attr_e('บันทึกการตั้งค่าคุกกี้', 'pdpa-consent'); ?>">
                         <?php _e('บันทึกการตั้งค่า', 'pdpa-consent'); ?>
                     </button>
                 </div>
@@ -19934,7 +20221,7 @@ function pdpa_cookie_consent_shortcode_xyz789() {
         </div>
         
         <!-- Reopen button -->
-        <button type="button" id="pdpa-reopen-consent-xyz789" class="pdpa-reopen-button-xyz789" <?php echo $consent_given ? '' : 'style="display:none;"'; ?> aria-label="<?php esc_attr_e('ตั้งค่าความเป็นส่วนตัว', 'pdpa-consent'); ?>">
+        <button type=DGA_BUTTON_TYPE id="pdpa-reopen-consent-xyz789" class="pdpa-reopen-button-xyz789" <?php echo $consent_given ? '' : 'style="display:none;"'; ?> aria-label="<?php esc_attr_e('ตั้งค่าความเป็นส่วนตัว', 'pdpa-consent'); ?>">
             <span class="pdpa-reopen-icon-xyz789" aria-hidden="true">🍪</span>
             <span class="pdpa-reopen-text-xyz789"><?php _e('ตั้งค่าความเป็นส่วนตัว', 'pdpa-consent'); ?></span>
         </button>
@@ -20261,7 +20548,7 @@ function fpe_enqueue_assets_vkj785($post_id) {
         'strings' => array(
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'saved' => __('บันทึกแล้ว', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
             'confirmDelete' => __('ยืนยันการลบ?', DGA_TEXT_DOMAIN),
         ),
         'currentContent' => get_post_meta($post_id, 'at_content', true),
@@ -20297,7 +20584,7 @@ function fpe_generate_editor_html_vkj785($post_id) {
     ?>
     <div class="fpe-container-vkj785">
         <!-- Edit Button -->
-        <button type="button" class="fpe-edit-btn-vkj785" data-post-id="<?php echo esc_attr($post_id); ?>" aria-label="<?php esc_attr_e('แก้ไขโพสต์', DGA_TEXT_DOMAIN); ?>">
+        <button type=DGA_BUTTON_TYPE class="fpe-edit-btn-vkj785" data-post-id="<?php echo esc_attr($post_id); ?>" aria-label="<?php esc_attr_e('แก้ไขโพสต์', DGA_TEXT_DOMAIN); ?>">
             <span class="dashicons dashicons-edit"></span>
         </button>
         
@@ -20306,7 +20593,7 @@ function fpe_generate_editor_html_vkj785($post_id) {
             <div class="fpe-modal-content-vkj785">
                 <div class="fpe-modal-header-vkj785">
                     <h2 id="fpe-title-<?php echo esc_attr($post_id); ?>"><?php esc_html_e('แก้ไขโพสต์', DGA_TEXT_DOMAIN); ?></h2>
-                    <button type="button" class="fpe-close-vkj785" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">&times;</button>
+                    <button type=DGA_BUTTON_TYPE class="fpe-close-vkj785" aria-label="<?php esc_attr_e('ปิด', DGA_TEXT_DOMAIN); ?>">&times;</button>
                 </div>
                 
                 <form id="fpe-form-<?php echo esc_attr($post_id); ?>" class="fpe-form-vkj785">
@@ -20358,14 +20645,14 @@ function fpe_generate_editor_html_vkj785($post_id) {
                             }
                             ?>
                         </div>
-                        <button type="button" class="fpe-add-file-vkj785"><?php esc_html_e('+ เพิ่มไฟล์', DGA_TEXT_DOMAIN); ?></button>
+                        <button type=DGA_BUTTON_TYPE class="fpe-add-file-vkj785"><?php esc_html_e('+ เพิ่มไฟล์', DGA_TEXT_DOMAIN); ?></button>
                     </div>
                     
                     <!-- Actions -->
                     <div class="fpe-actions-vkj785">
-                        <button type="submit" class="fpe-save-vkj785"><?php esc_html_e('บันทึก', DGA_TEXT_DOMAIN); ?></button>
-                        <button type="button" class="fpe-delete-vkj785"><?php esc_html_e('ลบโพสต์', DGA_TEXT_DOMAIN); ?></button>
-                        <button type="button" class="fpe-cancel-vkj785"><?php esc_html_e('ยกเลิก', DGA_TEXT_DOMAIN); ?></button>
+                        <button type=DGA_SUBMIT_TYPE class="fpe-save-vkj785"><?php esc_html_e('บันทึก', DGA_TEXT_DOMAIN); ?></button>
+                        <button type=DGA_BUTTON_TYPE class="fpe-delete-vkj785"><?php esc_html_e('ลบโพสต์', DGA_TEXT_DOMAIN); ?></button>
+                        <button type=DGA_BUTTON_TYPE class="fpe-cancel-vkj785"><?php esc_html_e('ยกเลิก', DGA_TEXT_DOMAIN); ?></button>
                     </div>
                 </form>
             </div>
@@ -20394,8 +20681,8 @@ function fpe_generate_file_row_vkj785($index, $file) {
                value="<?php echo esc_attr($file_date); ?>">
         <input type="hidden" name="at_file_standard[<?php echo esc_attr($index); ?>][at_rp_file_link]" 
                class="fpe-file-url-vkj785" value="<?php echo esc_attr($file_link); ?>">
-        <button type="button" class="fpe-upload-file-vkj785"><?php esc_html_e('อัพโหลด', DGA_TEXT_DOMAIN); ?></button>
-        <button type="button" class="fpe-remove-file-vkj785"><?php esc_html_e('ลบ', DGA_TEXT_DOMAIN); ?></button>
+        <button type=DGA_BUTTON_TYPE class="fpe-upload-file-vkj785"><?php esc_html_e('อัพโหลด', DGA_TEXT_DOMAIN); ?></button>
+        <button type=DGA_BUTTON_TYPE class="fpe-remove-file-vkj785"><?php esc_html_e('ลบ', DGA_TEXT_DOMAIN); ?></button>
     </div>
     <?php
     return ob_get_clean();
@@ -20594,7 +20881,7 @@ class Table_Files_Pro_ABC123 {
                 DGA_NONCE_KEY => wp_create_nonce('table_files_nonce_abc123'),
                 'strings' => array(
                     'loading' => __('กำลังโหลด...', DGA_TEXT_DOMAIN),
-                    'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+                    DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
                     'noFiles' => __('ไม่มีไฟล์แนบ', DGA_TEXT_DOMAIN),
                     'download' => __('ดาวน์โหลด', DGA_TEXT_DOMAIN),
                     'preview' => __('ดูตัวอย่าง', DGA_TEXT_DOMAIN),
@@ -21182,7 +21469,7 @@ function egp_statistics_shortcode() {
                 </div>
                 
                 <div class="egp-filter-group">
-                    <button id="egp-filter-submit" type="button" class="egp-button">แสดงข้อมูล</button>
+                    <button id="egp-filter-submit" type=DGA_BUTTON_TYPE class="egp-button">แสดงข้อมูล</button>
                 </div>
             </div>
         </div>
@@ -21346,7 +21633,7 @@ function egp_statistics_ajax_handler() {
         $results = process_egp_data($args, $view_type);
         
         if (WP_DEBUG && WP_DEBUG_LOG) {
-            error_log('Processing successful, total results: ' . $results['total']);
+            error_log('Processing successful, total results: ' . $results[DGA_TOTAL_FIELD_KEY]);
             error_log('=== EGP Statistics AJAX Handler End ===');
         }
         
@@ -21482,7 +21769,7 @@ function process_egp_data($args, $view_type) {
     
     // สรุปผลลัพธ์
     $result = array(
-        'total' => count($posts),
+        DGA_TOTAL_FIELD_KEY => count($posts),
         'by_type' => $data_by_type,
         'by_method' => $data_by_method,
         'by_department' => $data_by_department,
@@ -21558,7 +21845,7 @@ function dynamic_table_shortcode($atts) {
     if ($can_edit) {
         ?>
         <div class="dynamic-table-container" id="<?php echo esc_attr($atts['id']); ?>-container">
-            <h2 class="dynamic-table-title"><?php echo esc_html($atts['title']); ?></h2>
+            <h2 class="dynamic-table-title"><?php echo esc_html($atts[DGA_TITLE_FIELD]); ?></h2>
             
             <!-- Debugging Info for Admins -->
             <?php if (current_user_can(DGA_ADMIN_ROLE)) : ?>
@@ -21567,7 +21854,7 @@ function dynamic_table_shortcode($atts) {
                 <div>Table ID: <?php echo esc_html($atts['id']); ?></div>
                 <div>Columns count: <?php echo count($table_data['columns']); ?></div>
                 <div>Rows count: <?php echo count($table_data['rows']); ?></div>
-                <button id="toggle-raw-data" class="button">Show/Hide Raw Data</button>
+                <button id="toggle-raw-data" class=DGA_BUTTON_TYPE>Show/Hide Raw Data</button>
                 <pre id="raw-data" style="display: none; max-height: 200px; overflow: auto; margin-top: 10px; background: #fff; padding: 5px;"><?php echo esc_html(print_r($table_data, true)); ?></pre>
             </div>
             <?php endif; ?>
@@ -21644,7 +21931,7 @@ function dynamic_table_shortcode($atts) {
     } else {
         // For regular users, only show the read-only table view
         echo '<div class="dynamic-table-container view-only">';
-        echo '<h2 class="dynamic-table-title">' . esc_html($atts['title']) . '</h2>';
+        echo '<h2 class="dynamic-table-title">' . esc_html($atts[DGA_TITLE_FIELD]) . '</h2>';
         echo dynamic_table_display($atts['id']);
         echo '</div>';
     }
@@ -21958,7 +22245,7 @@ function user_posts_register_assets() {
             'ajaxurl' => admin_url(DGA_ADMIN_AJAX_URL),
             DGA_NONCE_KEY => wp_create_nonce('user_posts_nonce'),
             'strings' => array(
-                'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
                 'confirm_status_change' => 'คุณต้องการเปลี่ยนสถานะของโพสนี้ใช่หรือไม่?',
                 'no_posts_found' => 'ไม่พบโพสที่คุณสร้าง',
                 'loading' => 'กำลังโหลด...',
@@ -22001,10 +22288,10 @@ function user_posts_load_ajax() {
     $args = array(
         'author' => $user_id,
         DGA_POSTS_PER_PAGE => $per_page,
-        'paged' => $page,
+        DGA_PAGED_PARAMETER => $page,
         DGA_POST_STATUS_FIELD => $post_status ? $post_status : array(DGA_PUBLISH_STATUS, 'pending', 'draft'),
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
     );
     
     // เพิ่มประเภทโพสถ้ามีการระบุ
@@ -22036,7 +22323,7 @@ function user_posts_load_ajax() {
                 DGA_TYPE_FIELD => $post_type_obj ? $post_type_obj->labels->singular_name : get_post_type(),
                 DGA_TITLE_FIELD => get_the_title(),
                 'date' => get_the_date(),
-                'status' => get_post_status(),
+                DGA_STATUS_FIELD => get_post_status(),
                 'edit_link' => get_edit_post_link($post_id),
                 'view_link' => get_permalink($post_id),
             );
@@ -22070,7 +22357,7 @@ function user_posts_update_status_ajax() {
     
     // ดึงพารามิเตอร์
     $post_id = isset($_POST[DGA_POST_ID_FIELD]) ? intval($_POST[DGA_POST_ID_FIELD]) : 0;
-    $new_status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
+    $new_status = isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '';
     
     // ตรวจสอบความถูกต้องของพารามิเตอร์
     if (!$post_id || !in_array($new_status, array(DGA_PUBLISH_STATUS, 'pending'))) {
@@ -22186,8 +22473,8 @@ function dynamic_post_cards_shortcode_dpc734($atts) {
         DGA_POST_TYPE_FIELD => 'post',
         DGA_POSTS_PER_PAGE => 6,
         'category' => '',
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
         'view' => 'card',
         'show_add_button' => 'false',
         'show_search' => 'true',
@@ -22201,8 +22488,8 @@ function dynamic_post_cards_shortcode_dpc734($atts) {
     $atts[DGA_POST_TYPE_FIELD] = sanitize_text_field($atts[DGA_POST_TYPE_FIELD]);
     $atts[DGA_POSTS_PER_PAGE] = absint($atts[DGA_POSTS_PER_PAGE]);
     $atts['category'] = sanitize_text_field($atts['category']);
-    $atts['orderby'] = sanitize_text_field($atts['orderby']);
-    $atts['order'] = strtoupper(sanitize_text_field($atts['order']));
+    $atts[DGA_ORDERBY_FIELD_VALUE] = sanitize_text_field($atts[DGA_ORDERBY_FIELD_VALUE]);
+    $atts[DGA_ORDER_FIELD] = strtoupper(sanitize_text_field($atts[DGA_ORDER_FIELD]));
     $atts['view'] = sanitize_text_field($atts['view']);
     
     // แปลงค่าเป็น boolean
@@ -22228,8 +22515,8 @@ function dynamic_post_cards_shortcode_dpc734($atts) {
         data-post-type="' . esc_attr($atts[DGA_POST_TYPE_FIELD]) . '" 
         data-posts-per-page="' . esc_attr($atts[DGA_POSTS_PER_PAGE]) . '" 
         data-category="' . esc_attr($atts['category']) . '" 
-        data-orderby="' . esc_attr($atts['orderby']) . '" 
-        data-order="' . esc_attr($atts['order']) . '" 
+        data-orderby="' . esc_attr($atts[DGA_ORDERBY_FIELD_VALUE]) . '" 
+        data-order="' . esc_attr($atts[DGA_ORDER_FIELD]) . '" 
         data-view="' . esc_attr($atts['view']) . '"
         aria-live="polite">';
     
@@ -22242,12 +22529,12 @@ function dynamic_post_cards_shortcode_dpc734($atts) {
         $card_active = ($atts['view'] == 'card') ? 'active' : '';
         $list_active = ($atts['view'] == 'list') ? 'active' : '';
         
-        $output .= '<button type="button" class="view-mode-btn-dpc734 card-view-btn ' . $card_active . '" 
+        $output .= '<button type=DGA_BUTTON_TYPE class="view-mode-btn-dpc734 card-view-btn ' . $card_active . '" 
             aria-label="' . __('แสดงแบบการ์ด', DGA_TEXT_DOMAIN) . '" 
             data-view="card">
             <span class="dashicons dashicons-grid-view"></span> ' . __('การ์ด', DGA_TEXT_DOMAIN) . '
         </button>';
-        $output .= '<button type="button" class="view-mode-btn-dpc734 list-view-btn ' . $list_active . '" 
+        $output .= '<button type=DGA_BUTTON_TYPE class="view-mode-btn-dpc734 list-view-btn ' . $list_active . '" 
             aria-label="' . __('แสดงแบบรายการ', DGA_TEXT_DOMAIN) . '" 
             data-view="list">
             <span class="dashicons dashicons-list-view"></span> ' . __('รายการ', DGA_TEXT_DOMAIN) . '
@@ -22365,7 +22652,7 @@ function dynamic_post_cards_shortcode_dpc734($atts) {
     
     // ปุ่มโหลดเพิ่มเติม
     $output .= '<div class="dynamic-post-cards-footer-dpc734">';
-    $output .= '<button type="button" class="load-more-btn-dpc734" style="display:none;">' 
+    $output .= '<button type=DGA_BUTTON_TYPE class="load-more-btn-dpc734" style="display:none;">' 
         . __('โหลดเพิ่มเติม', DGA_TEXT_DOMAIN) . '</button>';
     $output .= '</div>';
     
@@ -22383,15 +22670,15 @@ function dynamic_post_cards_load_posts_dpc734() {
     // รับและ sanitize พารามิเตอร์
     $post_type = sanitize_text_field($_POST[DGA_POST_TYPE_FIELD] ?? 'post');
     $posts_per_page = absint($_POST[DGA_POSTS_PER_PAGE] ?? 6);
-    $paged = absint($_POST['paged'] ?? 1);
+    $paged = absint($_POST[DGA_PAGED_PARAMETER] ?? 1);
     $category = sanitize_text_field($_POST['category'] ?? '');
-    $orderby = sanitize_text_field($_POST['orderby'] ?? 'date');
-    $order = strtoupper(sanitize_text_field($_POST['order'] ?? 'DESC'));
+    $orderby = sanitize_text_field($_POST[DGA_ORDERBY_FIELD_VALUE] ?? 'date');
+    $order = strtoupper(sanitize_text_field($_POST[DGA_ORDER_FIELD] ?? 'DESC'));
     $search = sanitize_text_field($_POST['search'] ?? '');
     $year = absint($_POST['year'] ?? 0);
     
     // ตรวจสอบค่า orderby และ order
-    $allowed_orderby = array('date', 'title', 'menu_order', 'rand');
+    $allowed_orderby = array('date', DGA_TITLE_FIELD, 'menu_order', 'rand');
     if (!in_array($orderby, $allowed_orderby)) {
         $orderby = 'date';
     }
@@ -22405,9 +22692,9 @@ function dynamic_post_cards_load_posts_dpc734() {
     $args = array(
         DGA_POST_TYPE_FIELD => $post_type,
         DGA_POSTS_PER_PAGE => $posts_per_page,
-        'paged' => $paged,
-        'orderby' => $orderby,
-        'order' => $order,
+        DGA_PAGED_PARAMETER => $paged,
+        DGA_ORDERBY_FIELD_VALUE => $orderby,
+        DGA_ORDER_FIELD => $order,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         'ignore_sticky_posts' => true,
         'no_found_rows' => false
@@ -22458,7 +22745,7 @@ function dynamic_post_cards_load_posts_dpc734() {
             $args['tax_query'] = array(
                 array(
                     DGA_TAXONOMY_FIELD => $taxonomy_to_use,
-                    'field' => 'slug',
+                    DGA_FIELD_KEY => 'slug',
                     'terms' => $category
                 )
             );
@@ -23281,8 +23568,8 @@ function wptax_taxonomy_shortcode($atts) {
             $all_terms = get_terms(array(
                 DGA_TAXONOMY_FIELD => $taxonomy_name,
                 DGA_HIDE_EMPTY_FIELD => false,
-                'orderby' => 'name',
-                'order' => 'ASC'
+                DGA_ORDERBY_FIELD_VALUE => 'name',
+                DGA_ORDER_FIELD => 'ASC'
             ));
             
             if (!is_wp_error($all_terms) && !empty($all_terms)) {
@@ -23453,7 +23740,7 @@ function wptax_related_shortcode($atts) {
     $current_terms = array();
     
     foreach ($taxonomies as $taxonomy) {
-        $terms = wp_get_post_terms($current_post_id, $taxonomy, array('fields' => 'ids'));
+        $terms = wp_get_post_terms($current_post_id, $taxonomy, array(DGA_FIELDS_PARAMETER => 'ids'));
         if (!empty($terms) && !is_wp_error($terms)) {
             $current_terms[$taxonomy] = $terms;
         }
@@ -23464,7 +23751,7 @@ function wptax_related_shortcode($atts) {
     foreach ($current_terms as $taxonomy => $terms) {
         $tax_query[] = array(
             DGA_TAXONOMY_FIELD => $taxonomy,
-            'field' => 'id',
+            DGA_FIELD_KEY => 'id',
             'terms' => $terms
         );
     }
@@ -23474,8 +23761,8 @@ function wptax_related_shortcode($atts) {
         DGA_POST_TYPE_FIELD => $post_type,
         DGA_POSTS_PER_PAGE => $atts[DGA_POSTS_PER_PAGE],
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
     
     // Add tax_query if we have terms
@@ -23792,8 +24079,8 @@ add_action('init', 'register_oitform_shortcode');
 
 // Enqueue scripts และ styles
 function enqueue_oitform_scripts() {
-    wp_register_style('oitform-styles', get_stylesheet_directory_uri() . '/css/oitform.css', array(), '1.0.0');
-    wp_register_script('oitform-script', get_stylesheet_directory_uri() . '/js/oitform.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_register_style('oitform-styles', get_stylesheet_directory_uri() . '/css/oitform.css', array(), DGA_VERSION_NUMBER);
+    wp_register_script('oitform-script', get_stylesheet_directory_uri() . '/js/oitform.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // ส่งค่า AJAX URL ไปยัง JavaScript
     wp_localize_script('oitform-script', 'oitform_params', array(
@@ -23832,7 +24119,7 @@ function oitform_shortcode($atts) {
                     <label for="indicator-description">คำอธิบาย:</label>
                     <textarea id="indicator-description" name="indicator_description" rows="3" aria-required="true"></textarea>
                 </div>
-                <button type="submit" class="oitform-btn oitform-btn-primary">เพิ่มตัวชี้วัดย่อย</button>
+                <button type=DGA_SUBMIT_TYPE class="oitform-btn oitform-btn-primary">เพิ่มตัวชี้วัดย่อย</button>
             </form>
         </div>
         <?php endif; ?>
@@ -23872,7 +24159,7 @@ function oitform_shortcode($atts) {
                                 <?php foreach($indicator['content_items'] as $content_index => $content): ?>
                                 <li class="oitform-content-item" data-id="<?php echo esc_attr($content_index); ?>">
                                     <div class="oitform-content-title">
-                                        <?php echo esc_html($content['title']); ?>
+                                        <?php echo esc_html($content[DGA_TITLE_FIELD]); ?>
                                     </div>
                                     <div class="oitform-content-description">
                                         <?php echo wpautop(esc_html($content['description'])); ?>
@@ -23887,10 +24174,10 @@ function oitform_shortcode($atts) {
                                     
                                     <?php if(current_user_can(DGA_MANAGE_OPTIONS_CAP)): ?>
                                     <div class="oitform-content-actions">
-                                        <button class="oitform-btn oitform-btn-edit-content" aria-label="แก้ไขเนื้อหา <?php echo esc_attr($content['title']); ?>">
+                                        <button class="oitform-btn oitform-btn-edit-content" aria-label="แก้ไขเนื้อหา <?php echo esc_attr($content[DGA_TITLE_FIELD]); ?>">
                                             <span class="dashicons dashicons-edit"></span>
                                         </button>
-                                        <button class="oitform-btn oitform-btn-delete-content" aria-label="ลบเนื้อหา <?php echo esc_attr($content['title']); ?>">
+                                        <button class="oitform-btn oitform-btn-delete-content" aria-label="ลบเนื้อหา <?php echo esc_attr($content[DGA_TITLE_FIELD]); ?>">
                                             <span class="dashicons dashicons-trash"></span>
                                         </button>
                                     </div>
@@ -24059,7 +24346,7 @@ function oitform_add_content() {
     }
     
     $indicator_index = intval($_POST['indicator_index']);
-    $title = sanitize_text_field($_POST['title']);
+    $title = sanitize_text_field($_POST[DGA_TITLE_FIELD]);
     $description = sanitize_textarea_field($_POST['description']);
     $url = esc_url_raw($_POST['url']);
     
@@ -24106,7 +24393,7 @@ function oitform_edit_content() {
     
     $indicator_index = intval($_POST['indicator_index']);
     $content_index = intval($_POST['content_index']);
-    $title = sanitize_text_field($_POST['title']);
+    $title = sanitize_text_field($_POST[DGA_TITLE_FIELD]);
     $description = sanitize_textarea_field($_POST['description']);
     $url = esc_url_raw($_POST['url']);
     
@@ -24336,9 +24623,9 @@ function org_links_get_items() {
                         <div class="org-links-card internal">
                             <a href="<?php echo esc_url($item['url']); ?>" target="_blank" rel="noopener">
                                 <div class="org-links-logo">
-                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
+                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item[DGA_TITLE_FIELD]); ?>">
                                 </div>
-                                <h3 class="org-links-title"><?php echo esc_html($item['title']); ?></h3>
+                                <h3 class="org-links-title"><?php echo esc_html($item[DGA_TITLE_FIELD]); ?></h3>
                             </a>
                         </div>
                         <?php
@@ -24356,9 +24643,9 @@ function org_links_get_items() {
                         <div class="org-links-card external">
                             <a href="<?php echo esc_url($item['url']); ?>" target="_blank" rel="noopener">
                                 <div class="org-links-logo">
-                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
+                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item[DGA_TITLE_FIELD]); ?>">
                                 </div>
-                                <h3 class="org-links-title"><?php echo esc_html($item['title']); ?></h3>
+                                <h3 class="org-links-title"><?php echo esc_html($item[DGA_TITLE_FIELD]); ?></h3>
                             </a>
                         </div>
                         <?php
@@ -24378,9 +24665,9 @@ function org_links_get_items() {
                         <div class="org-links-list-item internal">
                             <a href="<?php echo esc_url($item['url']); ?>" target="_blank" rel="noopener">
                                 <div class="org-links-list-logo">
-                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
+                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item[DGA_TITLE_FIELD]); ?>">
                                 </div>
-                                <h3 class="org-links-list-title"><?php echo esc_html($item['title']); ?></h3>
+                                <h3 class="org-links-list-title"><?php echo esc_html($item[DGA_TITLE_FIELD]); ?></h3>
                             </a>
                         </div>
                         <?php
@@ -24396,9 +24683,9 @@ function org_links_get_items() {
                         <div class="org-links-list-item external">
                             <a href="<?php echo esc_url($item['url']); ?>" target="_blank" rel="noopener">
                                 <div class="org-links-list-logo">
-                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item['title']); ?>">
+                                    <img src="<?php echo esc_url($item['logo']); ?>" alt="<?php echo esc_attr($item[DGA_TITLE_FIELD]); ?>">
                                 </div>
-                                <h3 class="org-links-list-title"><?php echo esc_html($item['title']); ?></h3>
+                                <h3 class="org-links-list-title"><?php echo esc_html($item[DGA_TITLE_FIELD]); ?></h3>
                             </a>
                         </div>
                         <?php
@@ -24464,7 +24751,7 @@ function org_links_shortcode($atts) {
     if ($atts['show_add_button'] === 'true' && current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
         $add_button_html = '
         <div class="org-links-add-button-container">
-            <button type="button" class="org-links-add-button" id="orgLinksAddButton">
+            <button type=DGA_BUTTON_TYPE class="org-links-add-button" id="orgLinksAddButton">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 เพิ่มหน่วยงาน
             </button>
@@ -24476,7 +24763,7 @@ function org_links_shortcode($atts) {
     ?>
     <div class="org-links-container" data-type="<?php echo esc_attr($atts['type']); ?>">
         <div class="org-links-header">
-            <h2 class="org-links-main-title"><?php echo esc_html($atts['title']); ?></h2>
+            <h2 class="org-links-main-title"><?php echo esc_html($atts[DGA_TITLE_FIELD]); ?></h2>
             
             <div class="org-links-controls">
                 <div class="org-links-search">
@@ -24493,10 +24780,10 @@ function org_links_shortcode($atts) {
                 </div>
                 
                 <div class="org-links-view-switcher">
-                    <button type="button" class="view-btn active" data-view="card" aria-label="Card View">
+                    <button type=DGA_BUTTON_TYPE class="view-btn active" data-view="card" aria-label="Card View">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                     </button>
-                    <button type="button" class="view-btn" data-view="list" aria-label="List View">
+                    <button type=DGA_BUTTON_TYPE class="view-btn" data-view="list" aria-label="List View">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                     </button>
                 </div>
@@ -24573,7 +24860,7 @@ function org_links_settings_page() {
     
     // Handle form submission
     if (isset($_POST['org_links_save']) && check_admin_referer('org_links_admin', 'org_links_nonce')) {
-        $title = sanitize_text_field($_POST['title']);
+        $title = sanitize_text_field($_POST[DGA_TITLE_FIELD]);
         $url = esc_url_raw($_POST['url']);
         $type = sanitize_text_field($_POST['type']);
         
@@ -24647,7 +24934,7 @@ function org_links_settings_page() {
                 
                 <!-- ปุ่มเพิ่มหน่วยงานใหม่ -->
                 <div class="org-links-add-button-container">
-                    <button type="button" class="org-links-add-button" id="orgLinksAddButton">
+                    <button type=DGA_BUTTON_TYPE class="org-links-add-button" id="orgLinksAddButton">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         เพิ่มหน่วยงาน
                     </button>
@@ -24672,7 +24959,7 @@ function org_links_settings_page() {
                                     <td class="org-link-logo">
                                         <img src="<?php echo esc_url($item['logo']); ?>" alt="" width="60">
                                     </td>
-                                    <td><?php echo esc_html($item['title']); ?></td>
+                                    <td><?php echo esc_html($item[DGA_TITLE_FIELD]); ?></td>
                                     <td><a href="<?php echo esc_url($item['url']); ?>" target="_blank"><?php echo esc_url($item['url']); ?></a></td>
                                     <td><?php echo $item['type'] === 'internal' ? 'หน่วยงานภายใน' : 'หน่วยงานภายนอก'; ?></td>
                                     <td>
@@ -24763,7 +25050,7 @@ function org_links_modal_html() {
         <div class="org-links-modal-content">
             <div class="org-links-modal-header">
                 <h2>เพิ่มองค์กรหน่วยงานใหม่</h2>
-                <button type="button" class="org-links-modal-close" id="orgLinksModalClose">
+                <button type=DGA_BUTTON_TYPE class="org-links-modal-close" id="orgLinksModalClose">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
@@ -24796,8 +25083,8 @@ function org_links_modal_html() {
                         <div class="org-links-logo-upload">
                             <div class="org-links-logo-preview" id="logoPreview"></div>
                             <div class="org-links-logo-actions">
-                                <button type="button" class="org-links-logo-select" id="logoSelect">เลือกรูปภาพ</button>
-                                <button type="button" class="org-links-logo-remove" id="logoRemove">
+                                <button type=DGA_BUTTON_TYPE class="org-links-logo-select" id="logoSelect">เลือกรูปภาพ</button>
+                                <button type=DGA_BUTTON_TYPE class="org-links-logo-remove" id="logoRemove">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                                 </button>
                             </div>
@@ -24826,8 +25113,8 @@ function org_links_modal_html() {
                     </div>
                     
                     <div class="org-links-modal-footer">
-                        <button type="button" class="org-links-modal-cancel" id="orgLinksModalCancel">ยกเลิก</button>
-                        <button type="submit" name="org_links_save" class="org-links-modal-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="org-links-modal-cancel" id="orgLinksModalCancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE name="org_links_save" class="org-links-modal-submit">บันทึก</button>
                     </div>
                 </form>
             </div>
@@ -24853,7 +25140,7 @@ function org_links_add_item() {
     }
     
     // ดึงและตรวจสอบข้อมูล
-    $title = isset($_POST['title']) ? sanitize_text_field($_POST['title']) : '';
+    $title = isset($_POST[DGA_TITLE_FIELD]) ? sanitize_text_field($_POST[DGA_TITLE_FIELD]) : '';
     $url = isset($_POST['url']) ? esc_url_raw($_POST['url']) : '';
     $logo_url = isset($_POST['logo_url']) ? esc_url_raw($_POST['logo_url']) : '';
     $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : 'internal';
@@ -24943,8 +25230,8 @@ function corg_enqueue_assets() {
         $css_path = plugins_url('/css/corg-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('corg-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('corg-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('corg-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('corg-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('corg-add-taxo', 'corg_ajax', array(
@@ -24982,8 +25269,8 @@ function corg_add_term_shortcode() {
                         <p class="corg-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="corg-form-actions">
-                        <button type="button" class="corg-button corg-cancel">ยกเลิก</button>
-                        <button type="submit" class="corg-button corg-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="corg-button corg-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="corg-button corg-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="corg-message" class="corg-message"></div>
@@ -25057,7 +25344,7 @@ function corg_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มองค์กรสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25088,8 +25375,8 @@ function cgroup_enqueue_assets() {
         $css_path = plugins_url('/css/cgroup-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('cgroup-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('cgroup-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('cgroup-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('cgroup-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('cgroup-add-taxo', 'cgroup_ajax', array(
@@ -25127,8 +25414,8 @@ function cgroup_add_term_shortcode() {
                         <p class="cgroup-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="cgroup-form-actions">
-                        <button type="button" class="cgroup-button cgroup-cancel">ยกเลิก</button>
-                        <button type="submit" class="cgroup-button cgroup-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="cgroup-button cgroup-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="cgroup-button cgroup-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="cgroup-message" class="cgroup-message"></div>
@@ -25202,7 +25489,7 @@ function cgroup_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มกลุ่มสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25233,8 +25520,8 @@ function cdata_enqueue_assets() {
         $css_path = plugins_url('/css/cdata-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('cdata-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('cdata-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('cdata-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('cdata-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('cdata-add-taxo', 'cdata_ajax', array(
@@ -25272,8 +25559,8 @@ function cdata_add_term_shortcode() {
                         <p class="cdata-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="cdata-form-actions">
-                        <button type="button" class="cdata-button cdata-cancel">ยกเลิก</button>
-                        <button type="submit" class="cdata-button cdata-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="cdata-button cdata-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="cdata-button cdata-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="cdata-message" class="cdata-message"></div>
@@ -25347,7 +25634,7 @@ function cdata_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มประเภทชุดข้อมูลสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25378,8 +25665,8 @@ function cgov_enqueue_assets() {
         $css_path = plugins_url('/css/cgov-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('cgov-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('cgov-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('cgov-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('cgov-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('cgov-add-taxo', 'cgov_ajax', array(
@@ -25417,8 +25704,8 @@ function cgov_add_term_shortcode() {
                         <p class="cgov-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="cgov-form-actions">
-                        <button type="button" class="cgov-button cgov-cancel">ยกเลิก</button>
-                        <button type="submit" class="cgov-button cgov-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="cgov-button cgov-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="cgov-button cgov-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="cgov-message" class="cgov-message"></div>
@@ -25492,7 +25779,7 @@ function cgov_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มหมวดหมู่ตามธรรมาภิบาลข้อมูลสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25523,8 +25810,8 @@ function caccess_enqueue_assets() {
         $css_path = plugins_url('/css/caccess-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('caccess-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('caccess-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('caccess-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('caccess-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('caccess-add-taxo', 'caccess_ajax', array(
@@ -25562,8 +25849,8 @@ function caccess_add_term_shortcode() {
                         <p class="caccess-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="caccess-form-actions">
-                        <button type="button" class="caccess-button caccess-cancel">ยกเลิก</button>
-                        <button type="submit" class="caccess-button caccess-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="caccess-button caccess-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="caccess-button caccess-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="caccess-message" class="caccess-message"></div>
@@ -25637,7 +25924,7 @@ function caccess_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มการเข้าถึงสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25669,8 +25956,8 @@ function cformat_enqueue_assets() {
         $css_path = plugins_url('/css/cformat-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('cformat-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('cformat-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('cformat-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('cformat-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('cformat-add-taxo', 'cformat_ajax', array(
@@ -25708,8 +25995,8 @@ function cformat_add_term_shortcode() {
                         <p class="cformat-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="cformat-form-actions">
-                        <button type="button" class="cformat-button cformat-cancel">ยกเลิก</button>
-                        <button type="submit" class="cformat-button cformat-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="cformat-button cformat-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="cformat-button cformat-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="cformat-message" class="cformat-message"></div>
@@ -25783,7 +26070,7 @@ function cformat_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มรูปแบบสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25815,8 +26102,8 @@ function clicense_enqueue_assets() {
         $css_path = plugins_url('/css/clicense-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('clicense-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('clicense-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('clicense-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('clicense-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('clicense-add-taxo', 'clicense_ajax', array(
@@ -25854,8 +26141,8 @@ function clicense_add_term_shortcode() {
                         <p class="clicense-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="clicense-form-actions">
-                        <button type="button" class="clicense-button clicense-cancel">ยกเลิก</button>
-                        <button type="submit" class="clicense-button clicense-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="clicense-button clicense-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="clicense-button clicense-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="clicense-message" class="clicense-message"></div>
@@ -25929,7 +26216,7 @@ function clicense_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มสัญญาอนุญาตสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -25961,8 +26248,8 @@ function ctag_enqueue_assets() {
         $css_path = plugins_url('/css/ctag-add-taxo.css', __FILE__);
     }
     
-    wp_enqueue_script('ctag-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), '1.0.0', true);
-    wp_enqueue_style('ctag-add-taxo', $css_path, array(), '1.0.0');
+    wp_enqueue_script('ctag-add-taxo', $js_path, array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
+    wp_enqueue_style('ctag-add-taxo', $css_path, array(), DGA_VERSION_NUMBER);
     
     // Add the WordPress AJAX URL to our script
     wp_localize_script('ctag-add-taxo', 'ctag_ajax', array(
@@ -26000,8 +26287,8 @@ function ctag_add_term_shortcode() {
                         <p class="ctag-slug-desc">Slug จะถูกสร้างอัตโนมัติ</p>
                     </div>
                     <div class="ctag-form-actions">
-                        <button type="button" class="ctag-button ctag-cancel">ยกเลิก</button>
-                        <button type="submit" class="ctag-button ctag-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="ctag-button ctag-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="ctag-button ctag-submit">บันทึก</button>
                     </div>
                 </form>
                 <div id="ctag-message" class="ctag-message"></div>
@@ -26075,7 +26362,7 @@ function ctag_add_term_ajax_handler() {
     } else {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'เพิ่มแท็คสำเร็จแล้ว',
-            'term_id' => $term['term_id'],
+            DGA_TERM_ID_FIELD => $term[DGA_TERM_ID_FIELD],
             'term_name' => $term_name,
             'term_slug' => $slug,
         ));
@@ -26129,8 +26416,8 @@ function ckan_form_add_init_abc123() {
         DGA_AJAX_URL_KEY => admin_url(DGA_ADMIN_AJAX_URL),
         DGA_NONCE_KEY => wp_create_nonce('ckan_form_nonce_abc123'),
         'messages' => array(
-            'success' => 'บันทึกข้อมูลเรียบร้อยแล้ว',
-            'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่',
+            DGA_SUCCESS_STATUS => 'บันทึกข้อมูลเรียบร้อยแล้ว',
+            DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่',
             'required' => 'กรุณากรอกข้อมูลที่จำเป็น',
             'saving' => 'กำลังบันทึกข้อมูล...'
         )
@@ -26161,7 +26448,7 @@ function ckan_form_ajax_handler_abc123() {
     
     // Validate required fields
     $required = array(
-        'data_type', 'title', 'org_id', 'org_standard_name',
+        'data_type', DGA_TITLE_FIELD, 'org_id', 'org_standard_name',
         'maintainer', 'maintainer_email', 'tag_string', 'notes',
         'objective', 'update_frequency_unit', 'update_frequency_interval',
         'geo_coverage', 'data_source', 'license_id'
@@ -26171,7 +26458,7 @@ function ckan_form_ajax_handler_abc123() {
         if (empty($data[$field])) {
             wp_send_json_error(array(
                 DGA_MESSAGE_KEY => 'กรุณากรอกข้อมูลให้ครบถ้วน',
-                'field' => $field
+                DGA_FIELD_KEY => $field
             ));
             wp_die();
         }
@@ -26179,7 +26466,7 @@ function ckan_form_ajax_handler_abc123() {
     
     // Create post
     $post_args = array(
-        'post_title'   => sanitize_text_field($data['title']),
+        'post_title'   => sanitize_text_field($data[DGA_TITLE_FIELD]),
         'post_content' => sanitize_textarea_field($data['notes']),
         DGA_POST_TYPE_FIELD    => 'ckan',
         DGA_POST_STATUS_FIELD  => DGA_PUBLISH_STATUS,
@@ -26203,7 +26490,7 @@ function ckan_form_ajax_handler_abc123() {
     $meta_updates = array(
         // Mandatory fields (14 items)
         'ckan_data_type' => sanitize_text_field($data['data_type']),
-        'ckan_title' => sanitize_text_field($data['title']),
+        'ckan_title' => sanitize_text_field($data[DGA_TITLE_FIELD]),
         'ckan_org_id' => sanitize_text_field($data['org_id']),
         'ckan_org_standard_name' => sanitize_text_field($data['org_standard_name']),
         'ckan_maintainer' => sanitize_text_field($data['maintainer']),
@@ -26765,7 +27052,7 @@ function ckan_form_add_shortcode_abc123($atts) {
             
             <!-- Submit Button -->
             <div class="ckan-fadd-submit">
-                <button type="submit" class="ckan-fadd-submit-btn">บันทึกข้อมูล</button>
+                <button type=DGA_SUBMIT_TYPE class="ckan-fadd-submit-btn">บันทึกข้อมูล</button>
             </div>
         </form>
     </div>
@@ -26832,7 +27119,7 @@ function ckan_form_add_shortcode_abc123($atts) {
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('.ckan-fadd-status').removeClass('error').addClass('success').show();
+                        $('.ckan-fadd-status').removeClass(DGA_ERROR_STATUS).addClass(DGA_SUCCESS_STATUS).show();
                         $('.ckan-fadd-status-message').text(response.data.message);
                         
                         // Reset form
@@ -26846,12 +27133,12 @@ function ckan_form_add_shortcode_abc123($atts) {
                             }, 2000);
                         }
                     } else {
-                        $('.ckan-fadd-status').removeClass('success').addClass('error').show();
+                        $('.ckan-fadd-status').removeClass(DGA_SUCCESS_STATUS).addClass(DGA_ERROR_STATUS).show();
                         $('.ckan-fadd-status-message').text(response.data.message);
                     }
                 },
                 error: function() {
-                    $('.ckan-fadd-status').removeClass('success').addClass('error').show();
+                    $('.ckan-fadd-status').removeClass(DGA_SUCCESS_STATUS).addClass(DGA_ERROR_STATUS).show();
                     $('.ckan-fadd-status-message').text('เกิดข้อผิดพลาด');
                 },
                 complete: function() {
@@ -26872,8 +27159,8 @@ function ckan_list_init() {
     add_shortcode('ckan_list', 'ckan_list_shortcode');
     
     // Register scripts and styles
-    wp_register_style('ckan-list-css', get_stylesheet_directory_uri() . '/css/ckan-list.css', array(), '1.0.0');
-    wp_register_script('ckan-list-js', get_stylesheet_directory_uri() . '/js/ckan-list.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_register_style('ckan-list-css', get_stylesheet_directory_uri() . '/css/ckan-list.css', array(), DGA_VERSION_NUMBER);
+    wp_register_script('ckan-list-js', get_stylesheet_directory_uri() . '/js/ckan-list.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // Localize script with AJAX URL and nonce
     wp_localize_script('ckan-list-js', 'ckan_list_ajax', array(
@@ -26904,7 +27191,7 @@ function ckan_list_search_handler() {
     $args = array(
         DGA_POST_TYPE_FIELD => 'ckan',
         DGA_POSTS_PER_PAGE => 20,
-        'paged' => 1,
+        DGA_PAGED_PARAMETER => 1,
         's' => $search_term,
     );
     
@@ -27056,9 +27343,9 @@ function ckan_list_shortcode($atts) {
     // Parse attributes
     $atts = shortcode_atts(array(
         DGA_POSTS_PER_PAGE => 20,
-        'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
-        'orderby' => 'title',
-        'order' => 'ASC',
+        DGA_PAGED_PARAMETER => get_query_var(DGA_PAGED_PARAMETER) ? get_query_var(DGA_PAGED_PARAMETER) : 1,
+        DGA_ORDERBY_FIELD_VALUE => DGA_TITLE_FIELD,
+        DGA_ORDER_FIELD => 'ASC',
     ), $atts);
     
     // Enqueue styles and scripts
@@ -27072,21 +27359,21 @@ function ckan_list_shortcode($atts) {
     $args = array(
         DGA_POST_TYPE_FIELD => 'ckan',
         DGA_POSTS_PER_PAGE => $atts[DGA_POSTS_PER_PAGE],
-        'paged' => $atts['paged'],
-        'orderby' => $atts['orderby'],
-        'order' => $atts['order'],
+        DGA_PAGED_PARAMETER => $atts[DGA_PAGED_PARAMETER],
+        DGA_ORDERBY_FIELD_VALUE => $atts[DGA_ORDERBY_FIELD_VALUE],
+        DGA_ORDER_FIELD => $atts[DGA_ORDER_FIELD],
     );
     
     // Check if we're sorting by popularity
-    if ($atts['orderby'] === 'popularity') {
+    if ($atts[DGA_ORDERBY_FIELD_VALUE] === 'popularity') {
         $args['meta_key'] = 'ckan_total_views';
-        $args['orderby'] = 'meta_value_num';
-        $args['order'] = 'DESC';
+        $args[DGA_ORDERBY_FIELD_VALUE] = 'meta_value_num';
+        $args[DGA_ORDER_FIELD] = 'DESC';
     }
     
     // Check if we're sorting by last modified
-    if ($atts['orderby'] === 'modified') {
-        $args['orderby'] = 'modified';
+    if ($atts[DGA_ORDERBY_FIELD_VALUE] === 'modified') {
+        $args[DGA_ORDERBY_FIELD_VALUE] = 'modified';
     }
     
     // Run the query
@@ -27110,10 +27397,10 @@ function ckan_list_shortcode($atts) {
                 <div class="ckan-list-sort">
                     <label for="ckan-list-sort-select">เรียงโดย:</label>
                     <select id="ckan-list-sort-select">
-                        <option value="title-asc" <?php selected($atts['orderby'] . '-' . $atts['order'], 'title-ASC'); ?>>เรียงชื่อตามลำดับอักษร (ก-ฮ)</option>
-                        <option value="title-desc" <?php selected($atts['orderby'] . '-' . $atts['order'], 'title-DESC'); ?>>เรียงชื่อตามลำดับอักษร (ฮ-ก)</option>
-                        <option value="modified-desc" <?php selected($atts['orderby'], 'modified'); ?>>ถูกแก้ไขครั้งสุดท้าย</option>
-                        <option value="popularity-desc" <?php selected($atts['orderby'], 'popularity'); ?>>มีความสนใจมากสุด</option>
+                        <option value="title-asc" <?php selected($atts[DGA_ORDERBY_FIELD_VALUE] . '-' . $atts[DGA_ORDER_FIELD], 'title-ASC'); ?>>เรียงชื่อตามลำดับอักษร (ก-ฮ)</option>
+                        <option value="title-desc" <?php selected($atts[DGA_ORDERBY_FIELD_VALUE] . '-' . $atts[DGA_ORDER_FIELD], 'title-DESC'); ?>>เรียงชื่อตามลำดับอักษร (ฮ-ก)</option>
+                        <option value="modified-desc" <?php selected($atts[DGA_ORDERBY_FIELD_VALUE], 'modified'); ?>>ถูกแก้ไขครั้งสุดท้าย</option>
+                        <option value="popularity-desc" <?php selected($atts[DGA_ORDERBY_FIELD_VALUE], 'popularity'); ?>>มีความสนใจมากสุด</option>
                     </select>
                 </div>
                 
@@ -27274,18 +27561,18 @@ function ckan_list_shortcode($atts) {
         <?php if ($max_pages > 1) : ?>
         <div class="ckan-list-pagination">
             <?php
-            $current_page = max(1, get_query_var('paged'));
-            $base_url = add_query_arg(array(), remove_query_arg('paged'));
+            $current_page = max(1, get_query_var(DGA_PAGED_PARAMETER));
+            $base_url = add_query_arg(array(), remove_query_arg(DGA_PAGED_PARAMETER));
             
             if ($current_page > 1) {
-                echo '<a href="' . esc_url(add_query_arg('paged', $current_page - 1, $base_url)) . '" class="ckan-list-pagination-prev">&laquo; หน้าก่อนหน้า</a>';
+                echo '<a href="' . esc_url(add_query_arg(DGA_PAGED_PARAMETER, $current_page - 1, $base_url)) . '" class="ckan-list-pagination-prev">&laquo; หน้าก่อนหน้า</a>';
             }
             
             $start_page = max(1, $current_page - 2);
             $end_page = min($max_pages, $current_page + 2);
             
             if ($start_page > 1) {
-                echo '<a href="' . esc_url(add_query_arg('paged', 1, $base_url)) . '" class="ckan-list-pagination-number">1</a>';
+                echo '<a href="' . esc_url(add_query_arg(DGA_PAGED_PARAMETER, 1, $base_url)) . '" class="ckan-list-pagination-number">1</a>';
                 if ($start_page > 2) {
                     echo '<span class="ckan-list-pagination-dots">...</span>';
                 }
@@ -27295,7 +27582,7 @@ function ckan_list_shortcode($atts) {
                 if ($i == $current_page) {
                     echo '<span class="ckan-list-pagination-current">' . $i . '</span>';
                 } else {
-                    echo '<a href="' . esc_url(add_query_arg('paged', $i, $base_url)) . '" class="ckan-list-pagination-number">' . $i . '</a>';
+                    echo '<a href="' . esc_url(add_query_arg(DGA_PAGED_PARAMETER, $i, $base_url)) . '" class="ckan-list-pagination-number">' . $i . '</a>';
                 }
             }
             
@@ -27303,11 +27590,11 @@ function ckan_list_shortcode($atts) {
                 if ($end_page < $max_pages - 1) {
                     echo '<span class="ckan-list-pagination-dots">...</span>';
                 }
-                echo '<a href="' . esc_url(add_query_arg('paged', $max_pages, $base_url)) . '" class="ckan-list-pagination-number">' . $max_pages . '</a>';
+                echo '<a href="' . esc_url(add_query_arg(DGA_PAGED_PARAMETER, $max_pages, $base_url)) . '" class="ckan-list-pagination-number">' . $max_pages . '</a>';
             }
             
             if ($current_page < $max_pages) {
-                echo '<a href="' . esc_url(add_query_arg('paged', $current_page + 1, $base_url)) . '" class="ckan-list-pagination-next">หน้าถัดไป &raquo;</a>';
+                echo '<a href="' . esc_url(add_query_arg(DGA_PAGED_PARAMETER, $current_page + 1, $base_url)) . '" class="ckan-list-pagination-next">หน้าถัดไป &raquo;</a>';
             }
             ?>
         </div>
@@ -27372,7 +27659,7 @@ function ckan_taxo_list_ktl924_register_assets() {
         DGA_NONCE_KEY => wp_create_nonce('ckan_taxo_ktl924_nonce'),
         'i18n' => array(
             'loading' => __('กำลังโหลด...', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
             'noData' => __('ไม่พบข้อมูล', DGA_TEXT_DOMAIN),
             'accessDenied' => __('คุณไม่มีสิทธิ์เข้าถึงข้อมูลนี้', DGA_TEXT_DOMAIN),
             'all' => __('ทั้งหมด', DGA_TEXT_DOMAIN)
@@ -27477,8 +27764,8 @@ function ckan_taxo_get_accessible_terms_ktl924($taxonomy) {
     $all_terms = get_terms(array(
         DGA_TAXONOMY_FIELD => $taxonomy,
         DGA_HIDE_EMPTY_FIELD => true,
-        'orderby' => 'name',
-        'order' => 'ASC'
+        DGA_ORDERBY_FIELD_VALUE => 'name',
+        DGA_ORDER_FIELD => 'ASC'
     ));
     
     if (is_wp_error($all_terms) || empty($all_terms)) {
@@ -27534,14 +27821,14 @@ function ckan_taxo_count_accessible_posts_ktl924($terms, $taxonomy) {
         $args = array(
             DGA_POST_TYPE_FIELD => 'ckan',
             DGA_POSTS_PER_PAGE => -1,
-            'fields' => 'ids',
+            DGA_FIELDS_PARAMETER => 'ids',
             'no_found_rows' => true,
             'update_post_meta_cache' => false,
             'update_post_term_cache' => false,
             'tax_query' => array(
                 array(
                     DGA_TAXONOMY_FIELD => $taxonomy,
-                    'field' => 'term_id',
+                    DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                     'terms' => $term->term_id
                 )
             )
@@ -27571,7 +27858,7 @@ function ckan_taxo_count_accessible_posts_ktl924($terms, $taxonomy) {
     
     return array(
         'counts' => $counts,
-        'total' => $total
+        DGA_TOTAL_FIELD_KEY => $total
     );
 }
 
@@ -27588,7 +27875,7 @@ function ckan_taxo_filter_ktl924_handler() {
     
     // Validate and sanitize inputs
     $taxonomy = isset($_POST[DGA_TAXONOMY_FIELD]) ? sanitize_key($_POST[DGA_TAXONOMY_FIELD]) : '';
-    $term_id = isset($_POST['term_id']) ? absint($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? absint($_POST[DGA_TERM_ID_FIELD]) : 0;
     $page = isset($_POST['page']) ? max(1, absint($_POST['page'])) : 1;
     
     if (empty($taxonomy) || !taxonomy_exists($taxonomy)) {
@@ -27611,10 +27898,10 @@ function ckan_taxo_filter_ktl924_handler() {
     $args = array(
         DGA_POST_TYPE_FIELD => 'ckan',
         DGA_POSTS_PER_PAGE => $posts_per_page,
-        'paged' => $page,
+        DGA_PAGED_PARAMETER => $page,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
     
     // Add taxonomy query if term specified
@@ -27622,7 +27909,7 @@ function ckan_taxo_filter_ktl924_handler() {
         $args['tax_query'] = array(
             array(
                 DGA_TAXONOMY_FIELD => $taxonomy,
-                'field' => 'term_id',
+                DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                 'terms' => $term_id
             )
         );
@@ -27704,7 +27991,7 @@ function ckan_taxo_filter_ktl924_handler() {
     // Send response
     wp_send_json_success(array(
         'posts' => $results,
-        'term_id' => $term_id,
+        DGA_TERM_ID_FIELD => $term_id,
         'term_name' => $term_name,
         DGA_TAXONOMY_FIELD => $taxonomy,
         'found_posts' => count($results),
@@ -27738,7 +28025,7 @@ function ckan_taxo_list_ktl924_shortcode($atts) {
     }
     
     // Set default title
-    $title = !empty($atts['title']) ? sanitize_text_field($atts['title']) : '';
+    $title = !empty($atts[DGA_TITLE_FIELD]) ? sanitize_text_field($atts[DGA_TITLE_FIELD]) : '';
     
     if (empty($title)) {
         $taxonomy_labels = array(
@@ -27807,7 +28094,7 @@ function ckan_taxo_list_ktl924_shortcode($atts) {
              role="list">
             
             <!-- All items option -->
-            <button type="button"
+            <button type=DGA_BUTTON_TYPE
                     class="ckan-taxo-item-ktl924 active"
                     data-term-id="0"
                     role="listitem"
@@ -27817,8 +28104,8 @@ function ckan_taxo_list_ktl924_shortcode($atts) {
                     <?php echo esc_html__('ทั้งหมด', DGA_TEXT_DOMAIN); ?>
                 </span>
                 <?php if ($show_count) : ?>
-                <span class="ckan-taxo-item-count-ktl924" aria-label="<?php echo esc_attr($post_counts['total']); ?> รายการ">
-                    <?php echo esc_html($post_counts['total']); ?>
+                <span class="ckan-taxo-item-count-ktl924" aria-label="<?php echo esc_attr($post_counts[DGA_TOTAL_FIELD_KEY]); ?> รายการ">
+                    <?php echo esc_html($post_counts[DGA_TOTAL_FIELD_KEY]); ?>
                 </span>
                 <?php endif; ?>
             </button>
@@ -27829,7 +28116,7 @@ function ckan_taxo_list_ktl924_shortcode($atts) {
                 $count = isset($post_counts['counts'][$term->term_id]) ? $post_counts['counts'][$term->term_id] : 0;
                 if ($count > 0) : 
                 ?>
-                <button type="button"
+                <button type=DGA_BUTTON_TYPE
                         class="ckan-taxo-item-ktl924"
                         data-term-id="<?php echo esc_attr($term->term_id); ?>"
                         role="listitem"
@@ -28053,8 +28340,8 @@ function ckan_rp_list_xrt259($atts) {
         echo '</div>';
         
         echo '<div class="ckan-form-actions-xrt259">';
-        echo '<button type="submit" class="ckan-submit-btn-xrt259">' . __('บันทึก', DGA_TEXT_DOMAIN) . '</button>';
-        echo '<button type="button" class="ckan-cancel-btn-xrt259">' . __('ยกเลิก', DGA_TEXT_DOMAIN) . '</button>';
+        echo '<button type=DGA_SUBMIT_TYPE class="ckan-submit-btn-xrt259">' . __('บันทึก', DGA_TEXT_DOMAIN) . '</button>';
+        echo '<button type=DGA_BUTTON_TYPE class="ckan-cancel-btn-xrt259">' . __('ยกเลิก', DGA_TEXT_DOMAIN) . '</button>';
         echo '</div>';
         
         echo '</form>';
@@ -28699,13 +28986,13 @@ class CKAN_Metafield_System_xyz432 {
                 
                 <?php if ($is_admin): ?>
                     <div class="ckan-admin-header-actions-xyz432">
-                        <button type="button" class="ckan-settings-link-xyz432" title="<?php esc_attr_e('ตั้งค่า API', $this->text_domain); ?>">
+                        <button type=DGA_BUTTON_TYPE class="ckan-settings-link-xyz432" title="<?php esc_attr_e('ตั้งค่า API', $this->text_domain); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="3"></circle>
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                             </svg>
                         </button>
-                        <button type="button" class="ckan-field-manager-link-xyz432" title="<?php esc_attr_e('จัดการ Fields', $this->text_domain); ?>">
+                        <button type=DGA_BUTTON_TYPE class="ckan-field-manager-link-xyz432" title="<?php esc_attr_e('จัดการ Fields', $this->text_domain); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="8" y1="6" x2="21" y2="6"></line>
                                 <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -28752,7 +29039,7 @@ class CKAN_Metafield_System_xyz432 {
                     
                     <!-- Expand/Collapse Button -->
                     <div class="ckan-expand-section-xyz432">
-                        <button type="button" class="ckan-expand-btn-xyz432" data-expanded="false">
+                        <button type=DGA_BUTTON_TYPE class="ckan-expand-btn-xyz432" data-expanded="false">
                             <span class="expand-text"><?php _e('แสดง Optional Fields ทั้งหมด', $this->text_domain); ?></span>
                             <span class="collapse-text" style="display:none;"><?php _e('ซ่อน Optional Fields', $this->text_domain); ?></span>
                             <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -28767,14 +29054,14 @@ class CKAN_Metafield_System_xyz432 {
             <!-- Admin Actions -->
             <?php if ($is_admin): ?>
                 <div class="ckan-admin-actions-bottom-xyz432">
-                    <button type="button" class="ckan-update-api-btn-xyz432" data-endpoint="<?php echo esc_attr($api_endpoint); ?>">
+                    <button type=DGA_BUTTON_TYPE class="ckan-update-api-btn-xyz432" data-endpoint="<?php echo esc_attr($api_endpoint); ?>">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="23 4 23 10 17 10"></polyline>
                             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                         </svg>
                         <?php _e('อัพเดต API', $this->text_domain); ?>
                     </button>
-                    <button type="button" class="ckan-api-test-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-api-test-btn-xyz432">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
@@ -28784,7 +29071,7 @@ class CKAN_Metafield_System_xyz432 {
                         </svg>
                         <?php _e('ทดสอบ JSON', $this->text_domain); ?>
                     </button>
-                    <button type="button" class="ckan-csv-export-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-csv-export-btn-xyz432">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
@@ -28798,7 +29085,7 @@ class CKAN_Metafield_System_xyz432 {
                 <div class="ckan-api-response-container-xyz432" style="display:none;">
                     <div class="ckan-api-response-header-xyz432">
                         <h4><?php _e('API Response / Test JSON', $this->text_domain); ?></h4>
-                        <button type="button" class="ckan-close-json-btn-xyz432">&times;</button>
+                        <button type=DGA_BUTTON_TYPE class="ckan-close-json-btn-xyz432">&times;</button>
                     </div>
                     <pre class="ckan-api-response-json-xyz432"></pre>
                 </div>
@@ -28817,14 +29104,14 @@ class CKAN_Metafield_System_xyz432 {
      * Render a single field row
      */
     private function render_field_row($field, $counter, $post_id, $is_admin) {
-        $field_value = $this->get_field_value($field['field'], $post_id);
+        $field_value = $this->get_field_value($field[DGA_FIELD_KEY], $post_id);
         $formatted_value = $this->format_field_value($field_value, $field['type'], $field['key']);
         $field_options = isset($field['options']) ? json_encode($field['options'], JSON_UNESCAPED_UNICODE) : '{}';
         
         ob_start();
         ?>
         <div class="ckan-field-row-xyz432 ckan-metadata-row-xyz432" 
-             data-field="<?php echo esc_attr($field['field']); ?>"
+             data-field="<?php echo esc_attr($field[DGA_FIELD_KEY]); ?>"
              data-type="<?php echo esc_attr($field['type']); ?>"
              data-key="<?php echo esc_attr($field['key']); ?>"
              data-field-key="<?php echo esc_attr($field['key']); ?>"
@@ -28834,7 +29121,7 @@ class CKAN_Metafield_System_xyz432 {
              <?php endif; ?>>
             
             <div class="ckan-field-label-xyz432 ckan-metadata-label-xyz432">
-                <?php echo esc_html($counter . '. ' . $field['label']); ?>
+                <?php echo esc_html($counter . '. ' . $field[DGA_LABEL_FIELD]); ?>
                 <?php if(isset($field['required']) && $field['required']): ?>
                     <span class="required-indicator">*</span>
                 <?php endif; ?>
@@ -28869,8 +29156,8 @@ class CKAN_Metafield_System_xyz432 {
         // Mandatory fields configuration
         $mandatory_fields = array(
             array(
-                'label' => 'ระดับชั้นข้อมูล',
-                'field' => 'ckan_data_classification',
+                DGA_LABEL_FIELD => 'ระดับชั้นข้อมูล',
+                DGA_FIELD_KEY => 'ckan_data_classification',
                 DGA_TYPE_FIELD => 'select',
                 'key' => 'field_data_classification',
                 'required' => true,
@@ -28883,50 +29170,50 @@ class CKAN_Metafield_System_xyz432 {
                 )
             ),
             array(
-                'label' => 'ชื่อชุดข้อมูล',
-                'field' => 'post_title',
+                DGA_LABEL_FIELD => 'ชื่อชุดข้อมูล',
+                DGA_FIELD_KEY => 'post_title',
                 DGA_TYPE_FIELD => 'text',
                 'key' => 'field_post_title',
                 'required' => true
             ),
             array(
-                'label' => 'องค์กร',
-                'field' => 'ckan_organization',
+                DGA_LABEL_FIELD => 'องค์กร',
+                DGA_FIELD_KEY => 'ckan_organization',
                 DGA_TYPE_FIELD => 'text',
                 'key' => 'field_organization',
                 'required' => true
             ),
             array(
-                'label' => 'ชื่อผู้ติดต่อ',
-                'field' => 'ckan_contact_name',
+                DGA_LABEL_FIELD => 'ชื่อผู้ติดต่อ',
+                DGA_FIELD_KEY => 'ckan_contact_name',
                 DGA_TYPE_FIELD => 'text',
                 'key' => 'field_contact_name',
                 'required' => true
             ),
             array(
-                'label' => 'อีเมลผู้ติดต่อ',
-                'field' => 'ckan_contact_email',
+                DGA_LABEL_FIELD => 'อีเมลผู้ติดต่อ',
+                DGA_FIELD_KEY => 'ckan_contact_email',
                 DGA_TYPE_FIELD => 'email',
                 'key' => 'field_contact_email',
                 'required' => true
             ),
             array(
-                'label' => 'คำสำคัญ',
-                'field' => 'ckan_keywords',
+                DGA_LABEL_FIELD => 'คำสำคัญ',
+                DGA_FIELD_KEY => 'ckan_keywords',
                 DGA_TYPE_FIELD => 'text',
                 'key' => 'field_keywords',
                 'required' => true
             ),
             array(
-                'label' => 'รายละเอียด',
-                'field' => 'ckan_description',
+                DGA_LABEL_FIELD => 'รายละเอียด',
+                DGA_FIELD_KEY => 'ckan_description',
                 DGA_TYPE_FIELD => 'textarea',
                 'key' => 'field_description',
                 'required' => true
             ),
             array(
-                'label' => 'วัตถุประสงค์',
-                'field' => 'ckan_objective',
+                DGA_LABEL_FIELD => 'วัตถุประสงค์',
+                DGA_FIELD_KEY => 'ckan_objective',
                 DGA_TYPE_FIELD => 'select',
                 'key' => 'field_objective',
                 'required' => true,
@@ -28948,8 +29235,8 @@ class CKAN_Metafield_System_xyz432 {
                 )
             ),
             array(
-                'label' => 'หน่วยความถี่การปรับปรุง',
-                'field' => 'ckan_update_frequency',
+                DGA_LABEL_FIELD => 'หน่วยความถี่การปรับปรุง',
+                DGA_FIELD_KEY => 'ckan_update_frequency',
                 DGA_TYPE_FIELD => 'select',
                 'key' => 'field_update_frequency',
                 'required' => true,
@@ -28963,15 +29250,15 @@ class CKAN_Metafield_System_xyz432 {
                 )
             ),
             array(
-                'label' => 'ค่าความถี่',
-                'field' => 'ckan_frequency_value',
+                DGA_LABEL_FIELD => 'ค่าความถี่',
+                DGA_FIELD_KEY => 'ckan_frequency_value',
                 DGA_TYPE_FIELD => 'number',
                 'key' => 'field_frequency_value',
                 'required' => true
             ),
             array(
-                'label' => 'ขอบเขตพื้นที่',
-                'field' => 'ckan_geographic_area',
+                DGA_LABEL_FIELD => 'ขอบเขตพื้นที่',
+                DGA_FIELD_KEY => 'ckan_geographic_area',
                 DGA_TYPE_FIELD => 'select',
                 'key' => 'field_geographic_area',
                 'required' => true,
@@ -28988,23 +29275,23 @@ class CKAN_Metafield_System_xyz432 {
                 )
             ),
             array(
-                'label' => 'แหล่งที่มา',
-                'field' => 'ckan_source',
+                DGA_LABEL_FIELD => 'แหล่งที่มา',
+                DGA_FIELD_KEY => 'ckan_source',
                 DGA_TYPE_FIELD => 'text',
                 'key' => 'field_source',
                 'required' => true
             ),
             array(
-                'label' => 'รูปแบบข้อมูล',
-                'field' => 'ckan_format',
+                DGA_LABEL_FIELD => 'รูปแบบข้อมูล',
+                DGA_FIELD_KEY => 'ckan_format',
                 DGA_TYPE_FIELD => DGA_TAXONOMY_FIELD,
                 'key' => 'field_format',
                 DGA_TAXONOMY_FIELD => 'cformat',
                 'required' => true
             ),
             array(
-                'label' => 'สิทธิการใช้งาน',
-                'field' => 'ckan_license',
+                DGA_LABEL_FIELD => 'สิทธิการใช้งาน',
+                DGA_FIELD_KEY => 'ckan_license',
                 DGA_TYPE_FIELD => 'select',
                 'key' => 'field_license',
                 'required' => true,
@@ -29022,28 +29309,28 @@ class CKAN_Metafield_System_xyz432 {
         // Optional fields configuration  
         $optional_fields = array(
             array(
-                'label' => 'ประเภทชุดข้อมูล',
-                'field' => 'ckan_data_type',
+                DGA_LABEL_FIELD => 'ประเภทชุดข้อมูล',
+                DGA_FIELD_KEY => 'ckan_data_type',
                 DGA_TYPE_FIELD => DGA_TAXONOMY_FIELD,
                 'key' => 'field_data_type',
                 DGA_TAXONOMY_FIELD => 'cdata'
             ),
             array(
-                'label' => 'หมวดหมู่ธรรมาภิบาล',
-                'field' => 'ckan_governance',
+                DGA_LABEL_FIELD => 'หมวดหมู่ธรรมาภิบาล',
+                DGA_FIELD_KEY => 'ckan_governance',
                 DGA_TYPE_FIELD => DGA_TAXONOMY_FIELD,
                 'key' => 'field_governance',
                 DGA_TAXONOMY_FIELD => 'cgov'
             ),
             array(
-                'label' => 'URL',
-                'field' => 'ckan_url',
+                DGA_LABEL_FIELD => 'URL',
+                DGA_FIELD_KEY => 'ckan_url',
                 DGA_TYPE_FIELD => 'url',
                 'key' => 'field_url'
             ),
             array(
-                'label' => 'ภาษา',
-                'field' => 'ckan_language',
+                DGA_LABEL_FIELD => 'ภาษา',
+                DGA_FIELD_KEY => 'ckan_language',
                 DGA_TYPE_FIELD => 'select',
                 'key' => 'field_language',
                 'options' => array(
@@ -29053,20 +29340,20 @@ class CKAN_Metafield_System_xyz432 {
                 )
             ),
             array(
-                'label' => 'วันที่สร้าง',
-                'field' => 'ckan_date_created',
+                DGA_LABEL_FIELD => 'วันที่สร้าง',
+                DGA_FIELD_KEY => 'ckan_date_created',
                 DGA_TYPE_FIELD => 'date',
                 'key' => 'field_date_created'
             ),
             array(
-                'label' => 'วันที่ปรับปรุง',
-                'field' => 'ckan_date_updated',
+                DGA_LABEL_FIELD => 'วันที่ปรับปรุง',
+                DGA_FIELD_KEY => 'ckan_date_updated',
                 DGA_TYPE_FIELD => 'date',
                 'key' => 'field_date_updated'
             ),
             array(
-                'label' => 'ความยินยอม',
-                'field' => 'ckan_consent',
+                DGA_LABEL_FIELD => 'ความยินยอม',
+                DGA_FIELD_KEY => 'ckan_consent',
                 DGA_TYPE_FIELD => 'boolean',
                 'key' => 'field_consent'
             )
@@ -29075,19 +29362,19 @@ class CKAN_Metafield_System_xyz432 {
         // Apply custom labels and names
         foreach ($mandatory_fields as &$field) {
             if (isset($custom_labels[$field['key']])) {
-                $field['label'] = $custom_labels[$field['key']];
+                $field[DGA_LABEL_FIELD] = $custom_labels[$field['key']];
             }
             if (isset($custom_names[$field['key']])) {
-                $field['field'] = $custom_names[$field['key']];
+                $field[DGA_FIELD_KEY] = $custom_names[$field['key']];
             }
         }
         
         foreach ($optional_fields as &$field) {
             if (isset($custom_labels[$field['key']])) {
-                $field['label'] = $custom_labels[$field['key']];
+                $field[DGA_LABEL_FIELD] = $custom_labels[$field['key']];
             }
             if (isset($custom_names[$field['key']])) {
-                $field['field'] = $custom_names[$field['key']];
+                $field[DGA_FIELD_KEY] = $custom_names[$field['key']];
             }
         }
         
@@ -29262,7 +29549,7 @@ class CKAN_Metafield_System_xyz432 {
             <div class="ckan-modal-content-xyz432">
                 <div class="ckan-modal-header-xyz432">
                     <h4><?php _e('ตั้งค่า API Endpoint', $this->text_domain); ?></h4>
-                    <button type="button" class="ckan-modal-close-xyz432">&times;</button>
+                    <button type=DGA_BUTTON_TYPE class="ckan-modal-close-xyz432">&times;</button>
                 </div>
                 <div class="ckan-modal-body-xyz432">
                     <div class="ckan-endpoint-form-xyz432">
@@ -29278,10 +29565,10 @@ class CKAN_Metafield_System_xyz432 {
                     </div>
                 </div>
                 <div class="ckan-modal-footer-xyz432">
-                    <button type="button" class="ckan-save-endpoint-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-save-endpoint-btn-xyz432">
                         <?php _e('บันทึก', $this->text_domain); ?>
                     </button>
-                    <button type="button" class="ckan-cancel-endpoint-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-cancel-endpoint-btn-xyz432">
                         <?php _e('ยกเลิก', $this->text_domain); ?>
                     </button>
                 </div>
@@ -29293,7 +29580,7 @@ class CKAN_Metafield_System_xyz432 {
             <div class="ckan-modal-content-xyz432">
                 <div class="ckan-modal-header-xyz432">
                     <h4><?php _e('จัดการ Field Labels', $this->text_domain); ?></h4>
-                    <button type="button" class="ckan-modal-close-xyz432">&times;</button>
+                    <button type=DGA_BUTTON_TYPE class="ckan-modal-close-xyz432">&times;</button>
                 </div>
                 <div class="ckan-modal-body-xyz432">
                     <div class="ckan-field-manager-description-xyz432">
@@ -29304,13 +29591,13 @@ class CKAN_Metafield_System_xyz432 {
                     </div>
                 </div>
                 <div class="ckan-modal-footer-xyz432">
-                    <button type="button" class="ckan-save-field-labels-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-save-field-labels-btn-xyz432">
                         <?php _e('บันทึกการตั้งค่า', $this->text_domain); ?>
                     </button>
-                    <button type="button" class="ckan-reset-field-labels-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-reset-field-labels-btn-xyz432">
                         <?php _e('รีเซ็ต', $this->text_domain); ?>
                     </button>
-                    <button type="button" class="ckan-cancel-field-manager-btn-xyz432">
+                    <button type=DGA_BUTTON_TYPE class="ckan-cancel-field-manager-btn-xyz432">
                         <?php _e('ยกเลิก', $this->text_domain); ?>
                     </button>
                 </div>
@@ -29407,7 +29694,7 @@ class CKAN_Metafield_System_xyz432 {
             $field_key = null;
             
             foreach ($all_fields as $config_field) {
-                if ($config_field['field'] === $field_name) {
+                if ($config_field[DGA_FIELD_KEY] === $field_name) {
                     $field_key = $config_field['key'];
                     break;
                 }
@@ -29477,7 +29764,7 @@ class CKAN_Metafield_System_xyz432 {
         if (!empty($metadata)) {
             foreach ($metadata as $field_name => $field_data) {
                 $csv_content .= '"' . str_replace('"', '""', $field_name) . '",';
-                $csv_content .= '"' . str_replace('"', '""', $field_data['label']) . '",';
+                $csv_content .= '"' . str_replace('"', '""', $field_data[DGA_LABEL_FIELD]) . '",';
                 $csv_content .= '"' . str_replace('"', '""', $field_data['value']) . '",';
                 $csv_content .= '"' . str_replace('"', '""', $field_data['type']) . '"' . "\n";
             }
@@ -29568,7 +29855,7 @@ class CKAN_Metafield_System_xyz432 {
         $custom_names = get_option('ckan_field_names_xyz432', array());
         
         wp_send_json_success(array(
-            'fields' => $all_fields,
+            DGA_FIELDS_PARAMETER => $all_fields,
             'custom_labels' => $custom_labels,
             'custom_names' => $custom_names
         ));
@@ -29630,8 +29917,8 @@ class CKAN_Metafield_System_xyz432 {
         $terms = get_terms(array(
             DGA_TAXONOMY_FIELD => $taxonomy,
             DGA_HIDE_EMPTY_FIELD => false,
-            'orderby' => 'name',
-            'order' => 'ASC'
+            DGA_ORDERBY_FIELD_VALUE => 'name',
+            DGA_ORDER_FIELD => 'ASC'
         ));
         
         if (is_wp_error($terms)) {
@@ -29641,7 +29928,7 @@ class CKAN_Metafield_System_xyz432 {
         $terms_data = array();
         foreach ($terms as $term) {
             $terms_data[] = array(
-                'term_id' => $term->term_id,
+                DGA_TERM_ID_FIELD => $term->term_id,
                 DGA_NAME_FIELD => $term->name,
                 'slug' => $term->slug
             );
@@ -29713,7 +30000,7 @@ function ckan_get_post_data($request) {
     // ตรวจสอบว่าโพสต์มีอยู่จริง
     $post = get_post($post_id);
     if (!$post) {
-        return new WP_Error('post_not_found', 'ไม่พบข้อมูลสำหรับ ID นี้', array('status' => 404));
+        return new WP_Error('post_not_found', 'ไม่พบข้อมูลสำหรับ ID นี้', array(DGA_STATUS_FIELD => 404));
     }
     
     // ดึงข้อมูล metadata จาก ACF fields
@@ -29721,8 +30008,8 @@ function ckan_get_post_data($request) {
     $metadata = array();
     
     foreach ($metadata_fields as $field) {
-        $field_value = get_field($field['field'], $post_id);
-        $metadata[$field['field']] = $field_value;
+        $field_value = get_field($field[DGA_FIELD_KEY], $post_id);
+        $metadata[$field[DGA_FIELD_KEY]] = $field_value;
     }
     
     // ดึงข้อมูลไฟล์แนบจาก Repeater field
@@ -29744,7 +30031,7 @@ function ckan_get_post_data($request) {
     
     // สร้าง object ข้อมูลที่จะส่งกลับ
     $result = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'result' => array(
             'id' => $post_id,
             DGA_TITLE_FIELD => get_the_title($post_id),
@@ -29754,7 +30041,7 @@ function ckan_get_post_data($request) {
             'post_modified' => get_the_modified_date('c', $post_id),
             'metadata' => $metadata,
             'resources' => $assets,
-            'total' => count($assets)
+            DGA_TOTAL_FIELD_KEY => count($assets)
         )
     );
     
@@ -29836,7 +30123,7 @@ function ckan_search_data($request) {
     
     // สร้าง object ข้อมูลที่จะส่งกลับ
     $result = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'result' => array(
             'count' => $search_query->found_posts,
             'items' => $results,
@@ -29882,10 +30169,10 @@ function ckan_search_in_resources($resource_id, $params) {
     
     // สร้าง response แบบเดียวกับที่ CKAN API ส่งกลับ
     $result = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'result' => array(
             'resource_id' => $resource_id,
-            'fields' => array(
+            DGA_FIELDS_PARAMETER => array(
                 array('id' => 'id', DGA_TYPE_FIELD => 'int'),
                 array('id' => 'name', DGA_TYPE_FIELD => 'text'),
                 array('id' => 'description', DGA_TYPE_FIELD => 'text'),
@@ -29893,7 +30180,7 @@ function ckan_search_in_resources($resource_id, $params) {
             ),
             'records' => $mock_data,
             'limit' => $limit,
-            'total' => count($mock_data)
+            DGA_TOTAL_FIELD_KEY => count($mock_data)
         )
     );
     
@@ -29912,7 +30199,7 @@ function ckan_get_file_data($request) {
     // ตรวจสอบว่าโพสต์มีอยู่จริง
     $post = get_post($post_id);
     if (!$post) {
-        return new WP_Error('post_not_found', 'ไม่พบข้อมูลสำหรับ ID นี้', array('status' => 404));
+        return new WP_Error('post_not_found', 'ไม่พบข้อมูลสำหรับ ID นี้', array(DGA_STATUS_FIELD => 404));
     }
     
     // ดึงข้อมูลไฟล์แนบจาก Repeater field
@@ -29920,7 +30207,7 @@ function ckan_get_file_data($request) {
     
     // ตรวจสอบว่ามีไฟล์ที่ต้องการหรือไม่
     if (!is_array($ckan_assets) || !isset($ckan_assets[$file_index])) {
-        return new WP_Error('file_not_found', 'ไม่พบไฟล์ที่ต้องการ', array('status' => 404));
+        return new WP_Error('file_not_found', 'ไม่พบไฟล์ที่ต้องการ', array(DGA_STATUS_FIELD => 404));
     }
     
     $asset = $ckan_assets[$file_index];
@@ -29935,12 +30222,12 @@ function ckan_get_file_data($request) {
     ));
     
     if (is_wp_error($response)) {
-        return new WP_Error('file_fetch_error', $response->get_error_message(), array('status' => 500));
+        return new WP_Error('file_fetch_error', $response->get_error_message(), array(DGA_STATUS_FIELD => 500));
     }
     
     $file_content = wp_remote_retrieve_body($response);
     if (empty($file_content)) {
-        return new WP_Error('empty_file', 'ไฟล์ไม่มีข้อมูล', array('status' => 404));
+        return new WP_Error('empty_file', 'ไฟล์ไม่มีข้อมูล', array(DGA_STATUS_FIELD => 404));
     }
     
     // แปลงข้อมูลไฟล์ตามนามสกุล
@@ -29954,7 +30241,7 @@ function ckan_get_file_data($request) {
         case 'json':
             $json_data = json_decode($file_content, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                return new WP_Error('json_parse_error', 'ไม่สามารถแปลงไฟล์ JSON ได้', array('status' => 500));
+                return new WP_Error('json_parse_error', 'ไม่สามารถแปลงไฟล์ JSON ได้', array(DGA_STATUS_FIELD => 500));
             }
             $data = ckan_format_json_data($json_data);
             break;
@@ -29985,21 +30272,21 @@ function ckan_get_file_data($request) {
             
         default:
             // ไฟล์ประเภทอื่นๆ ที่ไม่รองรับ
-            return new WP_Error('format_not_supported', 'ไม่รองรับไฟล์ประเภท ' . $file_ext, array('status' => 400));
+            return new WP_Error('format_not_supported', 'ไม่รองรับไฟล์ประเภท ' . $file_ext, array(DGA_STATUS_FIELD => 400));
     }
     
     // สร้าง response ตามรูปแบบที่ต้องการ
     $result = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'result' => array(
             'resource_id' => 'b8a8a6b5-' . substr(md5($post_id . '_' . $file_index), 0, 4) . '-' . 
                             substr(md5($post_id . '_' . $file_index), 4, 4) . '-' . 
                             substr(md5($post_id . '_' . $file_index), 8, 4) . '-' . 
                             substr(md5($post_id . '_' . $file_index), 12, 12),
-            'fields' => $data['fields'],
+            DGA_FIELDS_PARAMETER => $data[DGA_FIELDS_PARAMETER],
             'records' => $data['records'],
             'limit' => count($data['records']),
-            'total' => count($data['records'])
+            DGA_TOTAL_FIELD_KEY => count($data['records'])
         )
     );
     
@@ -30022,7 +30309,7 @@ function ckan_get_file_data($request) {
 function ckan_parse_csv_to_array($csv_content) {
     $lines = explode("\n", $csv_content);
     $data = array(
-        'fields' => array(),
+        DGA_FIELDS_PARAMETER => array(),
         'records' => array()
     );
     
@@ -30060,7 +30347,7 @@ function ckan_parse_csv_to_array($csv_content) {
             }
         }
         
-        $data['fields'][] = array(
+        $data[DGA_FIELDS_PARAMETER][] = array(
             'id' => $field_name,
             DGA_TYPE_FIELD => $field_type
         );
@@ -30078,7 +30365,7 @@ function ckan_parse_csv_to_array($csv_content) {
             
             // ค้นหา field type
             $field_type = 'text';
-            foreach ($data['fields'] as $field) {
+            foreach ($data[DGA_FIELDS_PARAMETER] as $field) {
                 if ($field['id'] === $field_name) {
                     $field_type = $field['type'];
                     break;
@@ -30119,7 +30406,7 @@ function ckan_parse_excel_fallback($file_path, $file_ext) {
     
     // สร้างโครงสร้างข้อมูลเปล่า
     $data = array(
-        'fields' => array(
+        DGA_FIELDS_PARAMETER => array(
             array('id' => 'id', DGA_TYPE_FIELD => 'int'),
             array('id' => 'name', DGA_TYPE_FIELD => 'text'),
             array('id' => 'description', DGA_TYPE_FIELD => 'text'),
@@ -30154,7 +30441,7 @@ function ckan_parse_excel_with_phpspreadsheet($file_path, $file_ext) {
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_path);
         $worksheet = $spreadsheet->getActiveSheet();
         $data = array(
-            'fields' => array(),
+            DGA_FIELDS_PARAMETER => array(),
             'records' => array()
         );
         
@@ -30193,7 +30480,7 @@ function ckan_parse_excel_with_phpspreadsheet($file_path, $file_ext) {
                 }
             }
             
-            $data['fields'][] = array(
+            $data[DGA_FIELDS_PARAMETER][] = array(
                 'id' => $field_name,
                 DGA_TYPE_FIELD => $field_type
             );
@@ -30204,7 +30491,7 @@ function ckan_parse_excel_with_phpspreadsheet($file_path, $file_ext) {
             $row = $rows[$i];
             $item = array();
             
-            foreach ($data['fields'] as $j => $field) {
+            foreach ($data[DGA_FIELDS_PARAMETER] as $j => $field) {
                 $field_name = $field['id'];
                 $field_type = $field['type'];
                 
@@ -30242,7 +30529,7 @@ function ckan_parse_excel_with_phpspreadsheet($file_path, $file_ext) {
  */
 function ckan_format_json_data($json_data) {
     $data = array(
-        'fields' => array(),
+        DGA_FIELDS_PARAMETER => array(),
         'records' => array()
     );
     
@@ -30260,7 +30547,7 @@ function ckan_format_json_data($json_data) {
                 $type = 'float';
             }
             
-            $data['fields'][] = array(
+            $data[DGA_FIELDS_PARAMETER][] = array(
                 'id' => $key,
                 DGA_TYPE_FIELD => $type
             );
@@ -30299,7 +30586,7 @@ function ckan_format_json_data($json_data) {
                         $type = 'float';
                     }
                     
-                    $data['fields'][] = array(
+                    $data[DGA_FIELDS_PARAMETER][] = array(
                         'id' => $key,
                         DGA_TYPE_FIELD => $type
                     );
@@ -30340,7 +30627,7 @@ function ckan_format_json_data($json_data) {
                 );
             }
             
-            $data['fields'] = $fields;
+            $data[DGA_FIELDS_PARAMETER] = $fields;
             $data['records'] = array($record);
         }
     }
@@ -30354,7 +30641,7 @@ function ckan_format_json_data($json_data) {
  */
 function ckan_format_text_data($text_content) {
     $data = array(
-        'fields' => array(
+        DGA_FIELDS_PARAMETER => array(
             array('id' => 'line', DGA_TYPE_FIELD => 'int'),
             array('id' => 'content', DGA_TYPE_FIELD => 'text')
         ),
@@ -30410,13 +30697,13 @@ function ckan_parse_csv_to_json($csv_content, $title = '') {
     // สร้างโครงสร้างข้อมูลเหมือนกับ CKAN
     $result = array(
         DGA_TITLE_FIELD => $title,
-        'fields' => array(),
+        DGA_FIELDS_PARAMETER => array(),
         'records' => $data
     );
     
     // สร้าง fields metadata
     foreach ($header as $field_name) {
-        $result['fields'][] = array(
+        $result[DGA_FIELDS_PARAMETER][] = array(
             'id' => $field_name,
             DGA_TYPE_FIELD => 'text' // ค่าเริ่มต้นเป็น text
         );
@@ -30429,7 +30716,7 @@ function ckan_parse_csv_to_json($csv_content, $title = '') {
 function ckan_create_data($request) {
     // ตรวจสอบสิทธิ์
     if (!current_user_can(DGA_EDIT_POSTS_CAP)) {
-        return new WP_Error('permission_denied', 'คุณไม่มีสิทธิ์ในการสร้างข้อมูล', array('status' => 403));
+        return new WP_Error('permission_denied', 'คุณไม่มีสิทธิ์ในการสร้างข้อมูล', array(DGA_STATUS_FIELD => 403));
     }
     
     // รับข้อมูลจาก request
@@ -30437,12 +30724,12 @@ function ckan_create_data($request) {
     
     // ตรวจสอบข้อมูลที่จำเป็น
     if (empty($parameters['resource_data'])) {
-        return new WP_Error('missing_data', 'ไม่พบข้อมูลที่จำเป็น', array('status' => 400));
+        return new WP_Error('missing_data', 'ไม่พบข้อมูลที่จำเป็น', array(DGA_STATUS_FIELD => 400));
     }
     
     // สร้าง response
     $result = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'result' => array(
             DGA_MESSAGE_KEY => 'สร้างข้อมูลสำเร็จ',
             'resource_id' => 'new_' . time(),
@@ -30457,7 +30744,7 @@ function ckan_create_data($request) {
 function ckan_upsert_data($request) {
     // ตรวจสอบสิทธิ์
     if (!current_user_can(DGA_EDIT_POSTS_CAP)) {
-        return new WP_Error('permission_denied', 'คุณไม่มีสิทธิ์ในการอัพเดทข้อมูล', array('status' => 403));
+        return new WP_Error('permission_denied', 'คุณไม่มีสิทธิ์ในการอัพเดทข้อมูล', array(DGA_STATUS_FIELD => 403));
     }
     
     // รับข้อมูลจาก request
@@ -30465,12 +30752,12 @@ function ckan_upsert_data($request) {
     
     // ตรวจสอบข้อมูลที่จำเป็น
     if (empty($parameters['resource_id']) || empty($parameters['records'])) {
-        return new WP_Error('missing_data', 'ไม่พบข้อมูลที่จำเป็น', array('status' => 400));
+        return new WP_Error('missing_data', 'ไม่พบข้อมูลที่จำเป็น', array(DGA_STATUS_FIELD => 400));
     }
     
     // สร้าง response
     $result = array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'result' => array(
             DGA_MESSAGE_KEY => 'อัพเดทข้อมูลสำเร็จ',
             'resource_id' => $parameters['resource_id'],
@@ -30485,7 +30772,7 @@ function ckan_upsert_data($request) {
 // ฟังก์ชันเพิ่มการโหลด CSS และ JS สำหรับ API
 function ckan_api_enqueue_scripts() {
     wp_enqueue_style('ckan-api-css', get_stylesheet_directory_uri() . '/css/ckan-api.css');
-    wp_enqueue_script('ckan-api-js', get_stylesheet_directory_uri() . '/js/ckan-api.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_script('ckan-api-js', get_stylesheet_directory_uri() . '/js/ckan-api.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
 }
 add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'ckan_api_enqueue_scripts');
 
@@ -30493,7 +30780,7 @@ add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'ckan_api_enqueue_scripts');
 function ckan_rp_list_add_api_scripts($atts) {
     // ต้องเพิ่มโค้ดเข้าไปในฟังก์ชัน ckan_rp_list ที่มีอยู่แล้ว
     wp_enqueue_style('ckan-api-css', get_stylesheet_directory_uri() . '/css/ckan-api.css');
-    wp_enqueue_script('ckan-api-js', get_stylesheet_directory_uri() . '/js/ckan-api.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_script('ckan-api-js', get_stylesheet_directory_uri() . '/js/ckan-api.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // ไม่ต้องแก้ไขอะไรเพิ่ม เพราะฟังก์ชันนี้จะถูกเรียกใช้ก่อนฟังก์ชัน ckan_rp_list
 }
@@ -30587,7 +30874,7 @@ function ckan_taxo_caccess_shortcode_zkt789() {
         if (is_wp_error($all_terms) || empty($all_terms)) {
             $output .= '<div class="ckan-taxo-error-zkt789">' . __('No terms found in the "caccess" taxonomy.', DGA_TEXT_DOMAIN) . '</div>';
         } else {
-            $current_term_ids = wp_list_pluck($current_terms, 'term_id');
+            $current_term_ids = wp_list_pluck($current_terms, DGA_TERM_ID_FIELD);
             
             // Add form
             $output .= '<form id="ckan-taxo-caccess-form-zkt789" data-post-id="' . esc_attr($post_id) . '" data-can-edit="true">';
@@ -30626,7 +30913,7 @@ function ckan_taxo_caccess_shortcode_zkt789() {
             
             // Add submit button
             $output .= '<div class="ckan-taxo-submit-container-zkt789">';
-            $output .= '<button type="submit" id="ckan-taxo-submit-zkt789" class="button button-primary">';
+            $output .= '<button type=DGA_SUBMIT_TYPE id="ckan-taxo-submit-zkt789" class="button button-primary">';
             $output .= __('Update Terms', DGA_TEXT_DOMAIN);
             $output .= '</button>';
             $output .= '<span class="ckan-taxo-spinner-zkt789"></span>';
@@ -30779,7 +31066,7 @@ function ckan_taxo_caccess_update_terms_zkt789() {
         wp_send_json_error(array(DGA_MESSAGE_KEY => __('Error updating terms: ', DGA_TEXT_DOMAIN) . $result->get_error_message()));
     } else {
         // Get updated term names for confirmation
-        $updated_terms = wp_get_object_terms($post_id, 'caccess', array('fields' => 'names'));
+        $updated_terms = wp_get_object_terms($post_id, 'caccess', array(DGA_FIELDS_PARAMETER => 'names'));
         
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => __('Terms updated successfully!', DGA_TEXT_DOMAIN),
@@ -30846,7 +31133,7 @@ function ckan_taxo_cgroup_shortcode() {
     }
     
     // Get current terms assigned to this post
-    $current_terms = wp_get_object_terms($post_id, 'cgroup', array('fields' => 'ids'));
+    $current_terms = wp_get_object_terms($post_id, 'cgroup', array(DGA_FIELDS_PARAMETER => 'ids'));
     
     // Start building the output
     $output = '<div class="ckan-taxo-cgroup-container">';
@@ -30882,7 +31169,7 @@ function ckan_taxo_cgroup_shortcode() {
     
     // Add submit button
     $output .= '<div class="ckan-taxo-submit-container">';
-    $output .= '<button type="submit" id="ckan-taxo-submit">อัพเดต Terms</button>';
+    $output .= '<button type=DGA_SUBMIT_TYPE id="ckan-taxo-submit">อัพเดต Terms</button>';
     $output .= '<span class="ckan-taxo-spinner"></span>';
     $output .= '</div>';
     
@@ -30973,7 +31260,7 @@ function ckan_taxo_clicense_shortcode() {
     }
     
     // Get current terms assigned to this post
-    $current_terms = wp_get_object_terms($post_id, 'clicense', array('fields' => 'ids'));
+    $current_terms = wp_get_object_terms($post_id, 'clicense', array(DGA_FIELDS_PARAMETER => 'ids'));
     
     // Start building the output
     $output = '<div class="ckan-taxo-clicense-container">';
@@ -31009,7 +31296,7 @@ function ckan_taxo_clicense_shortcode() {
     
     // Add submit button
     $output .= '<div class="ckan-taxo-submit-container">';
-    $output .= '<button type="submit" id="ckan-taxo-submit">อัพเดต Terms</button>';
+    $output .= '<button type=DGA_SUBMIT_TYPE id="ckan-taxo-submit">อัพเดต Terms</button>';
     $output .= '<span class="ckan-taxo-spinner"></span>';
     $output .= '</div>';
     
@@ -31190,7 +31477,7 @@ function ckan_add_tag_shortcode_def456() {
             'no_tags' => __('ไม่พบ Tag ใด ๆ', DGA_TEXT_DOMAIN),
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'save' => __('บันทึก', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
             'connection_error' => __('เกิดข้อผิดพลาดในการเชื่อมต่อ', DGA_TEXT_DOMAIN),
             'create_new' => __('สร้างใหม่:', DGA_TEXT_DOMAIN),
             'no_results' => __('ไม่พบผลลัพธ์', DGA_TEXT_DOMAIN),
@@ -31344,7 +31631,7 @@ function ckan_create_term_def456() {
         return;
     }
     
-    $term = get_term($new_term['term_id'], 'ctag');
+    $term = get_term($new_term[DGA_TERM_ID_FIELD], 'ctag');
     
     wp_send_json_success(array(
         'id' => $term->term_id,
@@ -31409,7 +31696,7 @@ function ckan_get_term_info_def456() {
         return;
     }
     
-    $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? intval($_POST[DGA_TERM_ID_FIELD]) : 0;
     
     if (!$term_id) {
         wp_send_json_error(array(DGA_MESSAGE_KEY => __('ไม่พบ Tag ID', DGA_TEXT_DOMAIN)));
@@ -31461,7 +31748,7 @@ function ckan_delete_term_def456() {
         return;
     }
     
-    $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? intval($_POST[DGA_TERM_ID_FIELD]) : 0;
     $transfer_option = isset($_POST['transfer_option']) ? sanitize_text_field($_POST['transfer_option']) : 'delete_only';
     $target_term_id = isset($_POST['target_term_id']) ? intval($_POST['target_term_id']) : 0;
     
@@ -31479,17 +31766,17 @@ function ckan_delete_term_def456() {
             'tax_query' => array(
                 array(
                     DGA_TAXONOMY_FIELD => 'ctag',
-                    'field' => 'term_id',
+                    DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                     'terms' => $term_id
                 )
             ),
-            'fields' => 'ids'
+            DGA_FIELDS_PARAMETER => 'ids'
         ));
         
         // โอนโพสต์ไปยัง term ใหม่
         foreach ($posts as $post_id) {
             // ดึง terms ปัจจุบันของโพสต์
-            $current_terms = wp_get_object_terms($post_id, 'ctag', array('fields' => 'ids'));
+            $current_terms = wp_get_object_terms($post_id, 'ctag', array(DGA_FIELDS_PARAMETER => 'ids'));
             
             // ลบ term เดิมออกและเพิ่ม term ใหม่
             $current_terms = array_diff($current_terms, array($term_id));
@@ -31592,7 +31879,7 @@ function at_status_toggle_ajax_handler() {
     
     // รับและตรวจสอบค่า
     $post_id = isset($_POST[DGA_POST_ID_FIELD]) ? intval($_POST[DGA_POST_ID_FIELD]) : 0;
-    $new_status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
+    $new_status = isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '';
     
     if ($post_id <= 0) {
         wp_send_json_error(array(DGA_MESSAGE_KEY => __('ID โพสต์ไม่ถูกต้อง', DGA_TEXT_DOMAIN)));
@@ -31613,7 +31900,7 @@ function at_status_toggle_ajax_handler() {
     
     wp_send_json_success(array(
         DGA_MESSAGE_KEY => __('อัพเดตสถานะเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
-        'status' => $new_status,
+        DGA_STATUS_FIELD => $new_status,
         DGA_POST_ID_FIELD => $post_id
     ));
 }
@@ -31653,14 +31940,14 @@ function at_inactive_news_list_shortcode($atts) {
     $output .= '<div class="at-search-filter">
                     <div class="at-search-box">
                         <input type="text" id="at-news-search" placeholder="' . esc_attr__('ค้นหาข่าว, มสพร., มรด. ...', DGA_TEXT_DOMAIN) . '">
-                        <button id="at-news-search-btn" type="button">
+                        <button id="at-news-search-btn" type=DGA_BUTTON_TYPE>
                             <span class="dashicons dashicons-search"></span>
                             ' . esc_html__('ค้นหา', DGA_TEXT_DOMAIN) . '
                         </button>
                     </div>
                     <div class="at-filter-info">
                         <span>' . esc_html__('แสดงเฉพาะรายการที่มีสถานะ Inactive', DGA_TEXT_DOMAIN) . '</span>
-                        <button class="at-refresh-btn" type="button" title="' . esc_attr__('รีเฟรชข้อมูล', DGA_TEXT_DOMAIN) . '">
+                        <button class="at-refresh-btn" type=DGA_BUTTON_TYPE title="' . esc_attr__('รีเฟรชข้อมูล', DGA_TEXT_DOMAIN) . '">
                             <span class="dashicons dashicons-update"></span>
                         </button>
                     </div>
@@ -31790,8 +32077,8 @@ function at_load_inactive_news_ajax_handler() {
         DGA_POSTS_PER_PAGE => $per_page,
         'offset'         => $offset,
         DGA_POST_STATUS_FIELD    => DGA_PUBLISH_STATUS,
-        'orderby'        => 'date',
-        'order'          => 'DESC',
+        DGA_ORDERBY_FIELD_VALUE        => 'date',
+        DGA_ORDER_FIELD          => 'DESC',
         'meta_query'     => $meta_query
     );
     
@@ -31834,11 +32121,11 @@ function at_load_inactive_news_ajax_handler() {
                 DGA_POST_TYPE_FIELD  => get_post_type(),
                 'post_type_label' => $post_type_label,
                 'date'       => get_the_date('d/m/Y'),
-                'title'      => get_the_title(),
+                DGA_TITLE_FIELD      => get_the_title(),
                 'permalink'  => get_permalink(),
                 'docnum_1'   => $docnum_1 ?: '-',
                 'docnum_2'   => $docnum_2 ?: '-',
-                'status'     => 'inactive'
+                DGA_STATUS_FIELD     => 'inactive'
             );
         }
     }
@@ -31961,7 +32248,7 @@ function ckan_edit_org_shortcode_adm347() {
                     data-post-id="<?php echo esc_attr($post_id); ?>"
                     aria-label="<?php esc_attr_e('Edit organization', DGA_TEXT_DOMAIN); ?>"
                     title="<?php esc_attr_e('Edit organization (Admin only)', DGA_TEXT_DOMAIN); ?>"
-                    type="button"
+                    type=DGA_BUTTON_TYPE
                 >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -31990,7 +32277,7 @@ function ckan_edit_org_shortcode_adm347() {
                             class="ckan-modal-close-adm347" 
                             aria-label="<?php esc_attr_e('Close', DGA_TEXT_DOMAIN); ?>"
                             data-close="modal"
-                            type="button"
+                            type=DGA_BUTTON_TYPE
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -32011,14 +32298,14 @@ function ckan_edit_org_shortcode_adm347() {
                     <div class="ckan-modal-footer-adm347">
                         <button 
                             class="ckan-cancel-btn-adm347" 
-                            type="button"
+                            type=DGA_BUTTON_TYPE
                             data-close="modal"
                         >
                             <?php esc_html_e('Cancel', DGA_TEXT_DOMAIN); ?>
                         </button>
                         <button 
                             class="ckan-update-btn-adm347" 
-                            type="button"
+                            type=DGA_BUTTON_TYPE
                         >
                             <?php esc_html_e('Update', DGA_TEXT_DOMAIN); ?>
                         </button>
@@ -32058,10 +32345,10 @@ function ckan_edit_org_shortcode_adm347() {
                 'loading' => __('Loading...', DGA_TEXT_DOMAIN),
                 'updating' => __('Updating...', DGA_TEXT_DOMAIN),
                 'update' => __('Update', DGA_TEXT_DOMAIN),
-                'error' => __('An error occurred', DGA_TEXT_DOMAIN),
+                DGA_ERROR_STATUS => __('An error occurred', DGA_TEXT_DOMAIN),
                 'connectionError' => __('Connection error. Please try again.', DGA_TEXT_DOMAIN),
                 'noOrgData' => __('Not assigned', DGA_TEXT_DOMAIN),
-                'success' => __('Organization updated successfully', DGA_TEXT_DOMAIN),
+                DGA_SUCCESS_STATUS => __('Organization updated successfully', DGA_TEXT_DOMAIN),
                 'notAuthorized' => __('Only administrators can edit organizations', DGA_TEXT_DOMAIN),
             )
         ));
@@ -32119,8 +32406,8 @@ function ckan_get_all_org_terms_adm347() {
     $terms = get_terms(array(
         DGA_TAXONOMY_FIELD => 'corg',
         DGA_HIDE_EMPTY_FIELD => false,
-        'orderby' => 'name',
-        'order' => 'ASC'
+        DGA_ORDERBY_FIELD_VALUE => 'name',
+        DGA_ORDER_FIELD => 'ASC'
     ));
     
     // Get current term for the post
@@ -32170,7 +32457,7 @@ function ckan_update_post_org_adm347() {
     
     // Get and validate parameters
     $post_id = isset($_POST[DGA_POST_ID_FIELD]) ? intval($_POST[DGA_POST_ID_FIELD]) : 0;
-    $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? intval($_POST[DGA_TERM_ID_FIELD]) : 0;
     
     if (!$post_id) {
         wp_send_json_error(array(DGA_MESSAGE_KEY => __('Invalid post ID', DGA_TEXT_DOMAIN)));
@@ -32209,7 +32496,7 @@ function ckan_update_post_org_adm347() {
         
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => __('Organization updated successfully', DGA_TEXT_DOMAIN),
-            'term_id' => $term_id,
+            DGA_TERM_ID_FIELD => $term_id,
             'term_name' => $term_name
         ));
     }
@@ -32414,15 +32701,15 @@ function at_active_posts_shortcode_krt456($atts) {
     $atts = shortcode_atts(array(
         DGA_POST_TYPE_FIELD => 'post',
         DGA_POSTS_PER_PAGE => 10,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     ), $atts);
     
     $args = array(
         DGA_POST_TYPE_FIELD => $atts[DGA_POST_TYPE_FIELD],
         DGA_POSTS_PER_PAGE => $atts[DGA_POSTS_PER_PAGE],
-        'orderby' => $atts['orderby'],
-        'order' => $atts['order'],
+        DGA_ORDERBY_FIELD_VALUE => $atts[DGA_ORDERBY_FIELD_VALUE],
+        DGA_ORDER_FIELD => $atts[DGA_ORDER_FIELD],
         'meta_query' => array(
             'relation' => 'OR',
             array(
@@ -33199,7 +33486,7 @@ function ckan_consent_yns423_shortcode($atts) {
     $post = get_post($post_id);
     
     // Get current terms
-    $current_terms = wp_get_post_terms($post_id, 'cgov', array('fields' => 'names'));
+    $current_terms = wp_get_post_terms($post_id, 'cgov', array(DGA_FIELDS_PARAMETER => 'names'));
     
     // Check consent status based on BOTH term and post status
     // Consent = published AND ข้อมูลสาธารณะ
@@ -33318,7 +33605,7 @@ function ckan_consent_update_yns423() {
     
     // Get updated post to confirm changes
     $updated_post = get_post($post_id);
-    $updated_terms = wp_get_post_terms($post_id, 'cgov', array('fields' => 'names'));
+    $updated_terms = wp_get_post_terms($post_id, 'cgov', array(DGA_FIELDS_PARAMETER => 'names'));
     
     if ($success) {
         wp_send_json_success(array(
@@ -33412,7 +33699,7 @@ function egp_file_download_shortcode($atts) {
         <div class="egp-file-header">
             <h3 class="egp-file-title">เอกสาร/ไฟล์แนบ</h3>
             <?php if ($can_edit) : ?>
-            <button type="button" class="egp-add-file-btn">
+            <button type=DGA_BUTTON_TYPE class="egp-add-file-btn">
                 <span class="dashicons dashicons-plus-alt"></span> แนบไฟล์เพิ่ม
             </button>
             <?php endif; ?>
@@ -33456,13 +33743,13 @@ function egp_file_download_shortcode($atts) {
                                     </td>
                                     <?php if ($can_edit) : ?>
                                     <td class="egp-file-manage">
-                                        <button type="button" class="egp-edit-file-btn" data-index="<?php echo esc_attr($index); ?>" 
+                                        <button type=DGA_BUTTON_TYPE class="egp-edit-file-btn" data-index="<?php echo esc_attr($index); ?>" 
                                             data-name="<?php echo esc_attr($file['egp_rp_name']); ?>"
                                             data-date="<?php echo esc_attr($file['egp_rp_date']); ?>"
                                             data-url="<?php echo esc_attr($file['egp_rp_link']); ?>">
                                             <span class="dashicons dashicons-edit"></span>
                                         </button>
-                                        <button type="button" class="egp-delete-file-btn" data-index="<?php echo esc_attr($index); ?>">
+                                        <button type=DGA_BUTTON_TYPE class="egp-delete-file-btn" data-index="<?php echo esc_attr($index); ?>">
                                             <span class="dashicons dashicons-trash"></span>
                                         </button>
                                     </td>
@@ -33498,7 +33785,7 @@ function egp_file_download_shortcode($atts) {
         <div class="egp-modal-container">
             <div class="egp-modal-header">
                 <h3 class="egp-modal-title">เพิ่มไฟล์เอกสาร</h3>
-                <button type="button" class="egp-modal-close">
+                <button type=DGA_BUTTON_TYPE class="egp-modal-close">
                     <span class="dashicons dashicons-no-alt"></span>
                 </button>
             </div>
@@ -33525,8 +33812,8 @@ function egp_file_download_shortcode($atts) {
                         <label>ไฟล์ <span class="required">*</span></label>
                         <div class="egp-upload-tabs">
                             <div class="egp-tab-buttons">
-                                <button type="button" class="egp-tab-btn active" data-tab="upload">อัพโหลดไฟล์</button>
-                                <button type="button" class="egp-tab-btn" data-tab="media">Media Library</button>
+                                <button type=DGA_BUTTON_TYPE class="egp-tab-btn active" data-tab="upload">อัพโหลดไฟล์</button>
+                                <button type=DGA_BUTTON_TYPE class="egp-tab-btn" data-tab="media">Media Library</button>
                             </div>
                             
                             <div class="egp-tab-content active" data-tab="upload">
@@ -33536,14 +33823,14 @@ function egp_file_download_shortcode($atts) {
                                         <span>ลากไฟล์มาที่นี่หรือ</span>
                                     </span>
                                     <input type="file" name="file_upload" class="egp-file-input" required>
-                                    <button type="button" class="egp-browse-btn">เลือกไฟล์</button>
+                                    <button type=DGA_BUTTON_TYPE class="egp-browse-btn">เลือกไฟล์</button>
                                 </div>
                                 <div class="egp-file-name-display"></div>
                             </div>
                             
                             <div class="egp-tab-content" data-tab="media">
                                 <div class="egp-media-select-area">
-                                    <button type="button" class="egp-select-media-btn">
+                                    <button type=DGA_BUTTON_TYPE class="egp-select-media-btn">
                                         <span class="dashicons dashicons-admin-media"></span>
                                         เลือกไฟล์จาก Media Library
                                     </button>
@@ -33554,8 +33841,8 @@ function egp_file_download_shortcode($atts) {
                     </div>
                     
                     <div class="egp-form-actions">
-                        <button type="button" class="egp-cancel-btn">ยกเลิก</button>
-                        <button type="submit" class="egp-save-btn">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="egp-cancel-btn">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="egp-save-btn">บันทึก</button>
                     </div>
                 </form>
                 <div class="egp-debug-info" style="display: none;"></div>
@@ -33613,7 +33900,7 @@ function egp_save_file() {
     // ตรวจสอบ nonce เพื่อความปลอดภัย
     check_ajax_referer('egp_file_download_nonce', 'security');
     
-    $response = array('success' => false, DGA_MESSAGE_KEY => '', 'debug' => array());
+    $response = array(DGA_SUCCESS_STATUS => false, DGA_MESSAGE_KEY => '', 'debug' => array());
     
     try {
         // รับข้อมูลจาก AJAX request
@@ -33660,7 +33947,7 @@ function egp_save_file() {
             
             $response['debug']['upload_result'] = $movefile;
             
-            if ($movefile && !isset($movefile['error'])) {
+            if ($movefile && !isset($movefile[DGA_ERROR_STATUS])) {
                 // อัพโหลดสำเร็จ
                 $file_url = $movefile['url'];
                 
@@ -33696,7 +33983,7 @@ function egp_save_file() {
                 }
             } else {
                 // อัพโหลดไม่สำเร็จ
-                $error_message = isset($movefile['error']) ? $movefile['error'] : 'เกิดข้อผิดพลาดในการอัพโหลดไฟล์';
+                $error_message = isset($movefile[DGA_ERROR_STATUS]) ? $movefile[DGA_ERROR_STATUS] : 'เกิดข้อผิดพลาดในการอัพโหลดไฟล์';
                 throw new Exception($error_message);
             }
         } else if ($upload_type === 'media') {
@@ -33797,12 +34084,12 @@ function egp_save_file() {
         $response['debug']['updated_files'] = $updated_files;
         
         // สำเร็จ
-        $response['success'] = true;
+        $response[DGA_SUCCESS_STATUS] = true;
         $response['message'] = 'บันทึกข้อมูลเรียบร้อยแล้ว';
         $response['files'] = $updated_files;
         
     } catch (Exception $e) {
-        $response['success'] = false;
+        $response[DGA_SUCCESS_STATUS] = false;
         $response['message'] = $e->getMessage();
     }
     
@@ -33816,7 +34103,7 @@ function egp_delete_file() {
     // ตรวจสอบ nonce เพื่อความปลอดภัย
     check_ajax_referer('egp_file_download_nonce', 'nonce');
     
-    $response = array('success' => false, DGA_MESSAGE_KEY => '', 'debug' => array());
+    $response = array(DGA_SUCCESS_STATUS => false, DGA_MESSAGE_KEY => '', 'debug' => array());
     
     try {
         // รับข้อมูลจาก AJAX request
@@ -33884,12 +34171,12 @@ function egp_delete_file() {
         $response['debug']['updated_files'] = $updated_files;
         
         // สำเร็จ
-        $response['success'] = true;
+        $response[DGA_SUCCESS_STATUS] = true;
         $response['message'] = 'ลบข้อมูลเรียบร้อยแล้ว';
         $response['files'] = $updated_files;
         
     } catch (Exception $e) {
-        $response['success'] = false;
+        $response[DGA_SUCCESS_STATUS] = false;
         $response['message'] = $e->getMessage();
     }
     
@@ -34189,7 +34476,7 @@ class CKAN_DGA_Integration {
                 continue;
             }
             
-            $post_terms = wp_get_post_terms($post_id, $taxonomy, array('fields' => 'ids'));
+            $post_terms = wp_get_post_terms($post_id, $taxonomy, array(DGA_FIELDS_PARAMETER => 'ids'));
             
             if (!is_wp_error($post_terms) && !empty($post_terms)) {
                 $taxonomy_access_granted = false;
@@ -34780,7 +35067,7 @@ function ckan_taxo_orglist_enqueue_scripts() {
         'ckan-taxo-orglist-style',
         $child_theme_dir . '/css/ckan-taxo-orglist.css',
         array(),
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     // Enqueue JavaScript
@@ -34788,7 +35075,7 @@ function ckan_taxo_orglist_enqueue_scripts() {
         'ckan-taxo-orglist-script',
         $child_theme_dir . '/js/ckan-taxo-orglist.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
 }
@@ -34904,8 +35191,8 @@ function ckan_edit_taxo_term_modern_wkp789() {
             'deleteWarning' => __('การกระทำนี้ไม่สามารถย้อนกลับได้', DGA_TEXT_DOMAIN),
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'deleting' => __('กำลังลบ...', DGA_TEXT_DOMAIN),
-            'success' => __('ดำเนินการสำเร็จ', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_SUCCESS_STATUS => __('ดำเนินการสำเร็จ', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
             'cancel' => __('ยกเลิก', DGA_TEXT_DOMAIN),
             'save' => __('บันทึก', DGA_TEXT_DOMAIN),
             'delete' => __('ลบ', DGA_TEXT_DOMAIN),
@@ -34983,8 +35270,8 @@ function ckan_edit_taxo_term_modern_wkp789() {
                     $terms = get_terms(array(
                         DGA_TAXONOMY_FIELD => $taxonomy->name,
                         DGA_HIDE_EMPTY_FIELD => false,
-                        'orderby' => 'name',
-                        'order' => 'ASC',
+                        DGA_ORDERBY_FIELD_VALUE => 'name',
+                        DGA_ORDER_FIELD => 'ASC',
                     ));
                 ?>
                     <div class="ckan-taxonomy-card-wkp789" data-taxonomy="<?php echo esc_attr($taxonomy->name); ?>">
@@ -35088,7 +35375,7 @@ function ckan_modern_ajax_edit_term_wkp789() {
         wp_send_json_error(array(DGA_MESSAGE_KEY => __('ไม่มีสิทธิ์ดำเนินการ', DGA_TEXT_DOMAIN)), 403);
     }
 
-    $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? intval($_POST[DGA_TERM_ID_FIELD]) : 0;
     $taxonomy = isset($_POST[DGA_TAXONOMY_FIELD]) ? sanitize_key($_POST[DGA_TAXONOMY_FIELD]) : '';
     $new_name = isset($_POST['new_name']) ? sanitize_text_field($_POST['new_name']) : '';
 
@@ -35107,7 +35394,7 @@ function ckan_modern_ajax_edit_term_wkp789() {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => __('บันทึกสำเร็จ', DGA_TEXT_DOMAIN),
             'term' => array(
-                'term_id' => $updated_term->term_id,
+                DGA_TERM_ID_FIELD => $updated_term->term_id,
                 DGA_NAME_FIELD => $updated_term->name,
                 'slug' => $updated_term->slug,
                 'count' => $updated_term->count
@@ -35125,7 +35412,7 @@ function ckan_modern_ajax_delete_term_wkp789() {
         wp_send_json_error(array(DGA_MESSAGE_KEY => __('ไม่มีสิทธิ์ดำเนินการ', DGA_TEXT_DOMAIN)), 403);
     }
 
-    $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? intval($_POST[DGA_TERM_ID_FIELD]) : 0;
     $taxonomy = isset($_POST[DGA_TAXONOMY_FIELD]) ? sanitize_key($_POST[DGA_TAXONOMY_FIELD]) : '';
 
     if (empty($term_id) || empty($taxonomy)) {
@@ -35165,22 +35452,22 @@ function ckan_modern_ajax_delete_term_wkp789() {
 if (!defined('CKAN_ACTION_TYPES_HJK729')) {
     define('CKAN_ACTION_TYPES_HJK729', [
         // กิจกรรมหลัก
-        'Created' => ['label' => 'สร้าง', 'color' => '#4CAF50', 'icon' => 'dashicons-plus-alt'],
-        'Edited' => ['label' => 'แก้ไข', 'color' => '#2196F3', 'icon' => 'dashicons-edit'],
-        'Deleted' => ['label' => 'ลบ', 'color' => '#F44336', 'icon' => 'dashicons-trash'],
-        'Viewed' => ['label' => 'ดู', 'color' => '#9C27B0', 'icon' => 'dashicons-visibility'],
-        'Downloaded' => ['label' => 'ดาวน์โหลด', 'color' => '#FF9800', 'icon' => 'dashicons-download'],
-        'API_Request' => ['label' => 'เรียก API', 'color' => '#00BCD4', 'icon' => 'dashicons-cloud'],
-        'Published' => ['label' => 'เผยแพร่', 'color' => '#8BC34A', 'icon' => 'dashicons-admin-site'],
-        'Unpublished' => ['label' => 'ยกเลิกเผยแพร่', 'color' => '#FFC107', 'icon' => 'dashicons-hidden'],
+        'Created' => [DGA_LABEL_FIELD => 'สร้าง', 'color' => '#4CAF50', 'icon' => 'dashicons-plus-alt'],
+        'Edited' => [DGA_LABEL_FIELD => 'แก้ไข', 'color' => '#2196F3', 'icon' => 'dashicons-edit'],
+        'Deleted' => [DGA_LABEL_FIELD => 'ลบ', 'color' => '#F44336', 'icon' => 'dashicons-trash'],
+        'Viewed' => [DGA_LABEL_FIELD => 'ดู', 'color' => '#9C27B0', 'icon' => 'dashicons-visibility'],
+        'Downloaded' => [DGA_LABEL_FIELD => 'ดาวน์โหลด', 'color' => '#FF9800', 'icon' => 'dashicons-download'],
+        'API_Request' => [DGA_LABEL_FIELD => 'เรียก API', 'color' => '#00BCD4', 'icon' => 'dashicons-cloud'],
+        'Published' => [DGA_LABEL_FIELD => 'เผยแพร่', 'color' => '#8BC34A', 'icon' => 'dashicons-admin-site'],
+        'Unpublished' => [DGA_LABEL_FIELD => 'ยกเลิกเผยแพร่', 'color' => '#FFC107', 'icon' => 'dashicons-hidden'],
         // กิจกรรม User
-        'User_Login' => ['label' => 'เข้าสู่ระบบ', 'color' => '#4CAF50', 'icon' => 'dashicons-unlock'],
-        'User_Logout' => ['label' => 'ออกจากระบบ', 'color' => '#9E9E9E', 'icon' => 'dashicons-lock'],
-        'Failed_Login' => ['label' => 'เข้าสู่ระบบไม่สำเร็จ', 'color' => '#F44336', 'icon' => 'dashicons-warning'],
+        'User_Login' => [DGA_LABEL_FIELD => 'เข้าสู่ระบบ', 'color' => '#4CAF50', 'icon' => 'dashicons-unlock'],
+        'User_Logout' => [DGA_LABEL_FIELD => 'ออกจากระบบ', 'color' => '#9E9E9E', 'icon' => 'dashicons-lock'],
+        'Failed_Login' => [DGA_LABEL_FIELD => 'เข้าสู่ระบบไม่สำเร็จ', 'color' => '#F44336', 'icon' => 'dashicons-warning'],
         // กิจกรรมอื่นๆ
-        'Uploaded' => ['label' => 'อัพโหลด', 'color' => '#00BCD4', 'icon' => 'dashicons-upload'],
-        'Search' => ['label' => 'ค้นหา', 'color' => '#FF5722', 'icon' => 'dashicons-search'],
-        'Commented' => ['label' => 'แสดงความคิดเห็น', 'color' => '#607D8B', 'icon' => 'dashicons-admin-comments'],
+        'Uploaded' => [DGA_LABEL_FIELD => 'อัพโหลด', 'color' => '#00BCD4', 'icon' => 'dashicons-upload'],
+        'Search' => [DGA_LABEL_FIELD => 'ค้นหา', 'color' => '#FF5722', 'icon' => 'dashicons-search'],
+        'Commented' => [DGA_LABEL_FIELD => 'แสดงความคิดเห็น', 'color' => '#607D8B', 'icon' => 'dashicons-admin-comments'],
     ]);
 }
 
@@ -35200,7 +35487,7 @@ function ckan_register_log_post_type_hjk729() {
             'show_ui' => false,
             'show_in_menu' => false,
             'capability_type' => 'post',
-            'supports' => ['title'],
+            'supports' => [DGA_TITLE_FIELD],
             'rewrite' => false,
         ]);
     }
@@ -35532,9 +35819,9 @@ function ckan_ajax_get_activities_hjk729() {
         DGA_POST_TYPE_FIELD => 'ckan_term_log',
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         DGA_POSTS_PER_PAGE => $per_page,
-        'paged' => $page,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_PAGED_PARAMETER => $page,
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
     ];
     
     // Date filter
@@ -35619,8 +35906,8 @@ function ckan_ajax_export_csv_hjk729() {
         DGA_POST_TYPE_FIELD => 'ckan_term_log',
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         DGA_POSTS_PER_PAGE => 1000,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
     ];
     
     if ($period !== 'all') {
@@ -35660,7 +35947,7 @@ function ckan_ajax_export_csv_hjk729() {
             
             $csv_data[] = [
                 get_the_date('Y-m-d H:i:s'),
-                CKAN_ACTION_TYPES_HJK729[$action]['label'] ?? $action,
+                CKAN_ACTION_TYPES_HJK729[$action][DGA_LABEL_FIELD] ?? $action,
                 $term_name,
                 strip_tags($details) ?: '-',
                 $user_name,
@@ -35825,7 +36112,7 @@ function ckan_format_trend_data_hjk729($data, $period) {
     foreach ($main_actions as $action) {
         $action_info = CKAN_ACTION_TYPES_HJK729[$action];
         $dataset = [
-            'label' => $action_info['label'],
+            DGA_LABEL_FIELD => $action_info[DGA_LABEL_FIELD],
             'data' => array_column($date_data, $action),
             'borderColor' => $colors[$action],
             'backgroundColor' => $colors[$action] . '20',
@@ -35841,8 +36128,8 @@ function ckan_format_action_data_hjk729($data) {
     $formatted = ['labels' => [], 'data' => [], 'colors' => []];
     
     foreach ($data as $row) {
-        $action_info = CKAN_ACTION_TYPES_HJK729[$row->action] ?? ['label' => $row->action, 'color' => '#999'];
-        $formatted['labels'][] = $action_info['label'];
+        $action_info = CKAN_ACTION_TYPES_HJK729[$row->action] ?? [DGA_LABEL_FIELD => $row->action, 'color' => '#999'];
+        $formatted['labels'][] = $action_info[DGA_LABEL_FIELD];
         $formatted['data'][] = intval($row->count);
         $formatted['colors'][] = $action_info['color'];
     }
@@ -35956,7 +36243,7 @@ function ckan_log_term_created_xyz456($term_id, $tt_id, $taxonomy) {
             get_current_user_id(),
             [
                 'resource_type' => 'taxonomy_term',
-                'term_id' => $term_id,
+                DGA_TERM_ID_FIELD => $term_id,
                 'term_slug' => $term->slug,
                 'taxonomy_label' => $taxonomy_obj->label,
                 'parent' => $term->parent,
@@ -35980,7 +36267,7 @@ function ckan_log_term_edited_xyz456($term_id, $tt_id, $taxonomy) {
         
         $details = [
             'resource_type' => 'taxonomy_term',
-            'term_id' => $term_id,
+            DGA_TERM_ID_FIELD => $term_id,
             'taxonomy_label' => $taxonomy_obj->label
         ];
         
@@ -36039,7 +36326,7 @@ function ckan_log_term_deleted_xyz456($term_id, $taxonomy) {
             get_current_user_id(),
             [
                 'resource_type' => 'taxonomy_term',
-                'term_id' => $term_id,
+                DGA_TERM_ID_FIELD => $term_id,
                 'taxonomy_label' => $taxonomy_obj->label,
                 'post_count' => $term->count,
                 'details' => sprintf('ลบ %s (มี %d รายการ)', $taxonomy_obj->labels->singular_name, $term->count)
@@ -36109,7 +36396,7 @@ function ckan_log_post_status_xyz456($new_status, $old_status, $post) {
             [
                 'resource_type' => $post->post_type,
                 DGA_POST_ID_FIELD => $post->ID,
-                'status' => $new_status,
+                DGA_STATUS_FIELD => $new_status,
                 'post_type_label' => $post_type_obj->label,
                 'details' => sprintf('สร้าง %s แบบร่าง', $post_type_obj->labels->singular_name)
             ]
@@ -36137,7 +36424,7 @@ function ckan_log_post_updated_xyz456($post_id, $post_after, $post_before) {
     // Check for actual changes
     $changes = [];
     if ($post_before->post_title !== $post_after->post_title) {
-        $changes['title'] = ['old' => $post_before->post_title, 'new' => $post_after->post_title];
+        $changes[DGA_TITLE_FIELD] = ['old' => $post_before->post_title, 'new' => $post_after->post_title];
     }
     if ($post_before->post_content !== $post_after->post_content) {
         $changes['content'] = ['old' => wp_trim_words($post_before->post_content, 20), 'new' => wp_trim_words($post_after->post_content, 20)];
@@ -36155,7 +36442,7 @@ function ckan_log_post_updated_xyz456($post_id, $post_after, $post_before) {
             [
                 'resource_type' => $post_after->post_type,
                 DGA_POST_ID_FIELD => $post_id,
-                'field_changed' => $field_changed === 'title' ? 'ชื่อ' : 'เนื้อหา',
+                'field_changed' => $field_changed === DGA_TITLE_FIELD ? 'ชื่อ' : 'เนื้อหา',
                 'old_value' => $changes[$field_changed]['old'],
                 'new_value' => $changes[$field_changed]['new'],
                 'post_type_label' => $post_type_obj->label
@@ -36389,7 +36676,7 @@ function ckan_cleanup_old_logs_xyz456() {
             'before' => date('Y-m-d', strtotime("-{$days_to_keep} days"))
         ],
         DGA_POSTS_PER_PAGE => 100,
-        'fields' => 'ids'
+        DGA_FIELDS_PARAMETER => 'ids'
     ];
     
     $old_logs = get_posts($args);
@@ -36430,7 +36717,7 @@ function ckan_settings_page_xyz456() {
                 DGA_POST_TYPE_FIELD => 'ckan_term_log',
                 'date_query' => [['after' => 'today']],
                 DGA_POSTS_PER_PAGE => -1,
-                'fields' => 'ids'
+                DGA_FIELDS_PARAMETER => 'ids'
             ]);
             ?>
             <p>Total Logs: <strong><?php echo number_format($total_logs); ?></strong></p>
@@ -36454,8 +36741,8 @@ function ckan_settings_page_xyz456() {
             <p>ระบบจะลบ log ที่เก่ากว่า 90 วันอัตโนมัติทุกวัน</p>
             <form method="post">
                 <?php wp_nonce_field('ckan_clear_logs', 'ckan_nonce'); ?>
-                <button type="submit" name="clear_old_logs" class="button">ลบ Log เก่าตอนนี้</button>
-                <button type="submit" name="clear_all_logs" class="button button-secondary" 
+                <button type=DGA_SUBMIT_TYPE name="clear_old_logs" class=DGA_BUTTON_TYPE>ลบ Log เก่าตอนนี้</button>
+                <button type=DGA_SUBMIT_TYPE name="clear_all_logs" class="button button-secondary" 
                         onclick="return confirm('แน่ใจหรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้')">
                     ลบ Log ทั้งหมด
                 </button>
@@ -36474,7 +36761,7 @@ function ckan_settings_page_xyz456() {
         $all_logs = get_posts([
             DGA_POST_TYPE_FIELD => 'ckan_term_log',
             DGA_POSTS_PER_PAGE => -1,
-            'fields' => 'ids'
+            DGA_FIELDS_PARAMETER => 'ids'
         ]);
         foreach ($all_logs as $log_id) {
             wp_delete_post($log_id, true);
@@ -36514,7 +36801,7 @@ function cpd_delete_post_button_shortcode() {
         'cpd-delete-dataset-js', 
         get_stylesheet_directory_uri() . '/js/ckan-delete-dataset.js', 
         array(DGA_JQUERY_HANDLE), 
-        '1.0.0', 
+        DGA_VERSION_NUMBER, 
         true
     );
     
@@ -36522,7 +36809,7 @@ function cpd_delete_post_button_shortcode() {
         'cpd-delete-dataset-css', 
         get_stylesheet_directory_uri() . '/css/ckan-delete-dataset.css', 
         array(), 
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     // Pass post ID to JavaScript
@@ -36756,7 +37043,7 @@ function post_featured_images_set_default($batch_size = 50) {
         $args = array(
             DGA_POST_TYPE_FIELD      => $post_type,
             DGA_POSTS_PER_PAGE => $batch_size,
-            'fields'         => 'ids', // Only get post IDs for better performance
+            DGA_FIELDS_PARAMETER         => 'ids', // Only get post IDs for better performance
             'meta_query'     => array(
                 array(
                     'key'     => '_thumbnail_id',
@@ -36786,7 +37073,7 @@ function post_featured_images_set_default($batch_size = 50) {
         }
         
         // Update total posts count
-        $results['post_types'][$post_type]['total'] = $total_posts;
+        $results['post_types'][$post_type][DGA_TOTAL_FIELD_KEY] = $total_posts;
     }
     
     // Mark as processed
@@ -36913,7 +37200,7 @@ function post_featured_images_enqueue_scripts() {
         'post-featured-images-js',
         $theme_uri . '/js/post-featured-images.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
     
@@ -36922,7 +37209,7 @@ function post_featured_images_enqueue_scripts() {
         'post-featured-images-css',
         $theme_uri . '/css/post-featured-images.css',
         array(),
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
 }
 add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'post_featured_images_enqueue_scripts');
@@ -37011,7 +37298,7 @@ function post_featured_images_admin_page() {
                     </p>
                 </div>
                 
-                <input type="submit" name="post_featured_images_submit" class="button button-primary" value="<?php _e('Process Now', 'post-featured-images'); ?>">
+                <input type=DGA_SUBMIT_TYPE name="post_featured_images_submit" class="button button-primary" value="<?php _e('Process Now', 'post-featured-images'); ?>">
             </form>
         </div>
         
@@ -37040,7 +37327,7 @@ function post_featured_images_admin_page() {
                 <button id="post-featured-images-start-ajax" class="button button-primary">
                     <?php _e('Start Processing', 'post-featured-images'); ?>
                 </button>
-                <button id="post-featured-images-stop-ajax" class="button" style="display: none;">
+                <button id="post-featured-images-stop-ajax" class=DGA_BUTTON_TYPE style="display: none;">
                     <?php _e('Stop Processing', 'post-featured-images'); ?>
                 </button>
             </div>
@@ -37195,7 +37482,7 @@ function post_featured_images_process_batch_callback() {
     $args = array(
         DGA_POST_TYPE_FIELD      => get_post_types(array('public' => true)),
         DGA_POSTS_PER_PAGE => 1,
-        'fields'         => 'ids',
+        DGA_FIELDS_PARAMETER         => 'ids',
         'meta_query'     => array(
             array(
                 'key'     => '_thumbnail_id',
@@ -37247,7 +37534,7 @@ function post_featured_images_create_files() {
     // Wait for the document to be ready
     $(document).ready(function() {
         // Handle image loading errors
-        $('.post-featured-image').on('error', function() {
+        $('.post-featured-image').on(DGA_ERROR_STATUS, function() {
             $(this).attr('src', 'https://standard.wpdevs.co/wp-content/uploads/2025/03/no-images-scaled-2.jpg');
             $(this).addClass('fallback-featured-image');
         });
@@ -37365,7 +37652,7 @@ function ckan_post_status_pst638_shortcode($atts) {
     // Get current status and terms
     $status = $post->post_status;
     $is_published = ($status === DGA_PUBLISH_STATUS);
-    $current_terms = wp_get_post_terms($post_id, 'cgov', array('fields' => 'names'));
+    $current_terms = wp_get_post_terms($post_id, 'cgov', array(DGA_FIELDS_PARAMETER => 'names'));
     $is_secret = in_array('ข้อมูลลับ', $current_terms);
     
     // Determine toggle state
@@ -37501,12 +37788,12 @@ function ckan_post_status_pst638_ajax_handler() {
     
     // Get updated post info
     $updated_post = get_post($post_id);
-    $updated_terms = wp_get_post_terms($post_id, 'cgov', array('fields' => 'names'));
+    $updated_terms = wp_get_post_terms($post_id, 'cgov', array(DGA_FIELDS_PARAMETER => 'names'));
     
     if ($success) {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => $message,
-            'status' => $new_status,
+            DGA_STATUS_FIELD => $new_status,
             'make_public' => $make_public,
             DGA_POST_STATUS_FIELD => $updated_post->post_status,
             'terms' => $updated_terms
@@ -37567,8 +37854,8 @@ function news_statistics_enqueue_assets() {
         wp_enqueue_style('daterangepicker', 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css', array(), null);
         
         // Enqueue custom scripts and styles
-        wp_enqueue_script('news-statistics-js', get_stylesheet_directory_uri() . '/js/news-statistics.js', array(DGA_JQUERY_HANDLE, 'chartjs', 'daterangepicker'), '1.0.0', true);
-        wp_enqueue_style('news-statistics-css', get_stylesheet_directory_uri() . '/css/news-statistics.css', array(), '1.0.0');
+        wp_enqueue_script('news-statistics-js', get_stylesheet_directory_uri() . '/js/news-statistics.js', array(DGA_JQUERY_HANDLE, 'chartjs', 'daterangepicker'), DGA_VERSION_NUMBER, true);
+        wp_enqueue_style('news-statistics-css', get_stylesheet_directory_uri() . '/css/news-statistics.css', array(), DGA_VERSION_NUMBER);
         
         // Pass Ajax URL and nonce to JavaScript
         wp_localize_script('news-statistics-js', 'news_statistics_vars', array(
@@ -37597,7 +37884,7 @@ function news_statistics_shortcode($atts) {
     ob_start();
     ?>
     <div class="news-statistics-dashboard">
-        <h2><?php echo esc_html($atts['title']); ?></h2>
+        <h2><?php echo esc_html($atts[DGA_TITLE_FIELD]); ?></h2>
         
         <div class="news-statistics-controls">
             <div class="date-range-filter">
@@ -37672,7 +37959,7 @@ function get_news_statistics_ajax_handler() {
     // Get filter parameters
     $start_date = isset($_POST['start_date']) ? sanitize_text_field($_POST['start_date']) : '';
     $end_date = isset($_POST['end_date']) ? sanitize_text_field($_POST['end_date']) : '';
-    $term_id = isset($_POST['term_id']) ? intval($_POST['term_id']) : 0;
+    $term_id = isset($_POST[DGA_TERM_ID_FIELD]) ? intval($_POST[DGA_TERM_ID_FIELD]) : 0;
     
     // Convert dates to DateTime objects
     $start_datetime = !empty($start_date) ? new DateTime($start_date . ' 00:00:00') : new DateTime('30 days ago');
@@ -37688,7 +37975,7 @@ function get_news_statistics_ajax_handler() {
         $tax_query = array(
             array(
                 DGA_TAXONOMY_FIELD => 'tnews',
-                'field' => 'term_id',
+                DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                 'terms' => $term_id,
             ),
         );
@@ -37744,7 +38031,7 @@ function get_post_counts_by_date($start_date, $end_date, $tax_query = array()) {
                 'inclusive' => true,
             ),
         ),
-        'fields' => 'ids',
+        DGA_FIELDS_PARAMETER => 'ids',
     );
     
     if (!empty($tax_query)) {
@@ -37902,7 +38189,7 @@ function get_total_posts($tax_query = array()) {
         DGA_POST_TYPE_FIELD => 'news',
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         DGA_POSTS_PER_PAGE => -1,
-        'fields' => 'ids',
+        DGA_FIELDS_PARAMETER => 'ids',
     );
     
     if (!empty($tax_query)) {
@@ -38116,13 +38403,13 @@ function news_posts_table_shortcode($atts) {
         DGA_TITLE_FIELD => 'จัดการโพสต์ข่าวสาร',
         DGA_POSTS_PER_PAGE => 10,
         DGA_TAXONOMY_FIELD => 'tnews',
-        'term_id' => 0,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_TERM_ID_FIELD => 0,
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
     ), $atts);
     
     // Get term ID from URL parameter if available
-    $term_id = isset($_GET['term_id']) ? intval($_GET['term_id']) : intval($atts['term_id']);
+    $term_id = isset($_GET[DGA_TERM_ID_FIELD]) ? intval($_GET[DGA_TERM_ID_FIELD]) : intval($atts[DGA_TERM_ID_FIELD]);
     
     // Get date filter from URL if available
     $date_filter = isset($_GET['date']) ? sanitize_text_field($_GET['date']) : '';
@@ -38137,9 +38424,9 @@ function news_posts_table_shortcode($atts) {
     $args = array(
         DGA_POST_TYPE_FIELD => 'news',
         DGA_POSTS_PER_PAGE => intval($atts[DGA_POSTS_PER_PAGE]),
-        'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
-        'orderby' => $atts['orderby'],
-        'order' => $atts['order'],
+        DGA_PAGED_PARAMETER => get_query_var(DGA_PAGED_PARAMETER) ? get_query_var(DGA_PAGED_PARAMETER) : 1,
+        DGA_ORDERBY_FIELD_VALUE => $atts[DGA_ORDERBY_FIELD_VALUE],
+        DGA_ORDER_FIELD => $atts[DGA_ORDER_FIELD],
     );
     
     // Add taxonomy query if term ID is specified
@@ -38147,7 +38434,7 @@ function news_posts_table_shortcode($atts) {
         $args['tax_query'] = array(
             array(
                 DGA_TAXONOMY_FIELD => $atts[DGA_TAXONOMY_FIELD],
-                'field' => 'term_id',
+                DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                 'terms' => $term_id,
             ),
         );
@@ -38166,8 +38453,8 @@ function news_posts_table_shortcode($atts) {
     }
     
     // Get current page for pagination
-    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-    $args['paged'] = $paged;
+    $paged = (get_query_var(DGA_PAGED_PARAMETER)) ? get_query_var(DGA_PAGED_PARAMETER) : 1;
+    $args[DGA_PAGED_PARAMETER] = $paged;
     
     // Run the query
     $news_query = new WP_Query($args);
@@ -38176,7 +38463,7 @@ function news_posts_table_shortcode($atts) {
     ob_start();
     ?>
     <div class="news-posts-management">
-        <h2><?php echo esc_html($atts['title']); ?></h2>
+        <h2><?php echo esc_html($atts[DGA_TITLE_FIELD]); ?></h2>
         
         <div class="news-posts-filters">
             <form method="get" action="" class="auto-submit">
@@ -38198,7 +38485,7 @@ function news_posts_table_shortcode($atts) {
                     </div>
                 <?php endif; ?>
                 
-                <button type="submit" class="filter-button">กรอง</button>
+                <button type=DGA_SUBMIT_TYPE class="filter-button">กรอง</button>
             </form>
         </div>
         
@@ -38245,7 +38532,7 @@ function news_posts_table_shortcode($atts) {
                                 <td class="col-category"><?php echo implode(', ', $term_names); ?></td>
                                 <td class="col-actions">
                                     <div class="action-buttons-container">
-                                        <button type="button" class="action-btn edit-category-btn" 
+                                        <button type=DGA_BUTTON_TYPE class="action-btn edit-category-btn" 
                                                 data-post-id="<?php echo $post_id; ?>"
                                                 data-tooltip="แก้ไขหมวดหมู่ของโพสต์นี้"
                                                 data-current-terms="<?php echo esc_attr(implode(',', $post_term_ids)); ?>">
@@ -38253,7 +38540,7 @@ function news_posts_table_shortcode($atts) {
                                             แก้ไขหมวดหมู่
                                         </button>
                                         
-                                        <button type="button" class="action-btn delete-post-btn" 
+                                        <button type=DGA_BUTTON_TYPE class="action-btn delete-post-btn" 
                                                 data-post-id="<?php echo $post_id; ?>"
                                                 data-tooltip="ลบโพสต์นี้ออกจากระบบ"
                                                 data-post-title="<?php echo esc_attr(get_the_title()); ?>">
@@ -38272,12 +38559,12 @@ function news_posts_table_shortcode($atts) {
                 <div class="news-posts-pagination">
                     <?php
                     echo paginate_links(array(
-                        'base' => add_query_arg('paged', '%#%'),
+                        'base' => add_query_arg(DGA_PAGED_PARAMETER, '%#%'),
                         'format' => '',
                         'prev_text' => '<span class="dashicons dashicons-arrow-left-alt2"></span> ก่อนหน้า',
                         'next_text' => 'ถัดไป <span class="dashicons dashicons-arrow-right-alt2"></span>',
-                        'total' => $news_query->max_num_pages,
-                        'current' => max(1, get_query_var('paged')),
+                        DGA_TOTAL_FIELD_KEY => $news_query->max_num_pages,
+                        'current' => max(1, get_query_var(DGA_PAGED_PARAMETER)),
                         'mid_size' => 1,
                     ));
                     ?>
@@ -38314,8 +38601,8 @@ function news_posts_table_shortcode($atts) {
                     <p class="form-description">เลือกได้หลายหมวดหมู่โดยกด Ctrl (Windows) หรือ Command (Mac) ค้างไว้ขณะคลิก</p>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="update-category-submit">บันทึก</button>
-                    <button type="button" class="cancel-modal">ยกเลิก</button>
+                    <button type=DGA_SUBMIT_TYPE class="update-category-submit">บันทึก</button>
+                    <button type=DGA_BUTTON_TYPE class="cancel-modal">ยกเลิก</button>
                 </div>
             </form>
         </div>
@@ -38334,8 +38621,8 @@ function news_posts_table_shortcode($atts) {
             </p>
             <input type="hidden" id="delete-post-id" value="">
             <div class="form-actions">
-                <button type="button" class="confirm-delete-btn">ยืนยันการลบ</button>
-                <button type="button" class="cancel-modal">ยกเลิก</button>
+                <button type=DGA_BUTTON_TYPE class="confirm-delete-btn">ยืนยันการลบ</button>
+                <button type=DGA_BUTTON_TYPE class="cancel-modal">ยกเลิก</button>
             </div>
         </div>
     </div>
@@ -38449,7 +38736,7 @@ function delete_news_post_ajax_handler() {
     }
     
     // Track post terms before deletion for statistics purposes
-    $post_terms = wp_get_post_terms($post_id, 'tnews', array('fields' => 'ids'));
+    $post_terms = wp_get_post_terms($post_id, 'tnews', array(DGA_FIELDS_PARAMETER => 'ids'));
     
     // Delete the post
     $result = wp_delete_post($post_id, true); // true = force delete (skip trash)
@@ -38480,7 +38767,7 @@ function add_news_posts_admin_columns($columns) {
         $new_columns[$key] = $value;
         
         // Add views column after title
-        if ($key === 'title') {
+        if ($key === DGA_TITLE_FIELD) {
             $new_columns['post_views'] = 'การเข้าชม';
         }
     }
@@ -38517,9 +38804,9 @@ function news_posts_views_orderby($query) {
         return;
     }
     
-    if ($query->get('orderby') === 'post_views') {
+    if ($query->get(DGA_ORDERBY_FIELD_VALUE) === 'post_views') {
         $query->set('meta_key', 'post_views');
-        $query->set('orderby', 'meta_value_num');
+        $query->set(DGA_ORDERBY_FIELD_VALUE, 'meta_value_num');
     }
 }
 add_action('pre_get_posts', 'news_posts_views_orderby');
@@ -38798,7 +39085,7 @@ function std_looppost_shortcode($atts) {
                         </select>
                         
                         <button class="std-looppost-filter-reset" 
-                                type="button"
+                                type=DGA_BUTTON_TYPE
                                 aria-label="<?php _e('รีเซ็ตตัวกรองทั้งหมด', DGA_TEXT_DOMAIN); ?>">
                             <?php _e('แสดงทั้งหมด', DGA_TEXT_DOMAIN); ?>
                         </button>
@@ -38823,8 +39110,8 @@ function std_looppost_shortcode($atts) {
                     <div class="std-looppost-view-toggle" role="group" aria-label="<?php _e('เลือกรูปแบบการแสดงผล', DGA_TEXT_DOMAIN); ?>">
                         <button class="std-looppost-view-btn" 
                                 data-view="card" 
-                                type="button"
-                                role="button"
+                                type=DGA_BUTTON_TYPE
+                                role=DGA_BUTTON_TYPE
                                 aria-pressed="false"
                                 aria-label="<?php _e('แสดงเป็นมุมมองการ์ด', DGA_TEXT_DOMAIN); ?>"
                                 title="<?php _e('มุมมองการ์ด', DGA_TEXT_DOMAIN); ?>">
@@ -38832,8 +39119,8 @@ function std_looppost_shortcode($atts) {
                         </button>
                         <button class="std-looppost-view-btn active" 
                                 data-view="table" 
-                                type="button"
-                                role="button"
+                                type=DGA_BUTTON_TYPE
+                                role=DGA_BUTTON_TYPE
                                 aria-pressed="true"
                                 aria-label="<?php _e('แสดงเป็นมุมมองตาราง', DGA_TEXT_DOMAIN); ?>"
                                 title="<?php _e('มุมมองตาราง', DGA_TEXT_DOMAIN); ?>">
@@ -38870,8 +39157,8 @@ function std_looppost_shortcode($atts) {
                     DGA_POST_TYPE_FIELD => 'news',
                     DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
                     DGA_POSTS_PER_PAGE => $atts[DGA_POSTS_PER_PAGE],
-                    'orderby' => 'date',
-                    'order' => 'DESC',
+                    DGA_ORDERBY_FIELD_VALUE => 'date',
+                    DGA_ORDER_FIELD => 'DESC',
                     'meta_query' => array(
                         'relation' => 'OR',
                         array(
@@ -38934,7 +39221,7 @@ function std_looppost_shortcode($atts) {
                  role="navigation" 
                  aria-label="<?php _e('การนำทางหน้า', DGA_TEXT_DOMAIN); ?>">
                 <button class="std-looppost-load-more" 
-                        type="button"
+                        type=DGA_BUTTON_TYPE
                         aria-label="<?php _e('โหลดเพิ่ม', DGA_TEXT_DOMAIN); ?>">
                     <?php _e('โหลดเพิ่ม', DGA_TEXT_DOMAIN); ?>
                 </button>
@@ -39140,7 +39427,7 @@ function std_looppost_ajax_handler() {
     $taxonomy_term = isset($_POST['taxonomy_term']) ? sanitize_text_field($_POST['taxonomy_term']) : '';
     $sort = isset($_POST['sort']) ? sanitize_text_field($_POST['sort']) : 'newest';
     $view = isset($_POST['view']) ? sanitize_text_field($_POST['view']) : 'table';
-    $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    $paged = isset($_POST[DGA_PAGED_PARAMETER]) ? intval($_POST[DGA_PAGED_PARAMETER]) : 1;
     $posts_per_page = isset($_POST[DGA_POSTS_PER_PAGE]) ? intval($_POST[DGA_POSTS_PER_PAGE]) : 15;
     
     // Set up query arguments
@@ -39148,7 +39435,7 @@ function std_looppost_ajax_handler() {
         DGA_POST_TYPE_FIELD => 'news',
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         DGA_POSTS_PER_PAGE => $posts_per_page,
-        'paged' => $paged
+        DGA_PAGED_PARAMETER => $paged
     );
     
     // Add search parameter
@@ -39168,7 +39455,7 @@ function std_looppost_ajax_handler() {
         $args['tax_query'] = array(
             array(
                 DGA_TAXONOMY_FIELD => 'tnews',
-                'field' => 'slug',
+                DGA_FIELD_KEY => 'slug',
                 'terms' => $taxonomy_term
             )
         );
@@ -39207,21 +39494,21 @@ function std_looppost_ajax_handler() {
     // Add sorting
     switch ($sort) {
         case 'oldest':
-            $args['orderby'] = 'date';
-            $args['order'] = 'ASC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = 'date';
+            $args[DGA_ORDER_FIELD] = 'ASC';
             break;
         case 'title_asc':
-            $args['orderby'] = 'title';
-            $args['order'] = 'ASC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = DGA_TITLE_FIELD;
+            $args[DGA_ORDER_FIELD] = 'ASC';
             break;
         case 'title_desc':
-            $args['orderby'] = 'title';
-            $args['order'] = 'DESC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = DGA_TITLE_FIELD;
+            $args[DGA_ORDER_FIELD] = 'DESC';
             break;
         case 'newest':
         default:
-            $args['orderby'] = 'date';
-            $args['order'] = 'DESC';
+            $args[DGA_ORDERBY_FIELD_VALUE] = 'date';
+            $args[DGA_ORDER_FIELD] = 'DESC';
             break;
     }
     
@@ -39342,7 +39629,7 @@ function get_term_post_count($term_id, $taxonomy, $post_type = 'post') {
         'tax_query' => array(
             array(
                 DGA_TAXONOMY_FIELD => $taxonomy,
-                'field' => 'term_id',
+                DGA_FIELD_KEY => DGA_TERM_ID_FIELD,
                 'terms' => $term_id,
             ),
         ),
@@ -39530,7 +39817,7 @@ function dga_tag_add_tag() {
     
     wp_send_json_success(array(
         DGA_MESSAGE_KEY => 'สร้างแท็กสำเร็จแล้ว',
-        'tag' => get_term($tag['term_id'], 'post_tag')
+        'tag' => get_term($tag[DGA_TERM_ID_FIELD], 'post_tag')
     ));
 }
 add_action('wp_ajax_dga_tag_add_tag', 'dga_tag_add_tag');
@@ -39593,8 +39880,8 @@ function dga_user_token_shortcode() {
     }
     
     // Enqueue required styles and scripts
-    wp_enqueue_style('dga-user-token-css', get_stylesheet_directory_uri() . '/css/dga-user-token.css', array(), '1.0.0');
-    wp_enqueue_script('dga-user-token-js', get_stylesheet_directory_uri() . '/js/dga-user-token.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_style('dga-user-token-css', get_stylesheet_directory_uri() . '/css/dga-user-token.css', array(), DGA_VERSION_NUMBER);
+    wp_enqueue_script('dga-user-token-js', get_stylesheet_directory_uri() . '/js/dga-user-token.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // Add AJAX URL to the script
     wp_localize_script('dga-user-token-js', 'dgaUserToken', array(
@@ -39908,7 +40195,7 @@ function dga_build_test_interface_xy34($api_key) {
     $output .= '<input type="url" id="dga-endpoint-url-xy34" class="dga-form-control-xy34" 
                        placeholder="https://api.data.go.th/..." 
                        aria-describedby="dga-url-help-xy34" required>';
-    $output .= '<button id="dga-test-btn-xy34" class="dga-btn-primary-xy34" type="button">';
+    $output .= '<button id="dga-test-btn-xy34" class="dga-btn-primary-xy34" type=DGA_BUTTON_TYPE>';
     $output .= __('ทดสอบ', DGA_TEXT_DOMAIN) . '</button>';
     $output .= '</div>';
     $output .= '<div id="dga-url-help-xy34" class="dga-help-text-xy34">';
@@ -39929,7 +40216,7 @@ function dga_build_test_interface_xy34($api_key) {
     );
     
     foreach ($examples as $url => $label) {
-        $output .= '<button class="dga-example-btn-xy34" data-url="' . esc_attr($url) . '" type="button">';
+        $output .= '<button class="dga-example-btn-xy34" data-url="' . esc_attr($url) . '" type=DGA_BUTTON_TYPE>';
         $output .= esc_html($label) . '</button>';
     }
     
@@ -39992,9 +40279,9 @@ function dga_build_results_section_xy34() {
     $output .= '<div class="dga-results-header-xy34">';
     $output .= '<h4>' . __('ผลลัพธ์การทดสอบ', DGA_TEXT_DOMAIN) . '</h4>';
     $output .= '<div class="dga-results-actions-xy34">';
-    $output .= '<button id="dga-copy-response-xy34" class="dga-btn-secondary-xy34" type="button">';
+    $output .= '<button id="dga-copy-response-xy34" class="dga-btn-secondary-xy34" type=DGA_BUTTON_TYPE>';
     $output .= __('คัดลอกผลลัพธ์', DGA_TEXT_DOMAIN) . '</button>';
-    $output .= '<button id="dga-toggle-view-xy34" class="dga-btn-secondary-xy34" type="button">';
+    $output .= '<button id="dga-toggle-view-xy34" class="dga-btn-secondary-xy34" type=DGA_BUTTON_TYPE>';
     $output .= __('เปลี่ยนมุมมอง', DGA_TEXT_DOMAIN) . '</button>';
     $output .= '</div>';
     $output .= '</div>';
@@ -40231,7 +40518,7 @@ function dga_test_api_endpoint_ajax_xy34() {
             'api_key_used' => substr($api_key, 0, 4) . '...' . substr($api_key, -4),
             'api_key_length' => strlen($api_key),
             'custom_headers_count' => !empty($custom_headers) ? count(json_decode($custom_headers, true) ?: array()) : 0,
-            'success' => true
+            DGA_SUCCESS_STATUS => true
         ),
         'debug_info' => array(
             'api_key_exists' => !empty($api_key),
@@ -40250,7 +40537,7 @@ add_action('wp_ajax_dga_test_api_endpoint', 'dga_test_api_endpoint_ajax_xy34');
 function dga_extract_preview_data_xy34($response) {
     if (empty($response) || !is_array($response)) {
         return array(
-            DGA_TYPE_FIELD => 'error',
+            DGA_TYPE_FIELD => DGA_ERROR_STATUS,
             DGA_MESSAGE_KEY => __('ไม่สามารถแสดงตัวอย่างข้อมูลได้', DGA_TEXT_DOMAIN)
         );
     }
@@ -40264,7 +40551,7 @@ function dga_extract_preview_data_xy34($response) {
             return array(
                 DGA_TYPE_FIELD => 'list',
                 'data' => array_slice($result, 0, 20), // แสดงแค่ 20 รายการแรก
-                'total' => count($result),
+                DGA_TOTAL_FIELD_KEY => count($result),
                 DGA_TITLE_FIELD => __('รายการข้อมูล', DGA_TEXT_DOMAIN)
             );
         }
@@ -40274,7 +40561,7 @@ function dga_extract_preview_data_xy34($response) {
             return array(
                 DGA_TYPE_FIELD => 'table',
                 'data' => array_slice($result['results'], 0, 10),
-                'total' => isset($result['count']) ? $result['count'] : count($result['results']),
+                DGA_TOTAL_FIELD_KEY => isset($result['count']) ? $result['count'] : count($result['results']),
                 DGA_TITLE_FIELD => __('ผลการค้นหา', DGA_TEXT_DOMAIN)
             );
         }
@@ -40284,7 +40571,7 @@ function dga_extract_preview_data_xy34($response) {
             return array(
                 DGA_TYPE_FIELD => 'table',
                 'data' => array_slice($result, 0, 10),
-                'total' => count($result),
+                DGA_TOTAL_FIELD_KEY => count($result),
                 DGA_TITLE_FIELD => __('ข้อมูลจาก API', DGA_TEXT_DOMAIN)
             );
         }
@@ -40295,7 +40582,7 @@ function dga_extract_preview_data_xy34($response) {
         return array(
             DGA_TYPE_FIELD => 'table',
             'data' => array_slice($response['data'], 0, 10),
-            'total' => isset($response['total']) ? $response['total'] : count($response['data']),
+            DGA_TOTAL_FIELD_KEY => isset($response[DGA_TOTAL_FIELD_KEY]) ? $response[DGA_TOTAL_FIELD_KEY] : count($response['data']),
             DGA_TITLE_FIELD => __('ข้อมูลจาก API', DGA_TEXT_DOMAIN)
         );
     }
@@ -40398,7 +40685,7 @@ function admin_set_api_token_interface_xy34() {
     $output .= '<option value="">เลือกผู้ใช้...</option>';
     
     // ดึงรายชื่อผู้ใช้ทั้งหมด
-    $users = get_users(array('orderby' => 'display_name'));
+    $users = get_users(array(DGA_ORDERBY_FIELD_VALUE => 'display_name'));
     foreach ($users as $user) {
         $current_token = get_user_meta($user->ID, 'api_key', true);
         $status = empty($current_token) ? '(ไม่มี Token)' : '(มี Token แล้ว)';
@@ -40414,7 +40701,7 @@ function admin_set_api_token_interface_xy34() {
     $output .= '<small style="color: #6c757d;">ได้รับจาก <a href="https://data.go.th/developer" target="_blank">data.go.th/developer</a></small>';
     $output .= '</div>';
     
-    $output .= '<button type="submit" name="submit_api_token" style="background: #007cba; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer;">บันทึก API Token</button>';
+    $output .= '<button type=DGA_SUBMIT_TYPE name="submit_api_token" style="background: #007cba; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer;">บันทึก API Token</button>';
     $output .= '</form>';
     
     // ประมวลผลฟอร์ม
@@ -40684,7 +40971,7 @@ function dga_create_user_shortcode_hjk456() {
                         required
                     />
                     <span class="dga-field-icon-hjk456"><i class="dashicons dashicons-email"></i></span>
-                    <button type="button" class="dga-clear-btn-hjk456" aria-label="' . __('ล้างข้อความ', DGA_TEXT_DOMAIN) . '">
+                    <button type=DGA_BUTTON_TYPE class="dga-clear-btn-hjk456" aria-label="' . __('ล้างข้อความ', DGA_TEXT_DOMAIN) . '">
                         <i class="dashicons dashicons-no-alt"></i>
                     </button>
                     <span class="dga-field-status-hjk456"></span>
@@ -40699,7 +40986,7 @@ function dga_create_user_shortcode_hjk456() {
                     <span class="dga-field-icon-hjk456"><i class="dashicons dashicons-admin-users"></i></span>
                 </div>
                 
-                <button type="submit" class="dga-btn-submit-hjk456">
+                <button type=DGA_SUBMIT_TYPE class="dga-btn-submit-hjk456">
                     <span class="dga-btn-text-hjk456">' . __('สร้างผู้ใช้', DGA_TEXT_DOMAIN) . '</span>
                     <span class="dga-btn-loading-hjk456"></span>
                 </button>
@@ -40720,7 +41007,7 @@ function dga_create_user_shortcode_hjk456() {
         <div class="dga-modal-content-hjk456">
             <div class="dga-modal-header-hjk456">
                 <h3>' . __('ยืนยันการสร้างผู้ใช้', DGA_TEXT_DOMAIN) . '</h3>
-                <button type="button" class="dga-modal-close-hjk456" aria-label="' . __('ปิด', DGA_TEXT_DOMAIN) . '">
+                <button type=DGA_BUTTON_TYPE class="dga-modal-close-hjk456" aria-label="' . __('ปิด', DGA_TEXT_DOMAIN) . '">
                     <i class="dashicons dashicons-no"></i>
                 </button>
             </div>
@@ -40741,8 +41028,8 @@ function dga_create_user_shortcode_hjk456() {
                 </div>
             </div>
             <div class="dga-modal-footer-hjk456">
-                <button type="button" class="dga-modal-cancel-hjk456">' . __('ยกเลิก', DGA_TEXT_DOMAIN) . '</button>
-                <button type="button" class="dga-modal-confirm-hjk456">
+                <button type=DGA_BUTTON_TYPE class="dga-modal-cancel-hjk456">' . __('ยกเลิก', DGA_TEXT_DOMAIN) . '</button>
+                <button type=DGA_BUTTON_TYPE class="dga-modal-confirm-hjk456">
                     <span class="dga-modal-confirm-text-hjk456">' . __('ยืนยันการสร้าง', DGA_TEXT_DOMAIN) . '</span>
                     <span class="dga-modal-confirm-loading-hjk456"></span>
                 </button>
@@ -40763,8 +41050,8 @@ function dga_create_user_shortcode_hjk456() {
         DGA_NONCE_KEY => wp_create_nonce('dga_create_user_nonce_hjk456'),
         'strings' => [
             'creating' => __('กำลังสร้าง...', DGA_TEXT_DOMAIN),
-            'success' => __('สร้างผู้ใช้สำเร็จ!', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_SUCCESS_STATUS => __('สร้างผู้ใช้สำเร็จ!', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
             'emailInvalid' => __('กรุณากรอกอีเมลให้ถูกต้อง', DGA_TEXT_DOMAIN),
             'emailExists' => __('อีเมลนี้มีอยู่ในระบบแล้ว', DGA_TEXT_DOMAIN),
             'confirmCreate' => __('ยืนยันการสร้างผู้ใช้', DGA_TEXT_DOMAIN),
@@ -41175,7 +41462,7 @@ function dga_display_password_reset_form_hjk456($user, $key, $login) {
                 <input type="hidden" name="user_id" value="<?php echo esc_attr($user->ID); ?>">
                 <?php wp_nonce_field('dga_reset_password_hjk456', 'nonce'); ?>
                 
-                <button type="submit" class="dga-submit-btn-hjk456">
+                <button type=DGA_SUBMIT_TYPE class="dga-submit-btn-hjk456">
                     <?php _e('ตั้งรหัสผ่าน', DGA_TEXT_DOMAIN); ?>
                 </button>
             </form>
@@ -41218,16 +41505,16 @@ function dga_display_password_reset_form_hjk456($user, $key, $login) {
                 messages.innerHTML = '';
                 
                 if (pass1.value.length < 8) {
-                    showMessage('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร', 'error');
+                    showMessage('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร', DGA_ERROR_STATUS);
                     return;
                 }
                 
                 if (pass1.value !== pass2.value) {
-                    showMessage('รหัสผ่านไม่ตรงกัน', 'error');
+                    showMessage('รหัสผ่านไม่ตรงกัน', DGA_ERROR_STATUS);
                     return;
                 }
                 
-                const submitBtn = form.querySelector('button[type="submit"]');
+                const submitBtn = form.querySelector('button[type=DGA_SUBMIT_TYPE]');
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'กำลังดำเนินการ...';
                 
@@ -41243,19 +41530,19 @@ function dga_display_password_reset_form_hjk456($user, $key, $login) {
                     const result = await response.json();
                     
                     if (result.success) {
-                        showMessage('ตั้งรหัสผ่านสำเร็จ! กำลังเข้าสู่ระบบ...', 'success');
+                        showMessage('ตั้งรหัสผ่านสำเร็จ! กำลังเข้าสู่ระบบ...', DGA_SUCCESS_STATUS);
                         form.style.display = 'none';
                         
                         setTimeout(() => {
                             window.location.href = '<?php echo home_url(); ?>';
                         }, 2000);
                     } else {
-                        showMessage(result.data.message || 'เกิดข้อผิดพลาด', 'error');
+                        showMessage(result.data.message || 'เกิดข้อผิดพลาด', DGA_ERROR_STATUS);
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'ตั้งรหัสผ่าน';
                     }
                 } catch (error) {
-                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
+                    showMessage('เกิดข้อผิดพลาดในการเชื่อมต่อ', DGA_ERROR_STATUS);
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'ตั้งรหัสผ่าน';
                 }
@@ -41336,8 +41623,8 @@ function dga_enqueue_assets_hjk456() {
     
     // เช็คว่ามี shortcode หรือไม่
     if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'dga_create_user_horizontal')) {
-        wp_enqueue_style('dga-horizontal-style', get_stylesheet_directory_uri() . '/css/dga-horizontal.css', [], '1.0.0');
-        wp_enqueue_script('dga-horizontal-script', get_stylesheet_directory_uri() . '/js/dga-horizontal.js', [], '1.0.0', true);
+        wp_enqueue_style('dga-horizontal-style', get_stylesheet_directory_uri() . '/css/dga-horizontal.css', [], DGA_VERSION_NUMBER);
+        wp_enqueue_script('dga-horizontal-script', get_stylesheet_directory_uri() . '/js/dga-horizontal.js', [], DGA_VERSION_NUMBER, true);
     }
 }
 add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'dga_enqueue_assets_hjk456');
@@ -41647,7 +41934,7 @@ function dga_clone_template_ajax() {
             wp_delete_object_term_relationships($current_page_id, $taxonomy);
             
             // คัดลอก terms จากต้นฉบับ
-            $terms = wp_get_object_terms($template_id, $taxonomy, array('fields' => 'ids'));
+            $terms = wp_get_object_terms($template_id, $taxonomy, array(DGA_FIELDS_PARAMETER => 'ids'));
             if (!is_wp_error($terms) && !empty($terms)) {
                 wp_set_object_terms($current_page_id, $terms, $taxonomy);
             }
@@ -41878,10 +42165,10 @@ class DGA_Template_Importer {
      */
     public function add_template_button_to_editor() {
         // เพิ่ม CSS สำหรับปุ่ม
-        wp_enqueue_style('template-editor-css', get_stylesheet_directory_uri() . '/css/template-editor.css', array(), '1.0.0');
+        wp_enqueue_style('template-editor-css', get_stylesheet_directory_uri() . '/css/template-editor.css', array(), DGA_VERSION_NUMBER);
         
         // เพิ่ม JS สำหรับปุ่ม
-        wp_enqueue_script('template-editor-js', get_stylesheet_directory_uri() . '/js/template-editor.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+        wp_enqueue_script('template-editor-js', get_stylesheet_directory_uri() . '/js/template-editor.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
         
         // ส่งค่าไปที่ JavaScript
         wp_localize_script('template-editor-js', 'template_editor_data', array(
@@ -41976,7 +42263,7 @@ class DGA_Template_Importer {
         $template_data = json_decode($json_content, true);
         
         // ตรวจสอบข้อมูลจาก metadata
-        $title = isset($template_data['title']) ? $template_data['title'] : $template_id;
+        $title = isset($template_data[DGA_TITLE_FIELD]) ? $template_data[DGA_TITLE_FIELD] : $template_id;
         $description = isset($template_data['description']) ? $template_data['description'] : '';
         $category_from_json = isset($template_data['category']) ? $template_data['category'] : '';
         $preview = isset($template_data['preview']) ? $template_data['preview'] : '';
@@ -42087,7 +42374,7 @@ class DGA_Template_Importer {
         $metadata = $this->get_template_metadata($atts['template_id']);
         
         // ใช้ค่าจาก metadata ถ้าไม่ได้กำหนดใน shortcode
-        $title = !empty($atts['title']) ? $atts['title'] : $metadata['title'];
+        $title = !empty($atts[DGA_TITLE_FIELD]) ? $atts[DGA_TITLE_FIELD] : $metadata[DGA_TITLE_FIELD];
         $description = !empty($atts['description']) ? $atts['description'] : $metadata['description'];
         $preview = !empty($atts['preview']) ? $atts['preview'] : $metadata['preview'];
         
@@ -42130,7 +42417,7 @@ class DGA_Template_Importer {
         
         // สร้าง HTML สำหรับไอคอน
         $output = '<div class="template-icon-container template-icon-' . esc_attr($atts['position']) . '">';
-        $output .= '<button class="template-icon-button" style="background-color: ' . esc_attr($atts['color']) . ';" title="' . esc_attr($atts['title']) . '" data-modal-id="' . esc_attr($modal_id) . '">';
+        $output .= '<button class="template-icon-button" style="background-color: ' . esc_attr($atts['color']) . ';" title="' . esc_attr($atts[DGA_TITLE_FIELD]) . '" data-modal-id="' . esc_attr($modal_id) . '">';
         $output .= '<i class="fas ' . esc_attr($atts['icon']) . '"></i>';
         $output .= '</button>';
         $output .= '</div>';
@@ -42140,7 +42427,7 @@ class DGA_Template_Importer {
         $output .= '<div class="template-modal-overlay"></div>';
         $output .= '<div class="template-modal-content">';
         $output .= '<div class="template-modal-header">';
-        $output .= '<h3>' . esc_html($atts['title']) . '</h3>';
+        $output .= '<h3>' . esc_html($atts[DGA_TITLE_FIELD]) . '</h3>';
         $output .= '<button class="template-modal-close"><i class="fas fa-times"></i></button>';
         $output .= '</div>';
         $output .= '<div class="template-modal-body">';
@@ -42202,7 +42489,7 @@ class DGA_Template_Importer {
             
             // สร้างปุ่ม Toggle
             $output .= '<button class="template-gallery-toggle">';
-            $output .= esc_html($atts['title']);
+            $output .= esc_html($atts[DGA_TITLE_FIELD]);
             $output .= '<i class="fas fa-chevron-down"></i>';
             $output .= '</button>';
             
@@ -42280,7 +42567,7 @@ class DGA_Template_Importer {
                 // Preview image
                 $output .= '<div class="template-preview">';
                 if (!empty($metadata['preview'])) {
-                    $output .= '<img src="' . esc_url($metadata['preview']) . '" alt="' . esc_attr($metadata['title']) . '">';
+                    $output .= '<img src="' . esc_url($metadata['preview']) . '" alt="' . esc_attr($metadata[DGA_TITLE_FIELD]) . '">';
                 } else {
                     // Default placeholder image
                     $output .= '<img src="' . esc_url(get_stylesheet_directory_uri() . '/images/template-placeholder.jpg') . '" alt="Template Preview">';
@@ -42299,7 +42586,7 @@ class DGA_Template_Importer {
                 
                 // Template info
                 $output .= '<div class="template-info">';
-                $output .= '<div class="template-title">' . esc_html($metadata['title']) . '</div>';
+                $output .= '<div class="template-title">' . esc_html($metadata[DGA_TITLE_FIELD]) . '</div>';
                 $output .= '<div class="template-description">' . esc_html($metadata['description']) . '</div>';
                 
                 // Tags (ถ้ามี)
@@ -42677,8 +42964,8 @@ function dga_get_users_ajax() {
     $args = array(
         'number' => $per_page,
         'offset' => $offset,
-        'orderby' => 'display_name',
-        'order' => 'ASC',
+        DGA_ORDERBY_FIELD_VALUE => 'display_name',
+        DGA_ORDER_FIELD => 'ASC',
     );
     
     // Add role filter if specified
@@ -43148,7 +43435,7 @@ function dga_recaptcha_v3_enqueue_assets() {
             'dga-recap-v3',
             get_stylesheet_directory_uri() . '/js/dga-recap-v3.js',
             array(DGA_JQUERY_HANDLE, 'google-recaptcha-v3'),
-            '1.0.0',
+            DGA_VERSION_NUMBER,
             true
         );
         
@@ -43164,7 +43451,7 @@ function dga_recaptcha_v3_enqueue_assets() {
             'dga-recap-v3',
             get_stylesheet_directory_uri() . '/css/dga-recap-v3.css',
             array(),
-            '1.0.0'
+            DGA_VERSION_NUMBER
         );
     }
 }
@@ -43204,7 +43491,7 @@ function dga_verify_recaptcha_ajax() {
     $result = json_decode($body, true);
     
     // ตรวจสอบผลลัพธ์
-    if ($result['success'] && $result['score'] >= 0.5) {
+    if ($result[DGA_SUCCESS_STATUS] && $result['score'] >= 0.5) {
         wp_send_json_success(array(
             DGA_MESSAGE_KEY => 'reCAPTCHA verified successfully',
             'score' => $result['score'],
@@ -43236,7 +43523,7 @@ function dga_handle_contact_form_with_recaptcha() {
     
     if (empty($recaptcha_token)) {
         wp_send_json(array(
-            'status' => 'error',
+            DGA_STATUS_FIELD => DGA_ERROR_STATUS,
             DGA_MESSAGE_KEY => 'กรุณายืนยันว่าคุณไม่ใช่บอท'
         ));
         return;
@@ -43245,9 +43532,9 @@ function dga_handle_contact_form_with_recaptcha() {
     // Verify reCAPTCHA
     $verification = dga_verify_recaptcha_server_side($recaptcha_token, $recaptcha_action);
     
-    if (!$verification['success']) {
+    if (!$verification[DGA_SUCCESS_STATUS]) {
         wp_send_json(array(
-            'status' => 'error',
+            DGA_STATUS_FIELD => DGA_ERROR_STATUS,
             DGA_MESSAGE_KEY => 'การยืนยันความปลอดภัยล้มเหลว กรุณาลองใหม่อีกครั้ง'
         ));
         return;
@@ -43286,13 +43573,13 @@ function dga_handle_contact_form_with_recaptcha() {
     // Prepare response
     if ($admin_mail_sent && $user_mail_sent) {
         $response = array(
-            'status' => 'success',
+            DGA_STATUS_FIELD => DGA_SUCCESS_STATUS,
             DGA_MESSAGE_KEY => 'ส่งข้อความเรียบร้อยแล้ว',
             'recaptcha_score' => $verification['score']
         );
     } else {
         $response = array(
-            'status' => 'error',
+            DGA_STATUS_FIELD => DGA_ERROR_STATUS,
             DGA_MESSAGE_KEY => 'เกิดข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่อีกครั้ง'
         );
     }
@@ -43303,7 +43590,7 @@ function dga_handle_contact_form_with_recaptcha() {
 // Function สำหรับการตรวจสอบ reCAPTCHA ในฝั่ง server
 function dga_verify_recaptcha_server_side($token, $action = 'submit') {
     if (empty($token)) {
-        return array('success' => false, DGA_MESSAGE_KEY => 'Token is required');
+        return array(DGA_SUCCESS_STATUS => false, DGA_MESSAGE_KEY => 'Token is required');
     }
     
     $response = wp_remote_post('https://www.google.com/recaptcha/api/siteverify', array(
@@ -43315,7 +43602,7 @@ function dga_verify_recaptcha_server_side($token, $action = 'submit') {
     ));
     
     if (is_wp_error($response)) {
-        return array('success' => false, DGA_MESSAGE_KEY => 'Error verifying reCAPTCHA');
+        return array(DGA_SUCCESS_STATUS => false, DGA_MESSAGE_KEY => 'Error verifying reCAPTCHA');
     }
     
     $body = wp_remote_retrieve_body($response);
@@ -43324,16 +43611,16 @@ function dga_verify_recaptcha_server_side($token, $action = 'submit') {
     // ตรวจสอบว่า action ตรงกันหรือไม่
     $action_match = (!empty($result['action']) && $result['action'] === $action);
     
-    if ($result['success'] && $result['score'] >= 0.5 && $action_match) {
+    if ($result[DGA_SUCCESS_STATUS] && $result['score'] >= 0.5 && $action_match) {
         return array(
-            'success' => true,
+            DGA_SUCCESS_STATUS => true,
             'score' => $result['score'],
             'action' => $result['action']
         );
     }
     
     return array(
-        'success' => false,
+        DGA_SUCCESS_STATUS => false,
         'score' => isset($result['score']) ? $result['score'] : 0,
         'action' => isset($result['action']) ? $result['action'] : '',
         'errors' => isset($result['error-codes']) ? $result['error-codes'] : array()
@@ -43409,8 +43696,8 @@ function dga_session_timeout_page() {
                 </tr>
             </table>
             <?php wp_nonce_field('dga_timeout_nonce', 'dga_timeout_nonce_field'); ?>
-            <p class="submit">
-                <button type="submit" class="button-primary">Save Settings</button>
+            <p class=DGA_SUBMIT_TYPE>
+                <button type=DGA_SUBMIT_TYPE class="button-primary">Save Settings</button>
                 <span id="dga-timeout-message" class="notice" style="display:none;"></span>
             </p>
         </form>
@@ -43460,7 +43747,7 @@ function dga_timeout_enqueue_admin_scripts($hook) {
             'dga-timeout-admin', 
             get_stylesheet_directory_uri() . '/js/dga-timeout.js', 
             array(DGA_JQUERY_HANDLE), 
-            '1.0.0', 
+            DGA_VERSION_NUMBER, 
             true
         );
         
@@ -43468,7 +43755,7 @@ function dga_timeout_enqueue_admin_scripts($hook) {
             'dga-timeout-admin', 
             get_stylesheet_directory_uri() . '/css/dga-timeout.css', 
             array(), 
-            '1.0.0'
+            DGA_VERSION_NUMBER
         );
         
         // ส่งข้อมูลไปยัง JavaScript
@@ -43489,7 +43776,7 @@ function dga_timeout_enqueue_scripts() {
             'dga-timeout-handler', 
             get_stylesheet_directory_uri() . '/js/dga-timeout-handler.js', 
             array(DGA_JQUERY_HANDLE), 
-            '1.0.0', 
+            DGA_VERSION_NUMBER, 
             true
         );
         
@@ -43566,8 +43853,8 @@ function dga_glossary_shortcode($atts) {
     $is_admin = current_user_can(DGA_ADMIN_ROLE);
     
     // Enqueue scripts and styles
-    wp_enqueue_style('dga-glossary', get_stylesheet_directory_uri() . '/css/dga-glossary.css', array(), '1.0.0');
-    wp_enqueue_script('dga-glossary', get_stylesheet_directory_uri() . '/js/dga-glossary.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+    wp_enqueue_style('dga-glossary', get_stylesheet_directory_uri() . '/css/dga-glossary.css', array(), DGA_VERSION_NUMBER);
+    wp_enqueue_script('dga-glossary', get_stylesheet_directory_uri() . '/js/dga-glossary.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
     
     // Pass data to JavaScript
     wp_localize_script('dga-glossary', 'dga_glossary_ajax', array(
@@ -43679,8 +43966,8 @@ function dga_glossary_shortcode($atts) {
                     </div>
                     <input type="hidden" id="modal-id" name="id" value="" />
                     <div class="form-buttons">
-                        <button type="submit" class="btn-submit">บันทึก</button>
-                        <button type="button" class="btn-cancel">ยกเลิก</button>
+                        <button type=DGA_SUBMIT_TYPE class="btn-submit">บันทึก</button>
+                        <button type=DGA_BUTTON_TYPE class="btn-cancel">ยกเลิก</button>
                     </div>
                 </form>
             </div>
@@ -43858,7 +44145,7 @@ function dga_fetch_glossary_data() {
     $total_pages = ceil($total_posts / $per_page);
     
     wp_send_json(array(
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         'data' => $formatted_results,
         'pagination' => array(
             'current_page' => $page,
@@ -43881,7 +44168,7 @@ function dga_update_glossary_term() {
     // Check if user is administrator
     if (!current_user_can(DGA_ADMIN_ROLE)) {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'คุณไม่มีสิทธิ์ในการแก้ไขข้อมูล'
         ));
         wp_die();
@@ -43891,7 +44178,7 @@ function dga_update_glossary_term() {
     $table_name = $wpdb->prefix . 'dga_glossary';
     
     $id = intval($_POST[DGA_POST_ID_FIELD]);
-    $field = sanitize_text_field($_POST['field']);
+    $field = sanitize_text_field($_POST[DGA_FIELD_KEY]);
     $value = sanitize_text_field($_POST['value']);
     
     $field_map = array(
@@ -43908,18 +44195,18 @@ function dga_update_glossary_term() {
         
         if ($result !== false) {
             wp_send_json(array(
-                'success' => true,
+                DGA_SUCCESS_STATUS => true,
                 DGA_MESSAGE_KEY => 'บันทึกข้อมูลสำเร็จ'
             ));
         } else {
             wp_send_json(array(
-                'success' => false,
+                DGA_SUCCESS_STATUS => false,
                 DGA_MESSAGE_KEY => 'ไม่สามารถบันทึกข้อมูลได้'
             ));
         }
     } else {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'ไม่สามารถแก้ไขฟิลด์นี้ได้'
         ));
     }
@@ -43938,7 +44225,7 @@ function dga_save_glossary_entry() {
     // Check if user is administrator
     if (!current_user_can(DGA_ADMIN_ROLE)) {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'คุณไม่มีสิทธิ์ในการเพิ่มข้อมูล'
         ));
         wp_die();
@@ -43968,12 +44255,12 @@ function dga_save_glossary_entry() {
     
     if ($result !== false) {
         wp_send_json(array(
-            'success' => true,
+            DGA_SUCCESS_STATUS => true,
             DGA_MESSAGE_KEY => $message
         ));
     } else {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'
         ));
     }
@@ -43992,7 +44279,7 @@ function dga_delete_glossary_entry() {
     // Check if user is administrator
     if (!current_user_can(DGA_ADMIN_ROLE)) {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'คุณไม่มีสิทธิ์ในการลบข้อมูล'
         ));
         wp_die();
@@ -44007,12 +44294,12 @@ function dga_delete_glossary_entry() {
     
     if ($result !== false) {
         wp_send_json(array(
-            'success' => true,
+            DGA_SUCCESS_STATUS => true,
             DGA_MESSAGE_KEY => 'ลบข้อมูลสำเร็จ'
         ));
     } else {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'ไม่สามารถลบข้อมูลได้'
         ));
     }
@@ -44037,12 +44324,12 @@ function dga_get_glossary_entry() {
     
     if ($entry) {
         wp_send_json(array(
-            'success' => true,
+            DGA_SUCCESS_STATUS => true,
             'data' => $entry
         ));
     } else {
         wp_send_json(array(
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => 'ไม่พบข้อมูล'
         ));
     }
@@ -44069,7 +44356,7 @@ function dga_create_faq_post_type() {
         'public' => true,
         'has_archive' => true,
         'rewrite' => array('slug' => 'faq'),
-        'supports' => array('title', 'custom-fields'),
+        'supports' => array(DGA_TITLE_FIELD, 'custom-fields'),
         'show_in_rest' => true,
         'menu_icon' => 'dashicons-editor-help'
     );
@@ -44121,8 +44408,8 @@ function dga_faqs_shortcode($atts) {
                     <textarea id="dga-modal-answer" placeholder="กรอกคำตอบของคุณ" rows="5" required></textarea>
                 </div>
                 <div class="dga-modal-buttons">
-                    <button type="submit" class="dga-btn-primary">เพิ่มคำถาม</button>
-                    <button type="button" class="dga-btn-secondary dga-modal-cancel">ยกเลิก</button>
+                    <button type=DGA_SUBMIT_TYPE class="dga-btn-primary">เพิ่มคำถาม</button>
+                    <button type=DGA_BUTTON_TYPE class="dga-btn-secondary dga-modal-cancel">ยกเลิก</button>
                 </div>
             </form>
         </div>
@@ -44144,8 +44431,8 @@ function dga_faqs_shortcode($atts) {
                     <textarea id="dga-edit-answer" placeholder="กรอกคำตอบของคุณ" rows="5" required></textarea>
                 </div>
                 <div class="dga-modal-buttons">
-                    <button type="submit" class="dga-btn-primary">บันทึกการแก้ไข</button>
-                    <button type="button" class="dga-btn-secondary dga-modal-cancel">ยกเลิก</button>
+                    <button type=DGA_SUBMIT_TYPE class="dga-btn-primary">บันทึกการแก้ไข</button>
+                    <button type=DGA_BUTTON_TYPE class="dga-btn-secondary dga-modal-cancel">ยกเลิก</button>
                 </div>
             </form>
         </div>
@@ -44163,8 +44450,8 @@ function dga_faqs_shortcode($atts) {
                 <strong>คำถาม:</strong> <span id="dga-delete-question-text"></span>
             </div>
             <div class="dga-modal-buttons">
-                <button type="button" class="dga-btn-danger" id="dga-confirm-delete">ลบคำถาม</button>
-                <button type="button" class="dga-btn-secondary dga-modal-cancel">ยกเลิก</button>
+                <button type=DGA_BUTTON_TYPE class="dga-btn-danger" id="dga-confirm-delete">ลบคำถาม</button>
+                <button type=DGA_BUTTON_TYPE class="dga-btn-secondary dga-modal-cancel">ยกเลิก</button>
             </div>
         </div>
     </div>
@@ -44198,8 +44485,8 @@ function dga_faqs_enqueue_scripts() {
     global $post;
     
     if (is_a($post, 'WP_Post') && (has_shortcode($post->post_content, 'dga_faqs') || has_shortcode($post->post_content, 'dga-faq-add'))) {
-        wp_enqueue_style('dga-faqs-style', get_stylesheet_directory_uri() . '/css/dga-faqs.css', array(), '1.0.0');
-        wp_enqueue_script('dga-faqs-script', get_stylesheet_directory_uri() . '/js/dga-faqs.js', array(DGA_JQUERY_HANDLE), '1.0.0', true);
+        wp_enqueue_style('dga-faqs-style', get_stylesheet_directory_uri() . '/css/dga-faqs.css', array(), DGA_VERSION_NUMBER);
+        wp_enqueue_script('dga-faqs-script', get_stylesheet_directory_uri() . '/js/dga-faqs.js', array(DGA_JQUERY_HANDLE), DGA_VERSION_NUMBER, true);
         
         // ใช้ helper function ตรวจสอบ admin
         $is_admin = dga_is_user_admin();
@@ -44229,10 +44516,10 @@ function dga_load_faqs() {
     $args = array(
         DGA_POST_TYPE_FIELD => 'faq',
         DGA_POSTS_PER_PAGE => $per_page,
-        'paged' => $page,
+        DGA_PAGED_PARAMETER => $page,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
     
     if (!empty($search)) {
@@ -44541,7 +44828,7 @@ function dga_news_loops($atts) {
         $taxonomy = !empty($atts[DGA_TAXONOMY_FIELD]) ? sanitize_text_field($atts[DGA_TAXONOMY_FIELD]) : 'category';
         $tax_query[] = array(
             DGA_TAXONOMY_FIELD => $taxonomy,
-            'field' => 'slug',
+            DGA_FIELD_KEY => 'slug',
             'terms' => $atts['term']
         );
     }
@@ -44551,8 +44838,8 @@ function dga_news_loops($atts) {
         DGA_POST_TYPE_FIELD => $atts[DGA_POST_TYPE_FIELD],
         DGA_POSTS_PER_PAGE => $atts[DGA_POSTS_PER_PAGE],
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
     
     // Add tax_query if we have term
@@ -44628,12 +44915,12 @@ function dga_navigator($atts) {
     ob_start();
     ?>
     <div class="dga-news-navigator" data-target="<?php echo esc_attr($atts['target']); ?>">
-        <button type="button" class="dga-nav-prev" aria-label="ก่อนหน้า">
+        <button type=DGA_BUTTON_TYPE class="dga-nav-prev" aria-label="ก่อนหน้า">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
         </button>
-        <button type="button" class="dga-nav-next" aria-label="ถัดไป">
+        <button type=DGA_BUTTON_TYPE class="dga-nav-next" aria-label="ถัดไป">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -44660,7 +44947,7 @@ function dga_load_more_posts() {
     if (!empty($term)) {
         $tax_query[] = array(
             DGA_TAXONOMY_FIELD => $taxonomy,
-            'field' => 'slug',
+            DGA_FIELD_KEY => 'slug',
             'terms' => $term
         );
     }
@@ -44671,8 +44958,8 @@ function dga_load_more_posts() {
         DGA_POSTS_PER_PAGE => $posts_per_page,
         'offset' => $offset,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-        'orderby' => 'date',
-        'order' => 'DESC'
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
     );
     
     // Add tax_query if we have term
@@ -44815,7 +45102,7 @@ class PDF_Viewer_Shortcode {
                 <?php if ($fullscreen): ?>
                 <div class="pdf-header">
                     <button class="pdf-fullscreen-btn" 
-                            type="button" 
+                            type=DGA_BUTTON_TYPE 
                             title="Toggle Fullscreen"
                             aria-label="Toggle fullscreen mode">
                         <span class="fullscreen-icon">⛶</span>
@@ -44898,7 +45185,7 @@ class PDF_Viewer_Shortcode {
     private function load_assets() {
         if ($this->assets_loaded) return;
         
-        $version = get_theme_mod('cache_bust', '1.0.0');
+        $version = get_theme_mod('cache_bust', DGA_VERSION_NUMBER);
         
         // Determine asset path (theme vs plugin)
         $css_url = get_stylesheet_directory_uri() . '/css/pdf-viewer.css';
@@ -45038,7 +45325,7 @@ if (!function_exists('dga_thai_date_zxk429')) {
                       <?php if ($is_admin): ?>
                       title="<?php _e('คลิกเพื่อแก้ไขจำนวน', DGA_TEXT_DOMAIN); ?>"
                       tabindex="0"
-                      role="button"
+                      role=DGA_BUTTON_TYPE
                       aria-label="<?php _e('จำนวนผู้เข้าชม สามารถแก้ไขได้', DGA_TEXT_DOMAIN); ?>"
                       <?php endif; ?>>
                     <?php echo esc_html(number_format($view_count)); ?>
@@ -45173,7 +45460,7 @@ function dga_post_list_enqueue_assets_xy34() {
         'dga-post-list-js-xy34',
         get_stylesheet_directory_uri() . '/js/dga-post-list2.js',
         array(),
-        '1.0.0',
+        DGA_VERSION_NUMBER,
         true
     );
     
@@ -45181,7 +45468,7 @@ function dga_post_list_enqueue_assets_xy34() {
         'dga-post-list-css-xy34',
         get_stylesheet_directory_uri() . '/css/dga-post-list2.css',
         array(),
-        '1.0.0'
+        DGA_VERSION_NUMBER
     );
     
     // Localize script for AJAX
@@ -45200,8 +45487,8 @@ function dga_post_list_shortcode_xy34($atts) {
     $atts = shortcode_atts(array(
         DGA_POST_TYPE_FIELD => 'post',
         DGA_POSTS_PER_PAGE => 4,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC',
         'view_type' => 'list', // 'list' or 'card'
         'offset' => 0
     ), $atts, 'dga_post_list');
@@ -45209,8 +45496,8 @@ function dga_post_list_shortcode_xy34($atts) {
     // Sanitize attributes
     $post_type = sanitize_text_field($atts[DGA_POST_TYPE_FIELD]);
     $posts_per_page = absint($atts[DGA_POSTS_PER_PAGE]);
-    $orderby = sanitize_text_field($atts['orderby']);
-    $order = sanitize_text_field($atts['order']);
+    $orderby = sanitize_text_field($atts[DGA_ORDERBY_FIELD_VALUE]);
+    $order = sanitize_text_field($atts[DGA_ORDER_FIELD]);
     $view_type = in_array($atts['view_type'], ['list', 'card']) ? sanitize_text_field($atts['view_type']) : 'list';
     $offset = absint($atts['offset']);
     
@@ -45276,8 +45563,8 @@ function dga_load_posts_ajax_xy34() {
     // Sanitize input
     $post_type = sanitize_text_field($_POST[DGA_POST_TYPE_FIELD]);
     $posts_per_page = absint($_POST[DGA_POSTS_PER_PAGE]);
-    $orderby = sanitize_text_field($_POST['orderby']);
-    $order = sanitize_text_field($_POST['order']);
+    $orderby = sanitize_text_field($_POST[DGA_ORDERBY_FIELD_VALUE]);
+    $order = sanitize_text_field($_POST[DGA_ORDER_FIELD]);
     $view_type = sanitize_text_field($_POST['view_type']);
     $offset = absint($_POST['offset']);
     
@@ -45285,8 +45572,8 @@ function dga_load_posts_ajax_xy34() {
     $args = array(
         DGA_POST_TYPE_FIELD => $post_type,
         DGA_POSTS_PER_PAGE => $posts_per_page,
-        'orderby' => $orderby,
-        'order' => $order,
+        DGA_ORDERBY_FIELD_VALUE => $orderby,
+        DGA_ORDER_FIELD => $order,
         DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
         'offset' => $offset,
         'meta_query' => array(
@@ -45322,7 +45609,7 @@ function dga_load_posts_ajax_xy34() {
                 'excerpt' => get_the_excerpt($post->ID),
                 'date' => get_the_date('', $post->ID),
                 'author' => get_the_author_meta('display_name', $post->post_author),
-                'categories' => wp_get_post_categories($post->ID, array('fields' => 'names'))
+                'categories' => wp_get_post_categories($post->ID, array(DGA_FIELDS_PARAMETER => 'names'))
             );
         }
         wp_reset_postdata();
@@ -45418,8 +45705,8 @@ function render_acf_modern_ui_mfs582() {
             'deleteWarning' => __('การกระทำนี้ไม่สามารถย้อนกลับได้', DGA_TEXT_DOMAIN),
             'nameChangeWarning' => __('คำเตือน: การเปลี่ยน Metadata Name อาจทำให้ข้อมูลเดิมหายไป', DGA_TEXT_DOMAIN),
             'noFields' => __('ยังไม่มี Fields ในกลุ่มนี้', DGA_TEXT_DOMAIN),
-            'success' => __('ดำเนินการสำเร็จ', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_SUCCESS_STATUS => __('ดำเนินการสำเร็จ', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'deleting' => __('กำลังลบ...', DGA_TEXT_DOMAIN),
             'searchPlaceholder' => __('ค้นหา field...', DGA_TEXT_DOMAIN),
@@ -45455,8 +45742,8 @@ function render_acf_modern_ui_mfs582() {
             'save' => __('บันทึก', DGA_TEXT_DOMAIN),
             'delete' => __('ลบ', DGA_TEXT_DOMAIN),
             'harvesting' => __('กำลังดึงข้อมูล...', DGA_TEXT_DOMAIN),
-            'success' => __('ดึงข้อมูลสำเร็จ', DGA_TEXT_DOMAIN),
-            'error' => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_SUCCESS_STATUS => __('ดึงข้อมูลสำเร็จ', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
             'confirmDelete' => __('ยืนยันการลบ Endpoint นี้?', DGA_TEXT_DOMAIN),
             'noEndpoints' => __('ยังไม่มี Endpoints ที่กำหนด', DGA_TEXT_DOMAIN),
             'hourly' => __('ทุกชั่วโมง', DGA_TEXT_DOMAIN),
@@ -45465,7 +45752,7 @@ function render_acf_modern_ui_mfs582() {
             'weekly' => __('ทุกสัปดาห์', DGA_TEXT_DOMAIN),
             'monthly' => __('ทุกเดือน', DGA_TEXT_DOMAIN),
             'never' => __('ไม่มี', DGA_TEXT_DOMAIN),
-            'status' => __('สถานะ', DGA_TEXT_DOMAIN),
+            DGA_STATUS_FIELD => __('สถานะ', DGA_TEXT_DOMAIN),
             'active' => __('Active', DGA_TEXT_DOMAIN),
             'inactive' => __('Inactive', DGA_TEXT_DOMAIN),
             'testConnection' => __('ทดสอบการเชื่อมต่อ', DGA_TEXT_DOMAIN),
@@ -45494,7 +45781,7 @@ function render_acf_modern_ui_mfs582() {
                     <svg class="acf-icon-mfs582" viewBox="0 0 24 24" width="20" height="20">
                         <path fill="currentColor" d="M22 11v-1l-8-7-7 6V3H5v4L2 10v1h2v9h7v-5h4v5h7v-9h2zm-10-3a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2 2 2 0 012-2z"/>
                     </svg>
-                    <?php echo esc_html(sprintf(__('จัดการ %s Fields', DGA_TEXT_DOMAIN), $field_group['title'] ?? 'ACF')); ?>
+                    <?php echo esc_html(sprintf(__('จัดการ %s Fields', DGA_TEXT_DOMAIN), $field_group[DGA_TITLE_FIELD] ?? 'ACF')); ?>
                 </h1>
                 <div class="acf-stats-mfs582">
                     <div class="acf-stat-item-mfs582">
@@ -45535,13 +45822,13 @@ function render_acf_modern_ui_mfs582() {
                     <div class="acf-field-card-mfs582" data-field-key="<?php echo esc_attr($field['key']); ?>">
                         <div class="acf-card-header-mfs582">
                             <div class="acf-field-title-mfs582">
-                                <span class="acf-field-label-mfs582"><?php echo esc_html($field['label']); ?></span>
+                                <span class="acf-field-label-mfs582"><?php echo esc_html($field[DGA_LABEL_FIELD]); ?></span>
                                 <span class="acf-field-type-badge-mfs582"><?php echo esc_html($field['type']); ?></span>
                             </div>
                             <div class="acf-field-actions-mfs582">
                                 <button class="acf-btn-icon-mfs582 acf-btn-edit-mfs582"
                                         data-key="<?php echo esc_attr($field['key']); ?>"
-                                        data-label="<?php echo esc_attr($field['label']); ?>"
+                                        data-label="<?php echo esc_attr($field[DGA_LABEL_FIELD]); ?>"
                                         data-name="<?php echo esc_attr($field['name']); ?>"
                                         title="<?php _e('แก้ไข', DGA_TEXT_DOMAIN); ?>">
                                     <svg viewBox="0 0 24 24">
@@ -45550,7 +45837,7 @@ function render_acf_modern_ui_mfs582() {
                                 </button>
                                 <button class="acf-btn-icon-mfs582 acf-btn-delete-mfs582"
                                         data-key="<?php echo esc_attr($field['key']); ?>"
-                                        data-label="<?php echo esc_attr($field['label']); ?>"
+                                        data-label="<?php echo esc_attr($field[DGA_LABEL_FIELD]); ?>"
                                         title="<?php _e('ลบ', DGA_TEXT_DOMAIN); ?>">
                                     <svg viewBox="0 0 24 24">
                                         <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
@@ -45771,14 +46058,14 @@ function handle_acf_modern_actions_mfs582() {
     }
 
     // Load existing fields
-    $field_group['fields'] = acf_get_fields($field_group);
+    $field_group[DGA_FIELDS_PARAMETER] = acf_get_fields($field_group);
     
     $action = isset($_POST['sub_action']) ? sanitize_text_field($_POST['sub_action']) : '';
 
     switch ($action) {
         case 'add':
         case 'update':
-            $label = isset($_POST['label']) ? sanitize_text_field($_POST['label']) : '';
+            $label = isset($_POST[DGA_LABEL_FIELD]) ? sanitize_text_field($_POST[DGA_LABEL_FIELD]) : '';
             $name = isset($_POST['name']) ? sanitize_key($_POST['name']) : '';
 
             if (empty($label) || empty($name)) {
@@ -45788,7 +46075,7 @@ function handle_acf_modern_actions_mfs582() {
             if ($action === 'add') {
                 $new_field = [
                     'key' => 'field_' . uniqid(),
-                    'label' => $label,
+                    DGA_LABEL_FIELD => $label,
                     DGA_NAME_FIELD => $name,
                     DGA_TYPE_FIELD => 'text',
                     'prefix' => 'acf',
@@ -45802,16 +46089,16 @@ function handle_acf_modern_actions_mfs582() {
                     'append' => '',
                     'maxlength' => '',
                 ];
-                $field_group['fields'][] = $new_field;
+                $field_group[DGA_FIELDS_PARAMETER][] = $new_field;
                 $message = __('เพิ่ม Field สำเร็จ', DGA_TEXT_DOMAIN);
                 $response_data = $new_field;
             } else {
                 $key_to_update = isset($_POST['key']) ? sanitize_text_field($_POST['key']) : '';
                 $field_found = false;
                 
-                foreach ($field_group['fields'] as &$field) {
+                foreach ($field_group[DGA_FIELDS_PARAMETER] as &$field) {
                     if ($field['key'] === $key_to_update) {
-                        $field['label'] = $label;
+                        $field[DGA_LABEL_FIELD] = $label;
                         $field['name'] = $name;
                         $field_found = true;
                         $response_data = $field;
@@ -45826,7 +46113,7 @@ function handle_acf_modern_actions_mfs582() {
             }
 
             acf_import_field_group($field_group);
-            wp_send_json_success([DGA_MESSAGE_KEY => $message, 'field' => $response_data]);
+            wp_send_json_success([DGA_MESSAGE_KEY => $message, DGA_FIELD_KEY => $response_data]);
             break;
 
         case 'delete':
@@ -45836,11 +46123,11 @@ function handle_acf_modern_actions_mfs582() {
                 wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่พบ Field key', DGA_TEXT_DOMAIN)]);
             }
 
-            $field_group['fields'] = array_filter($field_group['fields'], function($field) use ($key_to_delete) {
+            $field_group[DGA_FIELDS_PARAMETER] = array_filter($field_group[DGA_FIELDS_PARAMETER], function($field) use ($key_to_delete) {
                 return $field['key'] !== $key_to_delete;
             });
             
-            $field_group['fields'] = array_values($field_group['fields']);
+            $field_group[DGA_FIELDS_PARAMETER] = array_values($field_group[DGA_FIELDS_PARAMETER]);
             
             acf_import_field_group($field_group);
             wp_send_json_success([DGA_MESSAGE_KEY => __('ลบ Field สำเร็จ', DGA_TEXT_DOMAIN)]);
@@ -45885,7 +46172,7 @@ function handle_ckan_harvest_actions_khv739() {
                 'api_type' => sanitize_text_field($_POST['api_type'] ?? 'ckan'),
                 'data_path' => sanitize_text_field($_POST['data_path'] ?? ''),
                 'unique_field' => sanitize_text_field($_POST['unique_field'] ?? 'id'),
-                'title_field' => sanitize_text_field($_POST['title_field'] ?? 'title'),
+                'title_field' => sanitize_text_field($_POST['title_field'] ?? DGA_TITLE_FIELD),
                 'content_field' => sanitize_text_field($_POST['content_field'] ?? 'notes'),
                 'frequency' => sanitize_text_field($_POST['frequency']),
                 'active' => isset($_POST['active']) ? filter_var($_POST['active'], FILTER_VALIDATE_BOOLEAN) : true,
@@ -45991,7 +46278,7 @@ function handle_ckan_harvest_actions_khv739() {
             $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
             $field_mapping = json_decode(stripslashes($_POST['field_mapping']), true);
             $unique_field = sanitize_text_field($_POST['unique_field'] ?? 'id');
-            $title_field = sanitize_text_field($_POST['title_field'] ?? 'title');
+            $title_field = sanitize_text_field($_POST['title_field'] ?? DGA_TITLE_FIELD);
             $content_field = sanitize_text_field($_POST['content_field'] ?? '');
             
             $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
@@ -46039,7 +46326,7 @@ function handle_ckan_harvest_actions_khv739() {
             
             $test_result = test_api_endpoint_khv739($url, $api_type);
             
-            if ($test_result['success']) {
+            if ($test_result[DGA_SUCCESS_STATUS]) {
                 wp_send_json_success($test_result);
             } else {
                 wp_send_json_error($test_result);
@@ -46137,7 +46424,7 @@ function detect_api_structure_khv739($url, $api_type = 'auto') {
     ];
     
     // Try to detect CKAN structure
-    if (isset($data['success']) && isset($data['result'])) {
+    if (isset($data[DGA_SUCCESS_STATUS]) && isset($data['result'])) {
         $structure['detected_type'] = 'ckan';
         $structure['api_type'] = 'ckan';
         
@@ -46199,7 +46486,7 @@ function test_api_endpoint_khv739($url, $api_type) {
     
     if (is_wp_error($response)) {
         return [
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => $response->get_error_message()
         ];
     }
@@ -46210,14 +46497,14 @@ function test_api_endpoint_khv739($url, $api_type) {
     
     if ($status_code !== 200) {
         return [
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => sprintf(__('API returned status code %d', DGA_TEXT_DOMAIN), $status_code)
         ];
     }
     
     if (!$data) {
         return [
-            'success' => false,
+            DGA_SUCCESS_STATUS => false,
             DGA_MESSAGE_KEY => __('Invalid JSON response', DGA_TEXT_DOMAIN)
         ];
     }
@@ -46225,7 +46512,7 @@ function test_api_endpoint_khv739($url, $api_type) {
     $structure = detect_api_structure_khv739($url, $api_type);
     
     return [
-        'success' => true,
+        DGA_SUCCESS_STATUS => true,
         DGA_MESSAGE_KEY => __('เชื่อมต่อสำเร็จ', DGA_TEXT_DOMAIN),
         'structure' => $structure
     ];
@@ -46304,7 +46591,7 @@ function ckan_harvest_run_all_khv739() {
         DGA_MESSAGE_KEY => sprintf(__('นำเข้าใหม่ %d รายการ, อัปเดต %d รายการ', DGA_TEXT_DOMAIN), $total_imported, $total_updated),
         'imported' => $total_imported,
         'updated' => $total_updated,
-        'total' => $current_total,
+        DGA_TOTAL_FIELD_KEY => $current_total,
         'errors' => $errors,
         'timestamp' => current_time('mysql')
     ];
@@ -46366,7 +46653,7 @@ function ckan_harvest_endpoint_khv739($endpoint) {
     
     // Get field configurations
     $unique_field = $endpoint['unique_field'] ?? 'id';
-    $title_field = $endpoint['title_field'] ?? 'title';
+    $title_field = $endpoint['title_field'] ?? DGA_TITLE_FIELD;
     $content_field = $endpoint['content_field'] ?? 'notes';
     
     foreach ($datasets as $dataset) {
@@ -46387,7 +46674,7 @@ function ckan_harvest_endpoint_khv739($endpoint) {
         // Prepare post data - support nested fields
         $post_title = get_nested_value_khv739($dataset, $title_field) ?? 
                      $dataset['name'] ?? 
-                     $dataset['title'] ?? 
+                     $dataset[DGA_TITLE_FIELD] ?? 
                      'Dataset ' . $unique_id;
                      
         $post_content = get_nested_value_khv739($dataset, $content_field) ?? 
@@ -46449,7 +46736,7 @@ function ckan_harvest_endpoint_khv739($endpoint) {
             if (isset($dataset['organization'])) {
                 update_post_meta($post_id, 'ckan_organization', 
                     is_array($dataset['organization']) ? 
-                    ($dataset['organization']['title'] ?? '') : 
+                    ($dataset['organization'][DGA_TITLE_FIELD] ?? '') : 
                     $dataset['organization']
                 );
             }
@@ -46499,7 +46786,7 @@ function ckan_auto_map_fields_khv739($sample_data, $acf_fields) {
     
     // Common field mappings (expanded)
     $common_mappings = [
-        DGA_TITLE_FIELD => ['title', 'name', 'heading', 'subject', 'ชื่อ'],
+        DGA_TITLE_FIELD => [DGA_TITLE_FIELD, 'name', 'heading', 'subject', 'ชื่อ'],
         'description' => ['description', 'content', 'text', 'notes', 'detail', 'คำอธิบาย', 'รายละเอียด'],
         'author' => ['author', 'creator', 'owner', 'publisher', 'ผู้สร้าง'],
         'date' => ['date', 'created', 'modified', 'updated', 'created_at', 'updated_at', 'วันที่'],
@@ -46510,7 +46797,7 @@ function ckan_auto_map_fields_khv739($sample_data, $acf_fields) {
         'amount' => ['amount', 'value', 'price', 'cost', 'จำนวนเงิน', 'มูลค่า'],
         'year' => ['year', 'fiscal_year', 'budget_year', 'ปี', 'ปีงบประมาณ'],
         'code' => ['code', 'id', 'identifier', 'รหัส'],
-        'status' => ['status', 'state', 'สถานะ']
+        DGA_STATUS_FIELD => [DGA_STATUS_FIELD, 'state', 'สถานะ']
     ];
     
     foreach ($api_fields as $api_field) {
@@ -46578,7 +46865,7 @@ function register_ckan_post_type_khv739() {
             ],
             'public' => true,
             'has_archive' => true,
-            'supports' => ['title', 'editor', 'custom-fields', 'thumbnail'],
+            'supports' => [DGA_TITLE_FIELD, 'editor', 'custom-fields', 'thumbnail'],
             'menu_icon' => 'dashicons-database',
             'show_in_rest' => true,
             'rewrite' => ['slug' => 'ckan-dataset'],
@@ -46625,7 +46912,7 @@ function ckan_harvest_cron_handler_khv739($endpoint_id) {
                 $log[] = [
                     'endpoint_id' => $endpoint_id,
                     'url' => $endpoint['url'],
-                    'status' => 'success',
+                    DGA_STATUS_FIELD => DGA_SUCCESS_STATUS,
                     'timestamp' => current_time('mysql')
                 ];
                 
@@ -46639,7 +46926,7 @@ function ckan_harvest_cron_handler_khv739($endpoint_id) {
                 $log[] = [
                     'endpoint_id' => $endpoint_id,
                     'url' => $endpoint['url'],
-                    'status' => 'error',
+                    DGA_STATUS_FIELD => DGA_ERROR_STATUS,
                     DGA_MESSAGE_KEY => $e->getMessage(),
                     'timestamp' => current_time('mysql')
                 ];
@@ -46682,7 +46969,7 @@ function dga_stax_corg_enqueue_scripts_qhx728() {
             'dga-stax-corg-js',
             get_stylesheet_directory_uri() . '/js/dga-stax-corg.js',
             array(),
-            '1.0.0',
+            DGA_VERSION_NUMBER,
             true
         );
         
@@ -46700,7 +46987,7 @@ function dga_stax_corg_enqueue_scripts_qhx728() {
             'dga-stax-corg-css',
             get_stylesheet_directory_uri() . '/css/dga-stax-corg.css',
             array(),
-            '1.0.0'
+            DGA_VERSION_NUMBER
         );
     }
 }
@@ -46714,8 +47001,8 @@ function dga_corg_table_shortcode_qhx728($atts) {
         'show_search' => 'true',
         'show_count' => 'true',
         'show_description' => 'true',
-        'orderby' => 'name',
-        'order' => 'ASC'
+        DGA_ORDERBY_FIELD_VALUE => 'name',
+        DGA_ORDER_FIELD => 'ASC'
     ), $atts, 'dga_corg_table');
     
     // Start output buffer
@@ -46805,8 +47092,8 @@ function dga_load_corg_terms_ajax_qhx728() {
     $page = isset($_POST['page']) ? absint($_POST['page']) : 1;
     $per_page = isset($_POST['per_page']) ? absint($_POST['per_page']) : 10;
     $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
-    $orderby = isset($_POST['orderby']) ? sanitize_text_field($_POST['orderby']) : 'name';
-    $order = isset($_POST['order']) ? sanitize_text_field($_POST['order']) : 'ASC';
+    $orderby = isset($_POST[DGA_ORDERBY_FIELD_VALUE]) ? sanitize_text_field($_POST[DGA_ORDERBY_FIELD_VALUE]) : 'name';
+    $order = isset($_POST[DGA_ORDER_FIELD]) ? sanitize_text_field($_POST[DGA_ORDER_FIELD]) : 'ASC';
     $show_count = isset($_POST['show_count']) ? filter_var($_POST['show_count'], FILTER_VALIDATE_BOOLEAN) : true;
     $show_description = isset($_POST['show_description']) ? filter_var($_POST['show_description'], FILTER_VALIDATE_BOOLEAN) : true;
     
@@ -46825,8 +47112,8 @@ function dga_load_corg_terms_ajax_qhx728() {
     $args = array(
         DGA_TAXONOMY_FIELD => 'corg',
         DGA_HIDE_EMPTY_FIELD => false,
-        'orderby' => $orderby,
-        'order' => $order
+        DGA_ORDERBY_FIELD_VALUE => $orderby,
+        DGA_ORDER_FIELD => $order
     );
     
     // Add search if provided
@@ -46944,7 +47231,7 @@ function dga_load_corg_terms_ajax_qhx728() {
     wp_send_json_success(array(
         'html' => $html,
         'pagination' => $pagination_html,
-        'total' => $total_terms,
+        DGA_TOTAL_FIELD_KEY => $total_terms,
         'pages' => $total_pages
     ));
 }
@@ -47015,7 +47302,7 @@ function dga_sitemap_shortcode_xkp492($atts) {
     
     // Header section
     $output .= '<div class="dga-sitemap-header-xkp492">';
-    $output .= '<h2 class="dga-sitemap-title-xkp492">' . esc_html($atts['title']) . '</h2>';
+    $output .= '<h2 class="dga-sitemap-title-xkp492">' . esc_html($atts[DGA_TITLE_FIELD]) . '</h2>';
     
     // Search box
     if ($atts['show_search'] === 'yes') {
@@ -47191,7 +47478,7 @@ function dga_mld_count_shortcode_fx47() {
         DGA_POST_TYPE_FIELD      => 'news',       // Target the 'news' post type.
         DGA_POST_STATUS_FIELD    => DGA_PUBLISH_STATUS,    // Only count publicly visible posts.
         DGA_POSTS_PER_PAGE => -1,           // Ensure we check all posts.
-        'fields'         => 'ids',        // Performance: Only fetch post IDs, not full post objects.
+        DGA_FIELDS_PARAMETER         => 'ids',        // Performance: Only fetch post IDs, not full post objects.
         'meta_query'     => array(
             array(
                 'key'     => 'at_docnum_2', // The custom field key.
