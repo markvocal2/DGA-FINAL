@@ -8,11 +8,11 @@ jQuery(document).ready(function($) {
     
     // Copy to clipboard functionality for API endpoints
     $(document).on('click', '.ckan-api-code code', function() {
-        var $code = $(this);
-        var text = $code.text();
+        const $code = $(this);
+        const text = $code.text();
         
         // Create temporary textarea
-        var $temp = $('<textarea>');
+        const $temp = $('<textarea>');
         $('body').append($temp);
         $temp.val(text).select();
         
@@ -20,7 +20,7 @@ jQuery(document).ready(function($) {
             document.execCommand('copy');
             
             // Show feedback
-            var originalText = $code.text();
+            const originalText = $code.text();
             $code.text('คัดลอกแล้ว!');
             setTimeout(function() {
                 $code.text(originalText);
@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
     $(document).on('click', '#ckan-api-file-data-link', function(e) {
         e.preventDefault();
         
-        var url = $(this).attr('href');
+        const url = $(this).attr('href');
         if (!url || url === '#') {
             alert('กรุณาเลือกไฟล์ก่อน');
             return;
