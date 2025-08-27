@@ -2736,7 +2736,9 @@ function get_logo_for_background($background_type = 'auto') {
                 // ฟังก์ชันนี้จะตรวจสอบว่าควรใช้โลโก้แบบไหน
                 function checkBackgroundType() {
                     const element = document.querySelector(".site-header"); // ปรับตามคลาสที่ใช้จริง
-                    if (!element) return;
+                    if (!element) {
+                        return;
+                    }
                     
                     // ดึงสี background ของ header
                     const bgColor = window.getComputedStyle(element).backgroundColor;
@@ -2752,7 +2754,9 @@ function get_logo_for_background($background_type = 'auto') {
                         const brightness = (r + g + b) / 3;
                         
                         const logo = document.querySelector(".custom-logo");
-                        if (!logo) return;
+                        if (!logo) {
+                            return;
+                        }
                         
                         // ถ้าพื้นหลังมืด ใช้โลโก้สำหรับพื้นหลังสีเข้ม
                         if (brightness < 128) {
@@ -5371,7 +5375,9 @@ function dga_carousel_slide_shortcode($atts) {
             <div class="dga-carousel-track">
                 <?php $slide_index = 0; while ($posts_query->have_posts()) : $posts_query->the_post(); 
                     $thumbnail_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
-                    if (!$thumbnail_url) continue; // Skip if no thumbnail
+                    if (!$thumbnail_url) {
+                        continue; // Skip if no thumbnail
+                    }
                     
                     // Get post title and excerpt for overlay
                     $post_title = get_the_title();
@@ -6507,7 +6513,9 @@ function wcag_check_contrast($dom, $xpath, &$checks) {
     
     foreach ($text_elements as $element) {
         $text = trim($element->textContent);
-        if (empty($text)) continue;
+        if (empty($text)) {
+            continue;
+        }
         
         $contrast_checked++;
         
@@ -6712,25 +6720,49 @@ function wcag_calculate_score_verbose($checks) {
 function wcag_determine_grade($score, $severity) {
     switch ($severity) {
         case 'very-low':
-            if ($score >= 75) return 'AAA';
-            if ($score >= 65) return 'AA';
-            if ($score >= 55) return 'A';
+            if ($score >= 75) {
+                return 'AAA';
+            }
+            if ($score >= 65) {
+                return 'AA';
+            }
+            if ($score >= 55) {
+                return 'A';
+            }
             break;
         case 'low':
-            if ($score >= 80) return 'AAA';
-            if ($score >= 70) return 'AA';
-            if ($score >= 60) return 'A';
+            if ($score >= 80) {
+                return 'AAA';
+            }
+            if ($score >= 70) {
+                return 'AA';
+            }
+            if ($score >= 60) {
+                return 'A';
+            }
             break;
         case 'medium':
-            if ($score >= 85) return 'AAA';
-            if ($score >= 75) return 'AA';
-            if ($score >= 65) return 'A';
+            if ($score >= 85) {
+                return 'AAA';
+            }
+            if ($score >= 75) {
+                return 'AA';
+            }
+            if ($score >= 65) {
+                return 'A';
+            }
             break;
         case 'high':
         default:
-            if ($score >= 90) return 'AAA';
-            if ($score >= 80) return 'AA';
-            if ($score >= 70) return 'A';
+            if ($score >= 90) {
+                return 'AAA';
+            }
+            if ($score >= 80) {
+                return 'AA';
+            }
+            if ($score >= 70) {
+                return 'A';
+            }
             break;
     }
     
@@ -7024,10 +7056,18 @@ function simulate_css_validation($url) {
     
     // Determine grade
     $grade = 'A';
-    if ($total_score < 90) $grade = 'B';
-    if ($total_score < 80) $grade = 'C'; 
-    if ($total_score < 70) $grade = 'D';
-    if ($total_score < 60) $grade = 'F';
+    if ($total_score < 90) {
+        $grade = 'B';
+    }
+    if ($total_score < 80) {
+        $grade = 'C';
+    }
+    if ($total_score < 70) {
+        $grade = 'D';
+    }
+    if ($total_score < 60) {
+        $grade = 'F';
+    }
     
     return array(
         'score' => round($total_score),
@@ -7564,7 +7604,9 @@ function at_handle_article_submission_kse749() {
     $standard_files_data = [];
     if (!empty($_FILES['file_upload']['tmp_name'][0])) {
         foreach ($_FILES['file_upload']['tmp_name'] as $key => $tmp_name) {
-            if (empty($tmp_name)) continue;
+            if (empty($tmp_name)) {
+                continue;
+            }
 
             $_FILES['standard_file'] = array(
                 DGA_NAME_FIELD => $_FILES['file_upload']['name'][$key],
@@ -8480,7 +8522,9 @@ function dga_display_request_reset_form_ghi789() {
                 }
                 
                 const container = document.getElementById('cf-turnstile-widget');
-                if (!container || widgetId !== null) return;
+                if (!container || widgetId !== null) {
+                    return;
+                }
                 
                 try {
                     widgetId = window.turnstile.render('#cf-turnstile-widget', {
@@ -10673,43 +10717,117 @@ if (!function_exists('complaint_list_shortcode')) {
  * AJAX handler: Get complaints list
  */
 if (!function_exists('complaint_list_get_complaints')) {
+    /**
+     * Refactored complaint list handler with reduced cognitive complexity
+     * Complexity reduced from 22 to ~8
+     */
     function complaint_list_get_complaints() {
+        // Security validation
+        if (!complaint_list_validate_request()) {
+            return;
+        }
+        
+        // Get and sanitize parameters
+        $params = complaint_list_get_parameters();
+        
+        // Build query arguments
+        $args = complaint_list_build_query_args($params);
+        
+        // Get status counts
+        $status_counts = complaint_list_get_status_counts($args);
+        
+        // Get complaints data
+        $query = new WP_Query($args);
+        $complaints = complaint_list_format_complaints($query);
+        
+        // Send response
+        wp_send_json_success(array(
+            'complaints' => $complaints,
+            DGA_TOTAL_FIELD_KEY => $query->found_posts,
+            'pages' => $query->max_num_pages,
+            'current_page' => $params['page'],
+            'status_counts' => $status_counts
+        ));
+    }
+    
+    /**
+     * Validate security for complaint list request
+     */
+    function complaint_list_validate_request() {
         // ตรวจสอบ nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'complaint_list_nonce')) {
             wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_SECURITY_FAILED_MSG));
+            return false;
         }
 
         // ตรวจสอบสิทธิ์
         if (!current_user_can(DGA_EDIT_POSTS_CAP) && !current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
             wp_send_json_error(array(DGA_MESSAGE_KEY => 'You do not have permission to access this data'));
+            return false;
         }
-
-        // รับพารามิเตอร์
-        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
-        $per_page = isset($_POST['per_page']) ? intval($_POST['per_page']) : 10;
-        $status = isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '';
-        $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
-        $date_filter = isset($_POST['date']) ? sanitize_text_field($_POST['date']) : '';
-        $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
-
-        // สร้าง query arguments
+        
+        return true;
+    }
+    
+    /**
+     * Get and sanitize request parameters
+     */
+    function complaint_list_get_parameters() {
+        return array(
+            'page' => isset($_POST['page']) ? intval($_POST['page']) : 1,
+            'per_page' => isset($_POST['per_page']) ? intval($_POST['per_page']) : 10,
+            'status' => isset($_POST[DGA_STATUS_FIELD]) ? sanitize_text_field($_POST[DGA_STATUS_FIELD]) : '',
+            'type' => isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '',
+            'date_filter' => isset($_POST['date']) ? sanitize_text_field($_POST['date']) : '',
+            'search' => isset($_POST['search']) ? sanitize_text_field($_POST['search']) : ''
+        );
+    }
+    
+    /**
+     * Build WP_Query arguments
+     */
+    function complaint_list_build_query_args($params) {
+        // Base arguments
         $args = array(
             DGA_POST_TYPE_FIELD => 'complaint',
-            DGA_POSTS_PER_PAGE => $per_page,
-            DGA_PAGED_PARAMETER => $page,
+            DGA_POSTS_PER_PAGE => $params['per_page'],
+            DGA_PAGED_PARAMETER => $params['page'],
             'meta_query' => array(),
-            's' => $search
+            's' => $params['search']
         );
-
-        // กรองตามสถานะ
+        
+        // Add status filter
+        $args = complaint_list_add_status_filter($args, $params['status']);
+        
+        // Add type filter
+        $args = complaint_list_add_type_filter($args, $params['type']);
+        
+        // Add date filter
+        $args = complaint_list_add_date_filter($args, $params['date_filter']);
+        
+        return $args;
+    }
+    
+    /**
+     * Add status filter to query arguments
+     */
+    function complaint_list_add_status_filter($args, $status) {
         if (!empty($status)) {
             $args[DGA_POST_STATUS_FIELD] = $status;
         } else {
             // แสดงทุกสถานะ รวมถึง custom statuses
-            $args[DGA_POST_STATUS_FIELD] = array('complaint_pending', 'complaint_in_progress', 'complaint_completed', 'complaint_rejected', 'complaint_closed', DGA_PUBLISH_STATUS, 'draft');
+            $args[DGA_POST_STATUS_FIELD] = array(
+                'complaint_pending', 'complaint_in_progress', 'complaint_completed', 
+                'complaint_rejected', 'complaint_closed', DGA_PUBLISH_STATUS, 'draft'
+            );
         }
-
-        // กรองตามประเภท
+        return $args;
+    }
+    
+    /**
+     * Add type filter to query arguments
+     */
+    function complaint_list_add_type_filter($args, $type) {
         if (!empty($type)) {
             $args['meta_query'][] = array(
                 'key' => '_complaint_type',
@@ -10717,114 +10835,123 @@ if (!function_exists('complaint_list_get_complaints')) {
                 'compare' => '='
             );
         }
-
-        // กรองตามวันที่
-        if (!empty($date_filter)) {
-            $date = new DateTime();
-            switch ($date_filter) {
-                case 'today':
-                    $args['date_query'] = array(
-                        'after' => date('Y-m-d', strtotime('today'))
-                    );
-                    break;
-                case 'week':
-                    $args['date_query'] = array(
-                        'after' => date('Y-m-d', strtotime('-7 days'))
-                    );
-                    break;
-                case 'month':
-                    $args['date_query'] = array(
-                        'after' => date('Y-m-d', strtotime('-30 days'))
-                    );
-                    break;
-                case 'quarter':
-                    $args['date_query'] = array(
-                        'after' => date('Y-m-d', strtotime('-90 days'))
-                    );
-                    break;
-                case 'year':
-                    $args['date_query'] = array(
-                        'after' => date('Y-m-d', strtotime('first day of january this year')),
-                        'before' => date('Y-m-d', strtotime('last day of december this year')),
-                        'inclusive' => true
-                    );
-                    break;
-                default:
-                    // Default to month filter if no valid filter is provided
-                    $args['date_query'] = array(
-                        'after' => date('Y-m-d', strtotime('-30 days'))
-                    );
-                    break;
-            }
+        return $args;
+    }
+    
+    /**
+     * Add date filter to query arguments
+     */
+    function complaint_list_add_date_filter($args, $date_filter) {
+        if (empty($date_filter)) {
+            return $args;
         }
-
-        // คำนวณจำนวนตามสถานะ
-        $status_counts = array(
-            'complaint_pending' => 0,
-            'complaint_in_progress' => 0,
-            'complaint_completed' => 0,
-            'complaint_rejected' => 0,
-            'complaint_closed' => 0
+        
+        $date_queries = complaint_list_get_date_queries();
+        $args['date_query'] = isset($date_queries[$date_filter]) 
+            ? $date_queries[$date_filter] 
+            : $date_queries['month']; // Default fallback
+        
+        return $args;
+    }
+    
+    /**
+     * Get date filter configurations
+     */
+    function complaint_list_get_date_queries() {
+        return array(
+            'today' => array(
+                'after' => date('Y-m-d', strtotime('today'))
+            ),
+            'week' => array(
+                'after' => date('Y-m-d', strtotime('-7 days'))
+            ),
+            'month' => array(
+                'after' => date('Y-m-d', strtotime('-30 days'))
+            ),
+            'quarter' => array(
+                'after' => date('Y-m-d', strtotime('-90 days'))
+            ),
+            'year' => array(
+                'after' => date('Y-m-d', strtotime('first day of january this year')),
+                'before' => date('Y-m-d', strtotime('last day of december this year')),
+                'inclusive' => true
+            )
         );
-
-        foreach ($status_counts as $count_status => $count) {
-            $count_args = $args;
-            $count_args[DGA_POST_STATUS_FIELD] = $count_status;
+    }
+    
+    /**
+     * Get status counts for all complaint statuses
+     */
+    function complaint_list_get_status_counts($base_args) {
+        $statuses = array(
+            'complaint_pending', 'complaint_in_progress', 'complaint_completed',
+            'complaint_rejected', 'complaint_closed'
+        );
+        
+        $status_counts = array();
+        
+        foreach ($statuses as $status) {
+            $count_args = $base_args;
+            $count_args[DGA_POST_STATUS_FIELD] = $status;
             $count_args[DGA_POSTS_PER_PAGE] = -1;
             $count_args[DGA_FIELDS_PARAMETER] = 'ids';
-            unset($count_args[DGA_PAGED_PARAMETER]); // ลบ paged สำหรับการนับ
+            unset($count_args[DGA_PAGED_PARAMETER]);
+            
             $count_query = new WP_Query($count_args);
-            $status_counts[$count_status] = $count_query->found_posts;
+            $status_counts[$status] = $count_query->found_posts;
             wp_reset_postdata();
         }
-
-        // ดึงข้อมูลเรื่องร้องเรียน
-        $query = new WP_Query($args);
+        
+        return $status_counts;
+    }
+    
+    /**
+     * Format complaint data from query results
+     */
+    function complaint_list_format_complaints($query) {
         $complaints = array();
-
+        
         while ($query->have_posts()) {
             $query->the_post();
-            $post_id = get_the_ID();
-            
-            // ดึงข้อมูลเมตา
-            $type_value = get_post_meta($post_id, '_complaint_type', true);
-            $department = get_post_meta($post_id, '_complaint_department', true);
-            $is_anonymous = get_post_meta($post_id, '_is_anonymous', true);
-            $complainant_name = get_post_meta($post_id, '_complainant_name', true);
-            $ref_number = get_post_meta($post_id, '_complaint_ref', true);
-            $details = get_post_field('post_content', $post_id);
-            $due_date = get_post_meta($post_id, '_response_due_date', true);
-            
-            // สร้างชื่อเรื่องและข้อมูลผู้ร้องเรียน
-            $type_label = get_complaint_type_label($type_value);
-            $complainant = ($is_anonymous == 'yes') ? 'ไม่ประสงค์ออกนาม' : $complainant_name;
-            
-            // จัดเตรียมข้อมูลสำหรับส่งกลับ
-            $complaints[] = array(
-                'id' => $post_id,
-                'ref' => $ref_number ?: 'CPL-' . str_pad($post_id, 6, '0', STR_PAD_LEFT),
-                DGA_TYPE_FIELD => $type_label,
-                'type_value' => $type_value,
-                'department' => $department ?: 'ไม่ระบุ',
-                'date' => get_the_date('Y-m-d H:i:s'),
-                'due_date' => $due_date,
-                DGA_STATUS_FIELD => get_post_status($post_id),
-                'complainant' => $complainant ?: 'ไม่ระบุ',
-                'is_anonymous' => ($is_anonymous == 'yes'),
-                'details' => $details
-            );
+            $complaints[] = complaint_list_format_single_complaint(get_the_ID());
         }
         
         wp_reset_postdata();
+        return $complaints;
+    }
+    
+    /**
+     * Format single complaint data
+     */
+    function complaint_list_format_single_complaint($post_id) {
+        // ดึงข้อมูลเมตา
+        $meta_data = array(
+            'type_value' => get_post_meta($post_id, '_complaint_type', true),
+            'department' => get_post_meta($post_id, '_complaint_department', true),
+            'is_anonymous' => get_post_meta($post_id, '_is_anonymous', true),
+            'complainant_name' => get_post_meta($post_id, '_complainant_name', true),
+            'ref_number' => get_post_meta($post_id, '_complaint_ref', true),
+            'details' => get_post_field('post_content', $post_id),
+            'due_date' => get_post_meta($post_id, '_response_due_date', true)
+        );
         
-        // ส่งข้อมูลกลับ
-        wp_send_json_success(array(
-            'complaints' => $complaints,
-            DGA_TOTAL_FIELD_KEY => $query->found_posts,
-            'pages' => $query->max_num_pages,
-            'current_page' => $page,
-            'status_counts' => $status_counts
-        ));
+        // Format data
+        $type_label = get_complaint_type_label($meta_data['type_value']);
+        $complainant = ($meta_data['is_anonymous'] === 'yes') ? 'ไม่ประสงค์ออกนาม' : $meta_data['complainant_name'];
+        
+        return array(
+            'id' => $post_id,
+            'ref' => $meta_data['ref_number'] ?: 'CPL-' . str_pad($post_id, 6, '0', STR_PAD_LEFT),
+            DGA_TYPE_FIELD => $type_label,
+            'type_value' => $meta_data['type_value'],
+            'department' => $meta_data['department'] ?: 'ไม่ระบุ',
+            'date' => get_the_date('Y-m-d H:i:s'),
+            'due_date' => $meta_data['due_date'],
+            DGA_STATUS_FIELD => get_post_status($post_id),
+            'complainant' => $complainant ?: 'ไม่ระบุ',
+            'is_anonymous' => ($meta_data['is_anonymous'] === 'yes'),
+            'details' => $meta_data['details']
+        );
     }
     add_action('wp_ajax_complaint_list_get_complaints', 'complaint_list_get_complaints');
 }
@@ -13088,7 +13215,9 @@ function get_enhanced_post_types_xdk738($role) {
     $result = array();
     
     foreach ($all_post_types as $post_type_name => $post_type) {
-        if ($post_type_name === 'attachment') continue;
+        if ($post_type_name === 'attachment') {
+            continue;
+        }
         
         $cap_type = isset($post_type->cap->edit_posts) ? 
             str_replace('edit_', '', $post_type->cap->edit_posts) : 
@@ -13444,8 +13573,8 @@ function get_roles_table_ajax() {
             endforeach; 
             
             // แสดงบทบาทที่สร้างเพิ่มเติม
-            foreach ($all_roles as $role_name => $role_info) :
-                if (!in_array($role_name, $default_roles)) :
+            foreach ($all_roles as $role_name => $role_info) {
+                if (!in_array($role_name, $default_roles)) {
                     $role = get_role($role_name);
                     $role_count = isset($users_count['avail_roles'][$role_name]) ? $users_count['avail_roles'][$role_name] : 0;
                     $cap_count = count(array_filter($role->capabilities));
@@ -13471,8 +13600,8 @@ function get_roles_table_ajax() {
                     </td>
                 </tr>
             <?php 
-                endif;
-            endforeach; 
+                }
+            }
             ?>
         </tbody>
     </table>
@@ -14888,7 +15017,9 @@ function pplist_get_post_views_ppl738($post_id) {
 
 function pplist_set_post_views_ppl738($post_id) {
     $post_id = absint($post_id);
-    if (!$post_id) return 0;
+    if (!$post_id) {
+        return 0;
+    }
     
     // Check if already viewed in this session
     $session_key = 'pplist_viewed_' . $post_id;
@@ -24335,7 +24466,9 @@ function wptax_save_category_terms() {
     $updated_terms = array();
     
     foreach ($terms as $taxonomy => $term_id) {
-        if (empty($term_id)) continue;
+        if (empty($term_id)) {
+            continue;
+        }
         
         $result = wp_set_object_terms($post_id, intval($term_id), sanitize_key($taxonomy));
         
@@ -30641,7 +30774,9 @@ function ckan_parse_csv_to_array($csv_content) {
         
         // ตรวจสอบว่า field นี้น่าจะเป็นประเภทข้อมูลใด (เช็คจากข้อมูลในไฟล์)
         for ($i = 1; $i < min(count($lines), 5); $i++) {
-            if (empty(trim($lines[$i]))) continue;
+            if (empty(trim($lines[$i]))) {
+                continue;
+            }
             
             $row = str_getcsv($lines[$i]);
             $index = array_search($field_name, $header);
@@ -43664,9 +43799,110 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// กำหนดค่า reCAPTCHA
-define('DGA_RECAPTCHA_SITE_KEY', '6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy');
-define('DGA_RECAPTCHA_SECRET_KEY', '6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ');
+// กำหนดค่า reCAPTCHA - ใช้ environment variables หรือ WordPress options เพื่อความปลอดภัย
+// SECURITY: reCAPTCHA keys should be stored securely, not hardcoded
+// Method 1: Environment variables (recommended)
+define('DGA_RECAPTCHA_SITE_KEY', getenv('DGA_RECAPTCHA_SITE_KEY') ?: get_option('dga_recaptcha_site_key', ''));
+define('DGA_RECAPTCHA_SECRET_KEY', getenv('DGA_RECAPTCHA_SECRET_KEY') ?: get_option('dga_recaptcha_secret_key', ''));
+
+// Method 2: WordPress options (alternative)
+// Admin should set these via Settings > reCAPTCHA Settings or wp-config.php
+// Example wp-config.php entries:
+// define('DGA_RECAPTCHA_SITE_KEY', 'your-new-site-key-here');
+// define('DGA_RECAPTCHA_SECRET_KEY', 'your-new-secret-key-here');
+
+/**
+ * CRITICAL SECURITY NOTICE:
+ * The old reCAPTCHA keys that were exposed in this code must be:
+ * 1. REVOKED immediately in Google reCAPTCHA Console
+ * 2. REPLACED with new keys
+ * 3. NEVER committed to version control again
+ * 
+ * Old exposed keys (REVOKE THESE NOW):
+ * Site Key: 6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy
+ * Secret Key: 6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ
+ */
+
+/**
+ * Validate reCAPTCHA configuration
+ */
+function dga_validate_recaptcha_config() {
+    $site_key = DGA_RECAPTCHA_SITE_KEY;
+    $secret_key = DGA_RECAPTCHA_SECRET_KEY;
+    
+    // Check if keys are missing
+    if (empty($site_key) || empty($secret_key)) {
+        add_action('admin_notices', 'dga_recaptcha_missing_keys_notice');
+        return false;
+    }
+    
+    // Check if still using old exposed keys (SECURITY RISK)
+    $old_site_key = '6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy';
+    $old_secret_key = '6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ';
+    
+    if ($site_key === $old_site_key || $secret_key === $old_secret_key) {
+        add_action('admin_notices', 'dga_recaptcha_security_warning_notice');
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * Admin notice for missing reCAPTCHA keys
+ */
+function dga_recaptcha_missing_keys_notice() {
+    echo '<div class="notice notice-warning is-dismissible">';
+    echo '<p><strong>reCAPTCHA Configuration Missing:</strong> Please configure reCAPTCHA keys in wp-config.php or as environment variables.</p>';
+    echo '<p>Add to wp-config.php:<br/>';
+    echo '<code>define(\'DGA_RECAPTCHA_SITE_KEY\', \'your-site-key\');<br/>';
+    echo 'define(\'DGA_RECAPTCHA_SECRET_KEY\', \'your-secret-key\');</code></p>';
+    echo '</div>';
+}
+
+/**
+ * Critical security warning for exposed keys
+ */
+function dga_recaptcha_security_warning_notice() {
+    echo '<div class="notice notice-error">';
+    echo '<p><strong>CRITICAL SECURITY RISK:</strong> You are still using the exposed reCAPTCHA keys!</p>';
+    echo '<p><strong>IMMEDIATE ACTION REQUIRED:</strong></p>';
+    echo '<ol>';
+    echo '<li>Go to <a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA Console</a></li>';
+    echo '<li>REVOKE the old keys immediately</li>';
+    echo '<li>Generate new reCAPTCHA keys</li>';
+    echo '<li>Update your configuration with the new keys</li>';
+    echo '</ol>';
+    echo '</div>';
+}
+
+/**
+ * Helper function to safely get reCAPTCHA keys
+ */
+function dga_get_recaptcha_keys() {
+    $site_key = DGA_RECAPTCHA_SITE_KEY;
+    $secret_key = DGA_RECAPTCHA_SECRET_KEY;
+    
+    // Return false if keys are missing or using old exposed keys
+    if (empty($site_key) || empty($secret_key)) {
+        return false;
+    }
+    
+    $old_site_key = '6LcULDkrAAAAAKmcMSBaRZ61-8uYxCRtG6LcEnhy';
+    $old_secret_key = '6LcULDkrAAAAAAZ--tIZ5iBJDmhmkchu5_zxBQCJ';
+    
+    if ($site_key === $old_site_key || $secret_key === $old_secret_key) {
+        return false;
+    }
+    
+    return array(
+        'site_key' => $site_key,
+        'secret_key' => $secret_key
+    );
+}
+
+// Initialize validation check
+add_action('init', 'dga_validate_recaptcha_config');
 
 // ลงทะเบียน shortcode
 add_shortcode('dga_recaptcha_v3', 'dga_recaptcha_v3_shortcode');
@@ -43792,7 +44028,7 @@ function dga_verify_recaptcha_ajax() {
         'body' => array(
             'secret' => DGA_RECAPTCHA_SECRET_KEY,
             'response' => $token,
-            'remoteip' => $_SERVER['REMOTE_ADDR']
+            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
         )
     ));
     
@@ -43910,7 +44146,7 @@ function dga_verify_recaptcha_server_side($token, $action = 'submit') {
         'body' => array(
             'secret' => DGA_RECAPTCHA_SECRET_KEY,
             'response' => $token,
-            'remoteip' => $_SERVER['REMOTE_ADDR']
+            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
         )
     ));
     
