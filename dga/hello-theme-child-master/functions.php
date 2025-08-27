@@ -109,6 +109,9 @@ define( 'DGA_ERROR_MESSAGE_TH', 'เกิดข้อผิดพลาด' );
 define( 'DGA_ERROR_RETRY_MESSAGE_TH', 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง' );
 define( 'DGA_INVALID_NONCE_MESSAGE', 'Invalid nonce' );
 
+// Login related constants
+define( 'DGA_LOGIN_TEXT_TH', 'เข้าสู่ระบบ' );
+
 
 
 /***** DGA ADMIN LOGIN **********/
@@ -5104,7 +5107,7 @@ function welcome_user_shortcode_tt25($atts) {
         // Form title for tooltips style
         if ($style === 'tooltips') {
             $output .= '<div class="login-form-header-tt25">';
-            $output .= '<div id="login-form-title-tt25" class="login-form-title-tt25" role="heading" aria-level="2">' . __('เข้าสู่ระบบ', DGA_TEXT_DOMAIN) . '</div>';
+            $output .= '<div id="login-form-title-tt25" class="login-form-title-tt25" role="heading" aria-level="2">' . __(DGA_LOGIN_TEXT_TH, DGA_TEXT_DOMAIN) . '</div>';
             $output .= '<button type=DGA_BUTTON_TYPE class="login-form-close-tt25" aria-label="' . __('ปิดฟอร์มล็อกอิน', DGA_TEXT_DOMAIN) . '">×</button>';
             $output .= '</div>';
         }
@@ -5159,7 +5162,7 @@ function welcome_user_shortcode_tt25($atts) {
         
         // Submit button and forgot password link
         $output .= '<div class="login-form-actions-tt25">';
-        $output .= '<button type=DGA_SUBMIT_TYPE id="login-submit-btn-tt25">' . __('เข้าสู่ระบบ', DGA_TEXT_DOMAIN) . '</button>';
+        $output .= '<button type=DGA_SUBMIT_TYPE id="login-submit-btn-tt25">' . __(DGA_LOGIN_TEXT_TH, DGA_TEXT_DOMAIN) . '</button>';
         $output .= '<a href="' . esc_url(home_url('/reset-password')) . '" class="forgot-password-link-tt25">' . __('ลืมรหัสผ่าน', DGA_TEXT_DOMAIN) . '</a>';
         $output .= '</div>';
         
@@ -7876,7 +7879,7 @@ function profile_management_shortcode_pmg728() {
             __('กรุณาเข้าสู่ระบบ', DGA_TEXT_DOMAIN),
             __('คุณต้องเข้าสู่ระบบเพื่อแก้ไขโปรไฟล์', DGA_TEXT_DOMAIN),
             wp_login_url(get_permalink()),
-            __('เข้าสู่ระบบ', DGA_TEXT_DOMAIN)
+            __(DGA_LOGIN_TEXT_TH, DGA_TEXT_DOMAIN)
         );
     }
 
