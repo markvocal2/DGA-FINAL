@@ -10,43 +10,18 @@ jQuery(document).ready(function($) {
     
     // Add copy buttons to code blocks
     $('.changelog-feature pre').each(function() {
-        var $this = $(this);
-        var $code = $this.find('code');
-        var $button = $('<button class="copy-code-button">Copy</button>');
+        const $this = $(this);
+        const $code = $this.find('code');
+        const $button = $('<button class="copy-code-button">Copy</button>');
         
         $this.css('position', 'relative');
         $this.append($button);
         
-        $button.on('click', function() {
-            var code = $code.text();
-            copyToClipboard(code);
-            
-            // Visual feedback
-            var originalText = $button.text();
-            $button.text('Copied!');
-            $button.css('background-color', '#10b981'); // Success green
-            
-            setTimeout(function() {
-                $button.text(originalText);
-                $button.css('background-color', '#1e3a8a'); // Back to blue
-            }, 2000);
-        });
+        $button.on('click', createCopyButtonClickHandler($code, $button));
     });
     
     // Toggle version content
-    $('.version-header').on('click', function() {
-        var $content = $(this).next('.version-content');
-        $content.slideToggle(300);
-        
-        // Add visual indicator for toggle state
-        $(this).toggleClass('version-header-collapsed');
-        
-        if ($(this).hasClass('version-header-collapsed')) {
-            $(this).css('border-left-color', '#f97316'); // Orange when collapsed
-        } else {
-            $(this).css('border-left-color', '#1e40af'); // Blue when expanded
-        }
-    });
+    $('.version-header').on('click', createVersionHeaderClickHandler());
     
     // Expand/collapse all versions
     $('.expand-all-btn').on('click', function() {
@@ -63,8 +38,8 @@ jQuery(document).ready(function($) {
     
     // Version filtering (if there are many versions)
     if ($('.changelog-version').length > 5) {
-        var $filterContainer = $('<div class="changelog-filter"></div>');
-        var $filterInput = $('<input type="text" placeholder="Filter by version or feature...">');
+        const $filterContainer = $('<div class="changelog-filter"></div>');
+        const $filterInput = $('<input type="text" placeholder="Filter by version or feature...">');
         
         $filterContainer.css({
             'padding': '10px 30px',
@@ -82,50 +57,16 @@ jQuery(document).ready(function($) {
         $filterContainer.append($filterInput);
         $('.changelog-controls').after($filterContainer);
         
-        $filterInput.on('input', function() {
-            var filterText = $(this).val().toLowerCase();
-            
-            $('.changelog-version').each(function() {
-                var versionText = $(this).find('.version-number').text().toLowerCase();
-                var featureTexts = [];
-                
-                $(this).find('.feature-title').each(function() {
-                    featureTexts.push($(this).text().toLowerCase());
-                });
-                
-                var hasMatch = versionText.indexOf(filterText) > -1;
-                
-                // Check features too
-                for (var i = 0; i < featureTexts.length; i++) {
-                    if (featureTexts[i].indexOf(filterText) > -1) {
-                        hasMatch = true;
-                        break;
-                    }
-                }
-                
-                if (hasMatch) {
-                    $(this).show();
-                    
-                    // If filtering and match found, auto-expand
-                    if (filterText.length > 0) {
-                        $(this).find('.version-content').slideDown(300);
-                        $(this).find('.version-header').removeClass('version-header-collapsed');
-                        $(this).find('.version-header').css('border-left-color', '#1e40af');
-                    }
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
+        $filterInput.on('input', createFilterInputHandler());
     }
     
     // Show modal when update button is clicked
     $('.update-changelog-btn').on('click', function() {
         // Set today's date as default
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
+        let today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
         today = yyyy + '-' + mm + '-' + dd;
         $('#date').val(today);
         
@@ -146,7 +87,7 @@ jQuery(document).ready(function($) {
     
     // Add new feature
     $('#add-feature-btn').on('click', function() {
-        var featureTemplate = `
+        const featureTemplate = `
             <div class="feature-item" style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 15px; margin-bottom: 15px;">
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px;">หัวข้อ</label>
@@ -192,12 +133,12 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         
         // Show loading indicator
-        var $submitBtn = $('.submit-btn');
-        var originalBtnText = $submitBtn.text();
+        const $submitBtn = $('.submit-btn');
+        const originalBtnText = $submitBtn.text();
         $submitBtn.prop('disabled', true).text('กำลังบันทึก...');
         
         // Get post ID from the container
-        var postId = $('.changelog-container').data('post-id');
+        let postId = $('.changelog-container').data('post-id');
         if (!postId) {
             postId = getCurrentPostId();
         }
@@ -210,8 +151,8 @@ jQuery(document).ready(function($) {
         }
         
         // Collect form data
-        var version = $('#version').val();
-        var date = $('#date').val();
+        const version = $('#version').val();
+        let date = $('#date').val();
         
         if (!version) {
             alert('กรุณาระบุเวอร์ชัน');
@@ -221,25 +162,25 @@ jQuery(document).ready(function($) {
         
         if (!date) {
             // Use current date if not specified
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
             date = yyyy + '-' + mm + '-' + dd;
         }
         
         // Format date for display
-        var displayDate = formatDate(date);
+        const displayDate = formatDate(date);
         
         // Collect features
-        var features = [];
+        const features = [];
         
         $('.feature-item').each(function() {
-            var $item = $(this);
-            var title = $item.find('.feature-title').val();
-            var text = $item.find('.feature-text').val();
-            var codeLanguage = $item.find('.code-language').val();
-            var codeContent = $item.find('.code-content').val();
+            const $item = $(this);
+            const title = $item.find('.feature-title').val();
+            const text = $item.find('.feature-text').val();
+            const codeLanguage = $item.find('.code-language').val();
+            const codeContent = $item.find('.code-content').val();
             
             if (title) {
                 features.push({
@@ -258,7 +199,7 @@ jQuery(document).ready(function($) {
         }
         
         // Prepare data for AJAX
-        var formData = {
+        const formData = {
             action: 'save_changelog',
             nonce: changelogParams.nonce,
             post_id: postId,
@@ -317,36 +258,127 @@ jQuery(document).ready(function($) {
     
     // Helper Functions
     
+    // Copy button click handler
+    function createCopyButtonClickHandler($code, $button) {
+        return function() {
+            const code = $code.text();
+            copyToClipboard(code);
+            
+            // Visual feedback
+            const originalText = $button.text();
+            $button.text('Copied!');
+            $button.css('background-color', '#10b981');
+            
+            setTimeout(function() {
+                $button.text(originalText);
+                $button.css('background-color', '#1e3a8a');
+            }, 2000);
+        };
+    }
+    
+    // Version header click handler
+    function createVersionHeaderClickHandler() {
+        return function() {
+            const $content = $(this).next('.version-content');
+            $content.slideToggle(300);
+            
+            $(this).toggleClass('version-header-collapsed');
+            
+            if ($(this).hasClass('version-header-collapsed')) {
+                $(this).css('border-left-color', '#f97316');
+            } else {
+                $(this).css('border-left-color', '#1e40af');
+            }
+        };
+    }
+    
+    // Add copy buttons to code blocks
+    function addCopyButtonsToCodeBlocks($container) {
+        $container.find('pre:not(:has(.copy-code-button))').each(function() {
+            const $pre = $(this);
+            const $code = $pre.find('code');
+            const $button = $('<button class="copy-code-button">Copy</button>');
+            
+            $pre.css('position', 'relative');
+            $pre.append($button);
+            
+            $button.on('click', createCopyButtonClickHandler($code, $button));
+        });
+    }
+    
+    // Process single changelog version for filtering
+    function processVersionForFilter($version, filterText) {
+        const versionText = $version.find('.version-number').text().toLowerCase();
+        const featureTexts = [];
+        
+        $version.find('.feature-title').each(function() {
+            featureTexts.push($(this).text().toLowerCase());
+        });
+        
+        let hasMatch = versionText.indexOf(filterText) > -1;
+        
+        // Check features too
+        for (let i = 0; i < featureTexts.length; i++) {
+            if (featureTexts[i].indexOf(filterText) > -1) {
+                hasMatch = true;
+                break;
+            }
+        }
+        
+        if (hasMatch) {
+            $version.show();
+            
+            // If filtering and match found, auto-expand
+            if (filterText.length > 0) {
+                $version.find('.version-content').slideDown(300);
+                $version.find('.version-header').removeClass('version-header-collapsed');
+                $version.find('.version-header').css('border-left-color', '#1e40af');
+            }
+        } else {
+            $version.hide();
+        }
+    }
+    
+    // Filter input handler
+    function createFilterInputHandler() {
+        return function() {
+            const filterText = $(this).val().toLowerCase();
+            $('.changelog-version').each(function() {
+                processVersionForFilter($(this), filterText);
+            });
+        };
+    }
+    
     // Get current post ID from various sources
     function getCurrentPostId() {
         // Try to get from URL first
-        var urlParams = new URLSearchParams(window.location.search);
-        var postId = urlParams.get('post');
+        const urlParams = new URLSearchParams(window.location.search);
+        let postId = urlParams.get('post');
         
         if (postId) {
             return postId;
         }
         
         // Try to get from the body class
-        var bodyClasses = document.body.className.split(' ');
-        for (var i = 0; i < bodyClasses.length; i++) {
+        const bodyClasses = document.body.className.split(' ');
+        for (let i = 0; i < bodyClasses.length; i++) {
             if (bodyClasses[i].indexOf('postid-') === 0) {
                 return bodyClasses[i].replace('postid-', '');
             }
         }
         
         // Try to get from canonical link
-        var canonicalLink = document.querySelector('link[rel="canonical"]');
+        const canonicalLink = document.querySelector('link[rel="canonical"]');
         if (canonicalLink) {
-            var href = canonicalLink.getAttribute('href');
-            var match = href.match(/\/(\d+)\/?$/);
+            const href = canonicalLink.getAttribute('href');
+            const match = href.match(/\/(\d+)\/?$/);
             if (match && match[1]) {
                 return match[1];
             }
         }
         
         // If all else fails, ask the user
-        var manualPostId = prompt('ไม่สามารถระบุ ID ของโพสต์ได้โดยอัตโนมัติ กรุณาระบุ ID ของโพสต์:');
+        const manualPostId = prompt('ไม่สามารถระบุ ID ของโพสต์ได้โดยอัตโนมัติ กรุณาระบุ ID ของโพสต์:');
         if (manualPostId && !isNaN(parseInt(manualPostId))) {
             return parseInt(manualPostId);
         }
@@ -356,21 +388,21 @@ jQuery(document).ready(function($) {
     
     // Format date for display
     function formatDate(dateString) {
-        var date = new Date(dateString);
-        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
         
         try {
             return date.toLocaleDateString('th-TH', options);
         } catch (e) {
             // Fallback for browsers without th-TH locale
-            var months = [
+            const months = [
                 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
                 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
             ];
             
-            var day = date.getDate();
-            var month = months[date.getMonth()];
-            var year = date.getFullYear();
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
             
             return day + ' ' + month + ' ' + year;
         }
@@ -393,14 +425,14 @@ jQuery(document).ready(function($) {
     
     // Legacy method to copy text
     function execCopyToClipboard(text) {
-        var textarea = document.createElement('textarea');
+        const textarea = document.createElement('textarea');
         textarea.value = text;
         textarea.setAttribute('readonly', '');
         textarea.style.position = 'absolute';
         textarea.style.left = '-9999px';
         document.body.appendChild(textarea);
         
-        var selected = document.getSelection().rangeCount > 0 ?
+        const selected = document.getSelection().rangeCount > 0 ?
             document.getSelection().getRangeAt(0) : false;
             
         textarea.select();
@@ -416,11 +448,11 @@ jQuery(document).ready(function($) {
     // Manual DOM update for changelog (if needed)
     function updateChangelogDOM(version, date, features) {
         // Check if there's already a version with the same date
-        var sameDateFound = false;
-        var $existingVersion = null;
+        let sameDateFound = false;
+        let $existingVersion = null;
         
         $('.changelog-version').each(function() {
-            var versionDate = $(this).find('.version-date').text();
+            const versionDate = $(this).find('.version-date').text();
             if (versionDate === date) {
                 sameDateFound = true;
                 $existingVersion = $(this);
@@ -430,10 +462,10 @@ jQuery(document).ready(function($) {
         
         if (sameDateFound && $existingVersion) {
             // Add features to existing version group
-            var $versionContent = $existingVersion.find('.version-content');
+            const $versionContent = $existingVersion.find('.version-content');
             
             features.forEach(function(feature) {
-                var featureHTML = `
+                const featureHTML = `
                     <div class="changelog-feature">
                         <h3 class="feature-title">${escapeHTML(feature.title)}</h3>
                         <div class="feature-content">
@@ -452,32 +484,10 @@ jQuery(document).ready(function($) {
             }
             
             // Add copy buttons to new code blocks
-            $versionContent.find('pre:not(:has(.copy-code-button))').each(function() {
-                var $pre = $(this);
-                var $code = $pre.find('code');
-                var $button = $('<button class="copy-code-button">Copy</button>');
-                
-                $pre.css('position', 'relative');
-                $pre.append($button);
-                
-                $button.on('click', function() {
-                    var code = $code.text();
-                    copyToClipboard(code);
-                    
-                    // Visual feedback
-                    var originalText = $button.text();
-                    $button.text('Copied!');
-                    $button.css('background-color', '#10b981');
-                    
-                    setTimeout(function() {
-                        $button.text(originalText);
-                        $button.css('background-color', '#1e3a8a');
-                    }, 2000);
-                });
-            });
+            addCopyButtonsToCodeBlocks($versionContent);
         } else {
             // Create new version entry
-            var versionHTML = `
+            const versionHTML = `
                 <div class="changelog-version">
                     <div class="version-header">
                         <span class="version-number">Version ${escapeHTML(version)}</span>
@@ -509,43 +519,10 @@ jQuery(document).ready(function($) {
             }
             
             // Add copy buttons to new code blocks
-            $('.changelog-version:first pre:not(:has(.copy-code-button))').each(function() {
-                var $pre = $(this);
-                var $code = $pre.find('code');
-                var $button = $('<button class="copy-code-button">Copy</button>');
-                
-                $pre.css('position', 'relative');
-                $pre.append($button);
-                
-                $button.on('click', function() {
-                    var code = $code.text();
-                    copyToClipboard(code);
-                    
-                    // Visual feedback
-                    var originalText = $button.text();
-                    $button.text('Copied!');
-                    $button.css('background-color', '#10b981');
-                    
-                    setTimeout(function() {
-                        $button.text(originalText);
-                        $button.css('background-color', '#1e3a8a');
-                    }, 2000);
-                });
-            });
+            addCopyButtonsToCodeBlocks($('.changelog-version:first'));
             
             // Add toggle functionality to new version header
-            $('.changelog-version:first .version-header').on('click', function() {
-                var $content = $(this).next('.version-content');
-                $content.slideToggle(300);
-                
-                $(this).toggleClass('version-header-collapsed');
-                
-                if ($(this).hasClass('version-header-collapsed')) {
-                    $(this).css('border-left-color', '#f97316');
-                } else {
-                    $(this).css('border-left-color', '#1e40af');
-                }
-            });
+            $('.changelog-version:first .version-header').on('click', createVersionHeaderClickHandler());
             
             // Make sure the new version is expanded
             $('.changelog-version:first .version-content').show();
