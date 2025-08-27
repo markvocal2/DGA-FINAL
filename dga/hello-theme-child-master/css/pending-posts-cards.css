@@ -354,7 +354,7 @@
 .filter-select {
     width: 100%;
     max-width: 500px;
-    padding-right: 32px; /* Corrected: Reordered for compliance */
+    padding-right: 32px; /* Reordered for SonarQube compliance */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -381,7 +381,7 @@
 .search-input {
     width: 100%;
     max-width: 500px;
-    padding-right: 32px; /* Corrected: Reordered for compliance */
+    padding-right: 32px; /* Reordered for SonarQube compliance */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
