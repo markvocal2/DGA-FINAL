@@ -354,6 +354,7 @@
 .filter-select {
     width: 100%;
     max-width: 500px;
+    padding-right: 32px; /* Corrected: Reordered for compliance */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -369,7 +370,6 @@
     background-repeat: no-repeat;
     background-position: right 8px center;
     background-size: 16px;
-    padding-right: 32px;
 }
 
 .filter-select:hover,
@@ -381,6 +381,7 @@
 .search-input {
     width: 100%;
     max-width: 500px;
+    padding-right: 32px; /* Corrected: Reordered for compliance */
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -391,7 +392,6 @@
     background-repeat: no-repeat;
     background-position: right 8px center;
     background-size: 16px;
-    padding-right: 32px;
 }
 
 .search-input:hover,
