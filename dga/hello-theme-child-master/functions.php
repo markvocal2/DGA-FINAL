@@ -101,6 +101,14 @@ define( 'DGA_TOTAL_FIELD_KEY', 'total' );
 define( 'DGA_FIELDS_PARAMETER', 'fields' );
 define( 'DGA_PAGED_PARAMETER', 'paged' );
 
+// Version constants
+define( 'DGA_THEME_VERSION', '1.0.1' );
+
+// Error messages constants
+define( 'DGA_ERROR_MESSAGE_TH', 'เกิดข้อผิดพลาด' );
+define( 'DGA_ERROR_RETRY_MESSAGE_TH', 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง' );
+define( 'DGA_INVALID_NONCE_MESSAGE', 'Invalid nonce' );
+
 
 
 /***** DGA ADMIN LOGIN **********/
@@ -665,7 +673,7 @@ function dga_translate_get_labels() {
         'clearingCookies' => __('กำลังล้างข้อมูล...', 'dga-translate'),
         'reloadingEn' => __('Loading English version...', 'dga-translate'),
         'reloadingTh' => __('กำลังโหลดหน้าภาษาไทย...', 'dga-translate'),
-        DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', 'dga-translate')
+        DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, 'dga-translate')
     );
 }
 
@@ -4125,7 +4133,7 @@ function postupdate_featured_images_scripts() {
                     'upload_title' => 'อัพโหลดภาพหน้าปกใหม่',
                     'processing' => 'กำลังประมวลผล...',
                     DGA_SUCCESS_STATUS => 'อัพเดตภาพหน้าปกสำเร็จ กำลังรีโหลดหน้า...',
-                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                    DGA_ERROR_STATUS => DGA_ERROR_RETRY_MESSAGE_TH,
                     'no_file' => 'กรุณาเลือกไฟล์ก่อนอัพโหลด',
                     'confirm_delete' => 'คุณต้องการลบภาพนี้ใช่หรือไม่?'
                 )
@@ -4650,7 +4658,7 @@ add_action('wp_nav_menu_item_custom_fields', 'add_nav_menu_role_fields', 10, 2);
 function update_menu_role_ajax() {
     // Verify nonce
     if (!check_ajax_referer('menu_roles_nonce', 'nonce', false)) {
-        wp_send_json_error('Invalid nonce');
+        wp_send_json_error(DGA_INVALID_NONCE_MESSAGE);
     }
 
     // Get and validate parameters
@@ -4725,69 +4733,65 @@ add_filter('wp_get_nav_menu_items', 'filter_nav_menu_role_items', 10);
  * ถ้าระบุ id จะดึงข้อมูลจาก post นั้น
  * style="card" จะแสดงแบบการ์ดคล้ายกับภาพตัวอย่าง
  */
-function dga_team_shortcode($atts) {
-    // ดึงค่า attributes
-    $attributes = shortcode_atts(array(
-        'id' => '',
-        DGA_NAME_FIELD => '',
-        'position' => '',
-        'phone' => '',
-        'half_image' => '', // URL รูปครึ่งตัว
-        'full_image' => '', // URL รูปเต็มตัว
-        'style' => 'card',  // default หรือ card (แบบที่เห็นในภาพตัวอย่าง)
-        'url' => ''         // URL สำหรับลิงก์ไปเมื่อคลิกที่การ์ด (ถ้ามี)
-    ), $atts);
+/**
+ * Helper function to get post data for team shortcode
+ */
+function dga_team_get_post_data($attributes) {
+    if (empty($attributes['id']) || !is_numeric($attributes['id'])) {
+        return $attributes;
+    }
     
-    // เรียกใช้ CSS และ JS
-    wp_enqueue_style('dga-team-css', get_stylesheet_directory_uri() . '/css/dga-team.css', array(), '1.0.1');
-    wp_enqueue_script('dga-team-js', get_stylesheet_directory_uri() . '/js/dga-team.js', array(DGA_JQUERY_HANDLE), '1.0.1', true);
+    $team_post = get_post($attributes['id']);
+    if (!$team_post) {
+        return $attributes;
+    }
     
-    // ถ้ามี id ลองดึงข้อมูลจาก post
-    if (!empty($attributes['id']) && is_numeric($attributes['id'])) {
-        $team_post = get_post($attributes['id']);
+    // Update attributes with post data
+    $attributes['name'] = $attributes['name'] ?: get_the_title($team_post->ID);
+    $attributes['position'] = $attributes['position'] ?: get_post_meta($team_post->ID, 'position', true);
+    $attributes['phone'] = $attributes['phone'] ?: get_post_meta($team_post->ID, 'phone', true);
+    $attributes['url'] = $attributes['url'] ?: get_permalink($team_post->ID);
+    
+    return $attributes;
+}
+
+/**
+ * Helper function to prepare team images
+ */
+function dga_team_prepare_images($attributes, $team_post = null) {
+    if (!$team_post) {
+        return $attributes;
+    }
+    
+    // Get half image
+    if (empty($attributes['half_image'])) {
+        $half_image_id = get_post_meta($team_post->ID, 'half_image_id', true);
+        $attributes['half_image'] = wp_get_attachment_url($half_image_id);
+    }
+    
+    // Get full image
+    if (empty($attributes['full_image'])) {
+        $full_image_id = get_post_meta($team_post->ID, 'full_image_id', true);
+        $attributes['full_image'] = wp_get_attachment_url($full_image_id);
         
-        if ($team_post) {
-            // ดึงข้อมูลจาก post ถ้ามี
-            $attributes['name'] = $attributes['name'] ?: get_the_title($team_post->ID);
-            $attributes['position'] = $attributes['position'] ?: get_post_meta($team_post->ID, 'position', true);
-            $attributes['phone'] = $attributes['phone'] ?: get_post_meta($team_post->ID, 'phone', true);
-            $attributes['url'] = $attributes['url'] ?: get_permalink($team_post->ID);
-            
-            // ดึงรูปถ้าไม่ได้ระบุมา
-            if (empty($attributes['half_image'])) {
-                $half_image_id = get_post_meta($team_post->ID, 'half_image_id', true);
-                $attributes['half_image'] = wp_get_attachment_url($half_image_id);
-            }
-            
-            if (empty($attributes['full_image'])) {
-                $full_image_id = get_post_meta($team_post->ID, 'full_image_id', true);
-                $attributes['full_image'] = wp_get_attachment_url($full_image_id);
-                
-                // ถ้าไม่มีรูปเต็มตัวที่กำหนดไว้ ใช้ featured image
-                if (empty($attributes['full_image']) && has_post_thumbnail($team_post->ID)) {
-                    $attributes['full_image'] = get_the_post_thumbnail_url($team_post->ID, 'full');
-                }
-            }
-            
-            // ถ้ายังไม่มีรูปครึ่งตัว แต่มีรูปเต็มตัว ให้ใช้รูปเต็มตัวแทน
-            if (empty($attributes['half_image']) && !empty($attributes['full_image'])) {
-                $attributes['half_image'] = $attributes['full_image'];
-            }
+        // Use featured image as fallback
+        if (empty($attributes['full_image']) && has_post_thumbnail($team_post->ID)) {
+            $attributes['full_image'] = get_the_post_thumbnail_url($team_post->ID, 'full');
         }
     }
     
-    // สร้าง ID เฉพาะสำหรับ element
-    $unique_id = 'dga-team-' . (is_numeric($attributes['id']) ? $attributes['id'] : uniqid());
-    
-    // ตรวจสอบว่ามีรูปภาพที่จะแสดง
-    if (empty($attributes['half_image']) || empty($attributes['full_image'])) {
-        return '<p class="dga-team-error">Error: ไม่ได้ระบุรูปภาพทีมงาน</p>';
+    // Use full image for half image if half is empty
+    if (empty($attributes['half_image']) && !empty($attributes['full_image'])) {
+        $attributes['half_image'] = $attributes['full_image'];
     }
     
-    // เตรียมคลาสและ data attributes
-    $classes = 'dga-team-member';
-    $classes .= ($attributes['style'] == 'card') ? ' dga-team-alternate' : '';
-    
+    return $attributes;
+}
+
+/**
+ * Helper function to build team member data attributes
+ */
+function dga_team_build_data_attributes($attributes) {
     $data_attrs = '';
     $data_attrs .= ' data-name="' . esc_attr($attributes['name']) . '"';
     $data_attrs .= ' data-position="' . esc_attr($attributes['position']) . '"';
@@ -4798,37 +4802,82 @@ function dga_team_shortcode($atts) {
         $data_attrs .= ' style="cursor: pointer;"';
     }
     
-    // ถ้าเป็นรูปแบบ card (คล้ายกับภาพตัวอย่าง)
-    if ($attributes['style'] == 'card') {
-        $output = '
-        <div class="' . esc_attr($classes) . '" id="' . esc_attr($unique_id) . '"' . $data_attrs . '>
-            <div class="dga-team-image-container">
-                <div class="dga-team-image-half" style="background-image: url(' . esc_url($attributes['half_image']) . ');"></div>
-                <div class="dga-team-image-full" style="background-image: url(' . esc_url($attributes['full_image']) . ');"></div>
-                <!-- ส่วนแสดงข้อมูลจะถูกสร้างโดย JavaScript -->
-            </div>
-            ' . (!empty($attributes['url']) ? '<a href="' . esc_url($attributes['url']) . '" class="dga-team-link"></a>' : '') . '
+    return $data_attrs;
+}
+
+/**
+ * Helper function to render card style team member
+ */
+function dga_team_render_card_style($attributes, $classes, $unique_id, $data_attrs) {
+    return '
+    <div class="' . esc_attr($classes) . '" id="' . esc_attr($unique_id) . '"' . $data_attrs . '>
+        <div class="dga-team-image-container">
+            <div class="dga-team-image-half" style="background-image: url(' . esc_url($attributes['half_image']) . ');"></div>
+            <div class="dga-team-image-full" style="background-image: url(' . esc_url($attributes['full_image']) . ');"></div>
+            <!-- ส่วนแสดงข้อมูลจะถูกสร้างโดย JavaScript -->
         </div>
-        ';
-    } else {
-        // รูปแบบปกติ
-        $output = '
-        <div class="' . esc_attr($classes) . '" id="' . esc_attr($unique_id) . '"' . $data_attrs . '>
-            <div class="dga-team-image-container">
-                <div class="dga-team-image-half" style="background-image: url(' . esc_url($attributes['half_image']) . ');"></div>
-                <div class="dga-team-image-full" style="background-image: url(' . esc_url($attributes['full_image']) . ');"></div>
-            </div>
-            <div class="dga-team-info">
-                <h3 class="dga-team-name">' . esc_html($attributes['name']) . '</h3>
-                <p class="dga-team-position">' . esc_html($attributes['position']) . '</p>
-                <p class="dga-team-phone">' . esc_html($attributes['phone']) . '</p>
-            </div>
-            ' . (!empty($attributes['url']) ? '<a href="' . esc_url($attributes['url']) . '" class="dga-team-link"></a>' : '') . '
+        ' . (!empty($attributes['url']) ? '<a href="' . esc_url($attributes['url']) . '" class="dga-team-link"></a>' : '') . '
+    </div>';
+}
+
+/**
+ * Helper function to render default style team member
+ */
+function dga_team_render_default_style($attributes, $classes, $unique_id, $data_attrs) {
+    return '
+    <div class="' . esc_attr($classes) . '" id="' . esc_attr($unique_id) . '"' . $data_attrs . '>
+        <div class="dga-team-image-container">
+            <div class="dga-team-image-half" style="background-image: url(' . esc_url($attributes['half_image']) . ');"></div>
+            <div class="dga-team-image-full" style="background-image: url(' . esc_url($attributes['full_image']) . ');"></div>
         </div>
-        ';
+        <div class="dga-team-info">
+            <h3 class="dga-team-name">' . esc_html($attributes['name']) . '</h3>
+            <p class="dga-team-position">' . esc_html($attributes['position']) . '</p>
+            <p class="dga-team-phone">' . esc_html($attributes['phone']) . '</p>
+        </div>
+        ' . (!empty($attributes['url']) ? '<a href="' . esc_url($attributes['url']) . '" class="dga-team-link"></a>' : '') . '
+    </div>';
+}
+
+function dga_team_shortcode($atts) {
+    // Get shortcode attributes
+    $attributes = shortcode_atts(array(
+        'id' => '',
+        DGA_NAME_FIELD => '',
+        'position' => '',
+        'phone' => '',
+        'half_image' => '',
+        'full_image' => '',
+        'style' => 'card',
+        'url' => ''
+    ), $atts);
+    
+    // Enqueue CSS and JS
+    wp_enqueue_style('dga-team-css', get_stylesheet_directory_uri() . '/css/dga-team.css', array(), DGA_THEME_VERSION);
+    wp_enqueue_script('dga-team-js', get_stylesheet_directory_uri() . '/js/dga-team.js', array(DGA_JQUERY_HANDLE), DGA_THEME_VERSION, true);
+    
+    // Get post data if ID is provided
+    $team_post = null;
+    if (!empty($attributes['id']) && is_numeric($attributes['id'])) {
+        $team_post = get_post($attributes['id']);
+        $attributes = dga_team_get_post_data($attributes);
+        $attributes = dga_team_prepare_images($attributes, $team_post);
     }
     
-    return $output;
+    // Validate required images
+    if (empty($attributes['half_image']) || empty($attributes['full_image'])) {
+        return '<p class="dga-team-error">Error: ไม่ได้ระบุรูปภาพทีมงาน</p>';
+    }
+    
+    // Prepare common variables
+    $unique_id = 'dga-team-' . (is_numeric($attributes['id']) ? $attributes['id'] : uniqid());
+    $classes = 'dga-team-member' . ($attributes['style'] == 'card' ? ' dga-team-alternate' : '');
+    $data_attrs = dga_team_build_data_attributes($attributes);
+    
+    // Return appropriate style
+    return ($attributes['style'] == 'card') 
+        ? dga_team_render_card_style($attributes, $classes, $unique_id, $data_attrs)
+        : dga_team_render_default_style($attributes, $classes, $unique_id, $data_attrs);
 }
 add_shortcode('dga_team', 'dga_team_shortcode');
 
@@ -4843,8 +4892,8 @@ add_shortcode('dga_team', 'dga_team_shortcode');
  */
 function dga_team_group_shortcode($atts, $content = null) {
     // เรียกใช้ CSS และ JS
-    wp_enqueue_style('dga-team-css', get_stylesheet_directory_uri() . '/css/dga-team.css', array(), '1.0.1');
-    wp_enqueue_script('dga-team-js', get_stylesheet_directory_uri() . '/js/dga-team.js', array(DGA_JQUERY_HANDLE), '1.0.1', true);
+    wp_enqueue_style('dga-team-css', get_stylesheet_directory_uri() . '/css/dga-team.css', array(), DGA_THEME_VERSION);
+    wp_enqueue_script('dga-team-js', get_stylesheet_directory_uri() . '/js/dga-team.js', array(DGA_JQUERY_HANDLE), DGA_THEME_VERSION, true);
     
     // ดึงค่า shortcode ข้างใน
     $output = '<div class="dga-team-grid">';
@@ -7745,7 +7794,7 @@ function profile_management_enqueue_scripts_pmg728() {
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'updating' => __('กำลังอัพเดต...', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('บันทึกข้อมูลเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_RETRY_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'passwordUpdated' => __('อัพเดตรหัสผ่านเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
             'redirecting' => __('กำลังไปยังหน้าเข้าสู่ระบบ...', DGA_TEXT_DOMAIN)
         )
@@ -8938,7 +8987,7 @@ function complaint_form_enqueue_scripts() {
                     'form_loading' => 'กำลังโหลดแบบฟอร์ม',
                     'submitting' => 'กำลังส่งข้อมูล',
                     DGA_SUCCESS_STATUS => 'ส่งข้อมูลสำเร็จ',
-                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด',
+                    DGA_ERROR_STATUS => DGA_ERROR_MESSAGE_TH,
                     'close_modal' => 'ปิดหน้าต่างข้อความ'
                 )
             )
@@ -10234,7 +10283,7 @@ if (!function_exists('complaint_list_enqueue_scripts')) {
                 DGA_NONCE_KEY => wp_create_nonce('complaint_list_nonce'),
                 'messages' => array(
                     'loading' => 'กำลังโหลดข้อมูล...',
-                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                    DGA_ERROR_STATUS => DGA_ERROR_RETRY_MESSAGE_TH,
                     DGA_SUCCESS_STATUS => 'ดำเนินการเรียบร้อยแล้ว',
                     'confirm_delete' => 'คุณต้องการลบเรื่องร้องเรียนนี้ใช่หรือไม่?',
                     'no_data' => 'ไม่พบเรื่องร้องเรียน',
@@ -11625,7 +11674,7 @@ if (!function_exists('complaint_stats_enqueue_scripts_xyz789')) {
                 ),
                 'messages' => array(
                     'loading' => 'กำลังโหลดข้อมูล...',
-                    DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                    DGA_ERROR_STATUS => DGA_ERROR_RETRY_MESSAGE_TH,
                     'no_data' => 'ไม่พบข้อมูล',
                     'export_success' => 'ส่งออกข้อมูลเรียบร้อยแล้ว'
                 ),
@@ -11820,7 +11869,7 @@ if (!function_exists('get_complaint_statistics_xyz789')) {
     function get_complaint_statistics_xyz789() {
         // ตรวจสอบ nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'complaint_stats_nonce')) {
-            wp_send_json_error(array(DGA_MESSAGE_KEY => 'Invalid nonce'));
+            wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_INVALID_NONCE_MESSAGE));
             return;
         }
         
@@ -12047,7 +12096,7 @@ if (!function_exists('export_complaint_data_xyz789')) {
     function export_complaint_data_xyz789() {
         // ตรวจสอบ nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'complaint_stats_nonce')) {
-            wp_send_json_error(array(DGA_MESSAGE_KEY => 'Invalid nonce'));
+            wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_INVALID_NONCE_MESSAGE));
             return;
         }
         
@@ -12475,7 +12524,7 @@ function init_department_role_manager_xdk738() {
                     'confirmReset' => __('คุณแน่ใจหรือไม่ที่จะรีเซ็ตสิทธิ์ทั้งหมด?', DGA_TEXT_DOMAIN),
                     'defaultRoleError' => __('ไม่สามารถดำเนินการกับบทบาทเริ่มต้นได้', DGA_TEXT_DOMAIN),
                     'roleExistsError' => __('ชื่อบทบาทนี้มีอยู่แล้ว', DGA_TEXT_DOMAIN),
-                    'generalError' => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+                    'generalError' => __(DGA_ERROR_RETRY_MESSAGE_TH, DGA_TEXT_DOMAIN),
                     'permissionSaved' => __('บันทึกการตั้งค่าสิทธิ์เรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
                     'presetApplied' => __('นำเข้าเทมเพลตสิทธิ์เรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
                     'searchPlaceholder' => __('ค้นหาสิทธิ์...', DGA_TEXT_DOMAIN)
@@ -14989,7 +15038,7 @@ function pplist_load_posts_ppl738() {
  */
 function pplist_increment_view_ppl738() {
     if (!check_ajax_referer('pplist_ppl738_nonce', 'nonce', false)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'Invalid nonce'), 403);
+        wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_INVALID_NONCE_MESSAGE), 403);
     }
     
     $post_id = isset($_POST[DGA_POST_ID_FIELD]) ? absint($_POST[DGA_POST_ID_FIELD]) : 0;
@@ -15010,7 +15059,7 @@ function pplist_increment_view_ppl738() {
  */
 function pplist_search_ppl738() {
     if (!check_ajax_referer('pplist_ppl738_nonce', 'nonce', false)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'Invalid nonce'), 403);
+        wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_INVALID_NONCE_MESSAGE), 403);
     }
     
     $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
@@ -15183,7 +15232,7 @@ add_shortcode('ppgroup_editor', 'ppgroup_editor_shortcode');
 function ppgroup_editor_update() {
     // ตรวจสอบ Nonce
     if (!check_ajax_referer('ppgroup_editor_nonce', 'nonce', false)) {
-        wp_send_json_error('Invalid nonce');
+        wp_send_json_error(DGA_INVALID_NONCE_MESSAGE);
     }
     
     // ตรวจสอบสิทธิ์
@@ -16888,7 +16937,7 @@ function contact_form_enqueue_scripts_kzn427() {
         'messages' => array(
             'sending' => __('กำลังส่งข้อมูล...', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('ส่งข้อความเรียบร้อยแล้ว', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_RETRY_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'validation_error' => __('กรุณากรอกข้อมูลให้ครบถ้วน', DGA_TEXT_DOMAIN),
             'captcha_error' => __('กรุณายืนยันว่าคุณไม่ใช่โปรแกรมอัตโนมัติ', DGA_TEXT_DOMAIN)
         )
@@ -19341,14 +19390,14 @@ function pending_posts_cards_assets() {
         'pending-posts-cards',
         get_stylesheet_directory_uri() . '/css/pending-posts-cards.css',
         array(),
-        '1.0.1'
+        DGA_THEME_VERSION
     );
 
     wp_enqueue_script(
         'pending-posts-cards',
         get_stylesheet_directory_uri() . '/js/pending-posts-cards.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.1',
+        DGA_THEME_VERSION,
         true
     );
 
@@ -20548,7 +20597,7 @@ function fpe_enqueue_assets_vkj785($post_id) {
         'strings' => array(
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'saved' => __('บันทึกแล้ว', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'confirmDelete' => __('ยืนยันการลบ?', DGA_TEXT_DOMAIN),
         ),
         'currentContent' => get_post_meta($post_id, 'at_content', true),
@@ -20881,7 +20930,7 @@ class Table_Files_Pro_ABC123 {
                 DGA_NONCE_KEY => wp_create_nonce('table_files_nonce_abc123'),
                 'strings' => array(
                     'loading' => __('กำลังโหลด...', DGA_TEXT_DOMAIN),
-                    DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+                    DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
                     'noFiles' => __('ไม่มีไฟล์แนบ', DGA_TEXT_DOMAIN),
                     'download' => __('ดาวน์โหลด', DGA_TEXT_DOMAIN),
                     'preview' => __('ดูตัวอย่าง', DGA_TEXT_DOMAIN),
@@ -21800,12 +21849,12 @@ function dynamic_table_shortcode($atts) {
     $can_edit = current_user_can(DGA_EDIT_POSTS_CAP);
     
     // Always enqueue viewer styles
-    wp_enqueue_style('dynamic-table-css', get_stylesheet_directory_uri() . '/css/dynamic-table.css', array(), '1.0.1');
+    wp_enqueue_style('dynamic-table-css', get_stylesheet_directory_uri() . '/css/dynamic-table.css', array(), DGA_THEME_VERSION);
     
     // Only enqueue edit scripts if user has permissions
     if ($can_edit) {
         wp_enqueue_script(DGA_JQUERY_HANDLE);
-        wp_enqueue_script('dynamic-table-js', get_stylesheet_directory_uri() . '/js/dynamic-table.js', array(DGA_JQUERY_HANDLE), '1.0.1', true);
+        wp_enqueue_script('dynamic-table-js', get_stylesheet_directory_uri() . '/js/dynamic-table.js', array(DGA_JQUERY_HANDLE), DGA_THEME_VERSION, true);
         
         // Localize script with AJAX URL and nonce
         wp_localize_script('dynamic-table-js', 'dynamic_table_params', array(
@@ -22233,7 +22282,7 @@ function user_posts_register_assets() {
         'user-posts-js',
         $child_theme_uri . '/js/user-posts.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.1',
+        DGA_THEME_VERSION,
         true
     );
     
@@ -22245,7 +22294,7 @@ function user_posts_register_assets() {
             'ajaxurl' => admin_url(DGA_ADMIN_AJAX_URL),
             DGA_NONCE_KEY => wp_create_nonce('user_posts_nonce'),
             'strings' => array(
-                DGA_ERROR_STATUS => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                DGA_ERROR_STATUS => DGA_ERROR_RETRY_MESSAGE_TH,
                 'confirm_status_change' => 'คุณต้องการเปลี่ยนสถานะของโพสนี้ใช่หรือไม่?',
                 'no_posts_found' => 'ไม่พบโพสที่คุณสร้าง',
                 'loading' => 'กำลังโหลด...',
@@ -22259,7 +22308,7 @@ function user_posts_register_assets() {
         'user-posts-css',
         $child_theme_uri . '/css/user-posts.css',
         array(),
-        '1.0.1'
+        DGA_THEME_VERSION
     );
 }
 add_action(DGA_ENQUEUE_SCRIPTS_HOOK, 'user_posts_register_assets');
@@ -23858,7 +23907,7 @@ function wptax_category_modal_enqueue_assets() {
             'modalTitle' => 'กำหนดหมวดหมู่สำหรับเนื้อหานี้',
             'modalDesc' => 'กรุณาเลือกหมวดหมู่ที่เหมาะสมสำหรับเนื้อหานี้',
             'successMessage' => 'บันทึกหมวดหมู่เรียบร้อยแล้ว',
-            'errorMessage' => 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'
+            'errorMessage' => DGA_ERROR_RETRY_MESSAGE_TH
         ));
     }
 }
@@ -24474,19 +24523,19 @@ function org_links_enqueue_scripts() {
     
     // Enqueue styles for frontend and admin
     if (!is_admin() || $is_admin_page) {
-        wp_enqueue_style('org-links-style', get_stylesheet_directory_uri() . '/css/org-links.css', array(), '1.0.1');
-        wp_enqueue_style('org-links-modal-style', get_stylesheet_directory_uri() . '/css/org-links-modal.css', array(), '1.0.1');
+        wp_enqueue_style('org-links-style', get_stylesheet_directory_uri() . '/css/org-links.css', array(), DGA_THEME_VERSION);
+        wp_enqueue_style('org-links-modal-style', get_stylesheet_directory_uri() . '/css/org-links-modal.css', array(), DGA_THEME_VERSION);
     }
     
     // Admin only styles
     if ($is_admin_page) {
-        wp_enqueue_style('org-links-admin-style', get_stylesheet_directory_uri() . '/css/org-links-admin.css', array(), '1.0.1');
+        wp_enqueue_style('org-links-admin-style', get_stylesheet_directory_uri() . '/css/org-links-admin.css', array(), DGA_THEME_VERSION);
     }
     
     // Enqueue main script for frontend and admin
     if (!is_admin() || $is_admin_page) {
         wp_enqueue_media(); // เพิ่ม media uploader ทั้งใน frontend และ admin
-        wp_enqueue_script('org-links-script', get_stylesheet_directory_uri() . '/js/organization-links.js', array(DGA_JQUERY_HANDLE, 'jquery-ui-sortable'), '1.0.1', true);
+        wp_enqueue_script('org-links-script', get_stylesheet_directory_uri() . '/js/organization-links.js', array(DGA_JQUERY_HANDLE, 'jquery-ui-sortable'), DGA_THEME_VERSION, true);
         
         // Pass data to JavaScript
         wp_localize_script('org-links-script', 'org_links_data', array(
@@ -27139,7 +27188,7 @@ function ckan_form_add_shortcode_abc123($atts) {
                 },
                 error: function() {
                     $('.ckan-fadd-status').removeClass(DGA_SUCCESS_STATUS).addClass(DGA_ERROR_STATUS).show();
-                    $('.ckan-fadd-status-message').text('เกิดข้อผิดพลาด');
+                    $('.ckan-fadd-status-message').text(DGA_ERROR_MESSAGE_TH);
                 },
                 complete: function() {
                     btn.prop('disabled', false).text(originalText);
@@ -27659,7 +27708,7 @@ function ckan_taxo_list_ktl924_register_assets() {
         DGA_NONCE_KEY => wp_create_nonce('ckan_taxo_ktl924_nonce'),
         'i18n' => array(
             'loading' => __('กำลังโหลด...', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_RETRY_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'noData' => __('ไม่พบข้อมูล', DGA_TEXT_DOMAIN),
             'accessDenied' => __('คุณไม่มีสิทธิ์เข้าถึงข้อมูลนี้', DGA_TEXT_DOMAIN),
             'all' => __('ทั้งหมด', DGA_TEXT_DOMAIN)
@@ -28934,7 +28983,7 @@ class CKAN_Metafield_System_xyz432 {
             'editingText' => __('กำลังแก้ไข...', $this->text_domain),
             'savingText' => __('กำลังบันทึก...', $this->text_domain),
             'successText' => __('บันทึกสำเร็จ', $this->text_domain),
-            'errorText' => __('เกิดข้อผิดพลาด', $this->text_domain),
+            'errorText' => __(DGA_ERROR_MESSAGE_TH, $this->text_domain),
             'loadingText' => __('กำลังโหลด...', $this->text_domain),
             'confirmText' => __('คุณแน่ใจหรือไม่?', $this->text_domain),
             'confirmResetText' => __('รีเซ็ตการตั้งค่าทั้งหมด?', $this->text_domain),
@@ -31477,7 +31526,7 @@ function ckan_add_tag_shortcode_def456() {
             'no_tags' => __('ไม่พบ Tag ใด ๆ', DGA_TEXT_DOMAIN),
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'save' => __('บันทึก', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'connection_error' => __('เกิดข้อผิดพลาดในการเชื่อมต่อ', DGA_TEXT_DOMAIN),
             'create_new' => __('สร้างใหม่:', DGA_TEXT_DOMAIN),
             'no_results' => __('ไม่พบผลลัพธ์', DGA_TEXT_DOMAIN),
@@ -31846,7 +31895,7 @@ function at_status_toggle_enqueue_scripts() {
         'at-status-toggle-style',
         get_stylesheet_directory_uri() . '/css/at-status-toggle.css',
         array(),
-        '1.0.1'
+        DGA_THEME_VERSION
     );
     
     // ลงทะเบียน JavaScript
@@ -31854,7 +31903,7 @@ function at_status_toggle_enqueue_scripts() {
         'at-status-toggle-script',
         get_stylesheet_directory_uri() . '/js/at-status-toggle.js',
         array(DGA_JQUERY_HANDLE),
-        '1.0.1',
+        DGA_THEME_VERSION,
         true
     );
     
@@ -31994,7 +32043,7 @@ function at_inactive_news_list_enqueue_scripts() {
         'at-inactive-news-list-style',
         get_stylesheet_directory_uri() . '/css/at-inactive-news-list.css',
         array(),
-        '1.0.1'
+        DGA_THEME_VERSION
     );
     
     // ตรวจสอบและโหลด dependencies ก่อน
@@ -32007,7 +32056,7 @@ function at_inactive_news_list_enqueue_scripts() {
         'at-inactive-news-list-script',
         get_stylesheet_directory_uri() . '/js/at-inactive-news-list.js',
         array(DGA_JQUERY_HANDLE, 'at-status-toggle-script'), // เพิ่ม dependency
-        '1.0.1',
+        DGA_THEME_VERSION,
         true
     );
     
@@ -33465,8 +33514,8 @@ function ckan_save_revision_history($post_id, $new_data, $old_data = null) {
 
 function ckan_consent_yns423_shortcode($atts) {
     // Enqueue required scripts and styles from ChildTheme
-    wp_enqueue_style('ckan-consent-css-yns423', get_stylesheet_directory_uri() . '/css/ckan-consent-yns423.css', array(), '1.0.1');
-    wp_enqueue_script('ckan-consent-js-yns423', get_stylesheet_directory_uri() . '/js/ckan-consent-yns423.js', array(DGA_JQUERY_HANDLE), '1.0.1', true);
+    wp_enqueue_style('ckan-consent-css-yns423', get_stylesheet_directory_uri() . '/css/ckan-consent-yns423.css', array(), DGA_THEME_VERSION);
+    wp_enqueue_script('ckan-consent-js-yns423', get_stylesheet_directory_uri() . '/js/ckan-consent-yns423.js', array(DGA_JQUERY_HANDLE), DGA_THEME_VERSION, true);
     
     // Localize script for AJAX URL and nonce
     wp_localize_script('ckan-consent-js-yns423', 'ckanConsentData', array(
@@ -35192,7 +35241,7 @@ function ckan_edit_taxo_term_modern_wkp789() {
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'deleting' => __('กำลังลบ...', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('ดำเนินการสำเร็จ', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'cancel' => __('ยกเลิก', DGA_TEXT_DOMAIN),
             'save' => __('บันทึก', DGA_TEXT_DOMAIN),
             'delete' => __('ลบ', DGA_TEXT_DOMAIN),
@@ -41051,7 +41100,7 @@ function dga_create_user_shortcode_hjk456() {
         'strings' => [
             'creating' => __('กำลังสร้าง...', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('สร้างผู้ใช้สำเร็จ!', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'emailInvalid' => __('กรุณากรอกอีเมลให้ถูกต้อง', DGA_TEXT_DOMAIN),
             'emailExists' => __('อีเมลนี้มีอยู่ในระบบแล้ว', DGA_TEXT_DOMAIN),
             'confirmCreate' => __('ยืนยันการสร้างผู้ใช้', DGA_TEXT_DOMAIN),
@@ -41537,7 +41586,7 @@ function dga_display_password_reset_form_hjk456($user, $key, $login) {
                             window.location.href = '<?php echo home_url(); ?>';
                         }, 2000);
                     } else {
-                        showMessage(result.data.message || 'เกิดข้อผิดพลาด', DGA_ERROR_STATUS);
+                        showMessage(result.data.message || DGA_ERROR_MESSAGE_TH, DGA_ERROR_STATUS);
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'ตั้งรหัสผ่าน';
                     }
@@ -42096,7 +42145,7 @@ class DGA_Template_Importer {
                 DGA_POST_ID_FIELD => get_the_ID(),
                 'loading_text' => __('กำลังนำเข้า...', 'dga-template-importer'),
                 'success_text' => __('นำเข้าสำเร็จ!', 'dga-template-importer'),
-                'error_text' => __('เกิดข้อผิดพลาด', 'dga-template-importer')
+                'error_text' => __(DGA_ERROR_MESSAGE_TH, 'dga-template-importer')
             ));
         }
     }
@@ -42133,7 +42182,7 @@ class DGA_Template_Importer {
             DGA_POST_ID_FIELD => get_the_ID(),
             'loading_text' => __('กำลังนำเข้า...', 'dga-template-importer'),
             'success_text' => __('นำเข้าสำเร็จ!', 'dga-template-importer'),
-            'error_text' => __('เกิดข้อผิดพลาด', 'dga-template-importer'),
+            'error_text' => __(DGA_ERROR_MESSAGE_TH, 'dga-template-importer'),
             'is_admin' => current_user_can(DGA_ADMIN_ROLE)
         ));
         
@@ -42877,8 +42926,8 @@ if (!defined('ABSPATH')) {
 function dga_user_export_shortcode() {
     // Enqueue necessary scripts and styles
     wp_enqueue_style('dashicons');
-    wp_enqueue_style('dga-user-export-style', get_stylesheet_directory_uri() . '/css/dga-user-export.css', array(), '1.0.1');
-    wp_enqueue_script('dga-user-export-script', get_stylesheet_directory_uri() . '/js/dga-user-export.js', array(DGA_JQUERY_HANDLE), '1.0.1', true);
+    wp_enqueue_style('dga-user-export-style', get_stylesheet_directory_uri() . '/css/dga-user-export.css', array(), DGA_THEME_VERSION);
+    wp_enqueue_script('dga-user-export-script', get_stylesheet_directory_uri() . '/js/dga-user-export.js', array(DGA_JQUERY_HANDLE), DGA_THEME_VERSION, true);
 
     // Localize script with AJAX URL and nonce
     wp_localize_script('dga-user-export-script', 'dga_user_export', array(
@@ -43463,7 +43512,7 @@ add_action('wp_ajax_nopriv_dga_verify_recaptcha', 'dga_verify_recaptcha_ajax');
 function dga_verify_recaptcha_ajax() {
     // ตรวจสอบ nonce
     if (!check_ajax_referer('dga_recaptcha_v3_nonce', 'nonce', false)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'Invalid nonce'));
+        wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_INVALID_NONCE_MESSAGE));
     }
     
     // รับ token จาก POST request
@@ -45706,7 +45755,7 @@ function render_acf_modern_ui_mfs582() {
             'nameChangeWarning' => __('คำเตือน: การเปลี่ยน Metadata Name อาจทำให้ข้อมูลเดิมหายไป', DGA_TEXT_DOMAIN),
             'noFields' => __('ยังไม่มี Fields ในกลุ่มนี้', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('ดำเนินการสำเร็จ', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'saving' => __('กำลังบันทึก...', DGA_TEXT_DOMAIN),
             'deleting' => __('กำลังลบ...', DGA_TEXT_DOMAIN),
             'searchPlaceholder' => __('ค้นหา field...', DGA_TEXT_DOMAIN),
@@ -45743,7 +45792,7 @@ function render_acf_modern_ui_mfs582() {
             'delete' => __('ลบ', DGA_TEXT_DOMAIN),
             'harvesting' => __('กำลังดึงข้อมูล...', DGA_TEXT_DOMAIN),
             DGA_SUCCESS_STATUS => __('ดึงข้อมูลสำเร็จ', DGA_TEXT_DOMAIN),
-            DGA_ERROR_STATUS => __('เกิดข้อผิดพลาด', DGA_TEXT_DOMAIN),
+            DGA_ERROR_STATUS => __(DGA_ERROR_MESSAGE_TH, DGA_TEXT_DOMAIN),
             'confirmDelete' => __('ยืนยันการลบ Endpoint นี้?', DGA_TEXT_DOMAIN),
             'noEndpoints' => __('ยังไม่มี Endpoints ที่กำหนด', DGA_TEXT_DOMAIN),
             'hourly' => __('ทุกชั่วโมง', DGA_TEXT_DOMAIN),
@@ -47262,7 +47311,7 @@ function dga_sitemap_enqueue_assets_xkp492() {
             'dga-sitemap-style',
             get_stylesheet_directory_uri() . '/css/dga-new-sitemap.css',
             array(),
-            '1.0.1'
+            DGA_THEME_VERSION
         );
         
         // Enqueue JavaScript
@@ -47270,7 +47319,7 @@ function dga_sitemap_enqueue_assets_xkp492() {
             'dga-sitemap-script',
             get_stylesheet_directory_uri() . '/js/dga-new-sitemap.js',
             array(),
-            '1.0.1',
+            DGA_THEME_VERSION,
             true
         );
         
