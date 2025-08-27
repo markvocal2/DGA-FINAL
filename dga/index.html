@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add Prompt and Noto Sans Thai fonts for better Thai text support -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        body,
+        button {
+            font-family: 'Prompt', 'Noto Sans Thai', sans-serif;
+        }
+
+        /* Add specific styles for Thai text */
+        .thai-text {
+            font-family: 'Noto Sans Thai', sans-serif;
+            line-height: 1.6;
+        }
+
+        hr {
+            margin: 0px 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        h2,
+        h3,
+        p {
+            margin: 0;
+        }
+
+        ul {
+            padding: 10px;
+            line-height: 30px;
+        }
+
+        /* Add styles to ensure proper Thai text wrapping */
+        .text-show-3,
+        .text-show-4 {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <nav class="topnav">
+            <div>
+                <img src="./images/logo-dga.png" alt="logo dga" style="width: 117px;">
+            </div>
+            <div>
+                <a class="active" href="#home">หน้าแรก</a>
+                <a href="#">รู้จักเรา
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+                <a href="#">บริการและโครงการ
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+                <a href="#">นโยบายและมาตรฐาน
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+                <a href="#">กิจกรรม
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+                <a href="#">เอกสารเผยแพร่
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+                <a href="#">จัดซื้อจัดจ้าง
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+                <a href="#">ร้องเรียน
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </a>
+            </div>
+            <div class="right-nav">
+                <div style="font-size: 30px; color: #B1B1B1; font-weight: bolder; margin-right: 10px;">
+                    +ก
+                </div>
+                <div style="display: flex; align-items: center; margin-right: 10px;">
+                    <img src="./images/th-lang.png" alt="thai flag" style="width: 20px; margin-right: 5px;">
+                    <i class="fa fa-angle-down" style="font-weight: bold; color: #1D174A;"></i>
+                </div>
+                <div>
+                    <button class="btn-search" type="button"><i class="fa fa-search"
+                            style="font-weight: bold; color: #F05123; font-size: 28px;"></i></button>
+                </div>
+            </div>
+            <!-- <i class="fa fa-cloud"></i> -->
+
+
+        </nav>
+
+    </section>
+    <section style="position: relative;">
+        <div>
+            <img src="./images/bg-home.jpg" alt="background home" style="width: 100%;">
+        </div>
+        <div class="div-sub">
+            <div style="display: flex; align-items: center;">
+                <span>
+                    <img src="./images/logo-citizen.png" alt="logo-citizen"
+                        style="max-height: 100px; margin-right: 10px;">
+                </span>
+                <span style="font-size: 22px; font-weight: bold; line-height: 30px;">
+                    Citizen <br>
+                    Portal
+                </span>
+            </div>
+            <hr style="color: #DBE2EC; height: 119px; opacity: 0.3;">
+            <div style="display: flex; align-items: center;">
+                <span>
+                    <img src="./images/logo-dg.png" alt="logo-citizen" style="max-height: 50px; margin-right: 10px;">
+                </span>
+                <span style="font-size: 22px; font-weight: bold; line-height: 30px;">
+                    Digital Government <br>
+                    Development Plan
+                </span>
+            </div>
+            <hr style="color: #DBE2EC; height: 119px; opacity: 0.3;">
+            <div style="display: flex; align-items: center;">
+                <span>
+                    <img src="./images/logo-tdga.png" alt="logo-citizen" style="max-height: 50px; margin-right: 10px;">
+                </span>
+                <span style="font-size: 22px; font-weight: bold; line-height: 30px;">
+                    Thailand <br>
+                    Digital
+                </span>
+            </div>
+            <hr style="color: #DBE2EC; height: 119px; opacity: 0.3;">
+            <div style="display: flex; align-items: center;">
+                <span>
+                    <img src="./images/logo-opendata.png" alt="logo-citizen"
+                        style="max-height: 50px; margin-right: 10px;">
+                </span>
+                <span style="font-size: 22px; font-weight: bold; line-height: 30px;">
+                    Open <br>
+                    Government
+                </span>
+            </div>
+            <hr style="color: #DBE2EC; height: 119px; opacity: 0.3;">
+            <div style="display: flex; align-items: center;">
+                <span>
+                    <img src="./images/logo-bizportal.png" alt="logo-citizen"
+                        style="max-height: 50px; margin-right: 10px;">
+                </span>
+                <span style="font-size: 22px; font-weight: bold; line-height: 30px;">
+                    Biz <br>
+                    Portal
+                </span>
+            </div>
+        </div>
+    </section>
+    <section style="margin-top: 150px; padding: 0px 100px;" class="container-extra">
+
+
+
+        <!-- Swiper -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="./images/banner-test-1.png" alt="logo-citizen"
+                        style="max-height: 830px; border-radius: 34px;">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./images/banner-test-2.jpg" alt="logo-citizen"
+                        style="max-height: 830px; border-radius: 34px;">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./images/banner-test-3.jpg" alt="logo-citizen"
+                        style="max-height: 830px; border-radius: 34px;">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./images/banner-test-4.jpg" alt="logo-citizen"
+                        style="max-height: 830px; border-radius: 34px;">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./images/banner-test-5.jpg" alt="logo-citizen"
+                        style="max-height: 830px; border-radius: 34px;">
+                </div>
+
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <div class="button-prev">
+                    <button class="btn-next">
+                        <i class="fa fa-angle-left" style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                    </button>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="button-next">
+                    <button class="btn-next">
+                        <i class="fa fa-angle-right" style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- <div class="swiper-button-next"></div> -->
+
+            <!-- <div class="swiper-button-prev"></div> -->
+        </div>
+
+        <!-- Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+        <!-- Initialize Swiper -->
+        <script>
+            //      var swiper = new Swiper(".mySwiper", {
+            //   pagination: {
+            //     el: ".swiper-pagination",
+            //   },
+            // });
+            var swiper = new Swiper(".mySwiper", {
+                navigation: {
+                    nextEl: ".button-next",
+                    prevEl: ".button-prev",
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                },
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                }
+            });
+        </script>
+    </section>
+    <section style="padding: 0px 100px; margin-top: 20px;" class="container-extra">
+        <div>
+            <h1 style="color: #F05123; text-align: center;">Digital Government</h1>
+            <h1 style="color: #1D174A; text-align: center; margin-top: -10px;">in Action</h1>
+            <p style="color: #67687B; text-align: center;">Digital Government Development Plan</p>
+        </div>
+        <div style="margin-top: 60px; display: flex; justify-content: space-between;">
+            <div style="position: relative; width: 380px; height: 268px;">
+                <img src="./images/bg-orange.jpg" alt="bg-orange" style="width: 380px; border-radius: 35px;">
+                <div style="position: absolute; top: 0; padding: 50px;">
+                    <img src="./images/icon-policy.png" alt="icon-policy" style="width: 50px;">
+                    <h2 style="color: #fff; margin-top: 5px;">Policy & Regulation</h3>
+
+                        <button class="btn-more" style="margin-top: 30px;">
+                            <i class="fa fa-angle-right"
+                                style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                        </button>
+
+                </div>
+            </div>
+            <div style="position: relative; width: 380px; height: 268px;">
+                <img src="./images/bg-orange.jpg" alt="bg-orange" style="width: 380px; border-radius: 35px;">
+                <div style="position: absolute; top: 0; padding: 50px;">
+                    <img src="./images/icon-policy.png" alt="icon-policy" style="width: 50px;">
+                    <h2 style="color: #fff; margin-top: 5px;">Standard</h3>
+
+                        <button class="btn-more" style="margin-top: 30px;">
+                            <i class="fa fa-angle-right"
+                                style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                        </button>
+
+                </div>
+            </div>
+            <div style="position: relative; width: 380px; height: 268px;">
+                <img src="./images/bg-orange.jpg" alt="bg-orange" style="width: 380px; border-radius: 35px;">
+                <div style="position: absolute; top: 0; padding: 50px;">
+                    <img src="./images/icon-policy.png" alt="icon-policy" style="width: 50px;">
+                    <h2 style="color: #fff; margin-top: 5px;">มติคณะรัฐมนตรีด้านรัฐบาลดิจิทัล</h3>
+
+                        <button class="btn-more" style="margin-top: 30px;">
+                            <i class="fa fa-angle-right"
+                                style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                        </button>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <section style="padding: 0px 100px; margin-top: 100px;" class="container-extra">
+        <div>
+            <h1 style="color: #F05123; ">DGA News</h1>
+            <h1 style="color: #1D174A; margin-top: -10px; ">บทความ</h1>
+            <div style="display: flex; justify-content: space-between;">
+                <p style="color: #67687B; ">Digital Government Development Plan</p>
+                <button type="button" class="btn-org-border">More
+                    <i class="fa fa-long-arrow-right"
+                        style="font-weight: bold; color: #F05123; font-size: 20px; margin-left: 10px;"></i>
+                </button>
+            </div>
+
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+            <div class="card-news">
+                <div style="position: relative;">
+                    <img src="./images/news-mock.jpg" alt="news" style="width: 100%;">
+                    <div class="div-date" style="">
+                        <p style="font-size: 36px; font-weight: bolder; text-align: center;">08</p>
+                        <p style="font-size: 20px; font-weight: bold; text-align: center; margin-top: -10px;">Dec</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; padding: 0px 20px; margin-top: 10px;">
+                    <img src="./images/icon-view.png" alt="view" style="width: 35px; height: 35px;">
+                    <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">2 views</p>
+                </div>
+                <div style="padding: 20px;">
+                    <h3 style="font-weight: bolder; text-wrap: wrap;" class="text-show-3">กรมการขนส่งทางบกร่วมกับ DGA
+                        ให้ ซูเปอร์ ‘แอป ทางรัฐ’ อำนวยความสะดวกประชาชนเข้าถึงข้อมูลทะเบียนรถ ใบอนุญาตขับขี่ สะดวก...
+                    </h3>
+                    <p style="text-wrap: wrap; color: #67687B; margin-top: 15px;" class="text-show-4">
+                        กรมการขนส่งทางบกร่วมกับ สำนักงานพัฒนารัฐบาลดิจิทัล (องค์การมหาชน) หรือ GDA
+                        ลงนามบันทึกข้อตกลงความร่วมมือ ‘โครงการเชื่อมโยงข้อมูลและบริการด้านการขนส่งทางบก’ ผ่าน
+                        ซูเปอร์กรมการขนส่งทางบกร่วมกับ สำนักงานพัฒนารัฐบาลดิจิทัล (องค์การมหาชน) หรือ GDA
+                        ลงนามบันทึกข้อตกลงความร่วมมือ ‘โครงการเชื่อมโยงข้อมูลและบริการด้านการขนส่งทางบก’ ผ่าน ซูเปอร์...
+                    </p>
+                    <button type="button" class="btn-org" style="margin-top: 20px;">อ่านต่อ
+                        <i class="fa fa-long-arrow-right"
+                            style="font-weight: bold; color: #fff; font-size: 20px; margin-left: 10px;"></i>
+                    </button>
+                </div>
+
+            </div>
+            <div class="card-news">
+                <div style="position: relative;">
+                    <img src="./images/news-mock.jpg" alt="news" style="width: 100%;">
+                    <div class="div-date" style="">
+                        <p style="font-size: 36px; font-weight: bolder; text-align: center;">08</p>
+                        <p style="font-size: 20px; font-weight: bold; text-align: center; margin-top: -10px;">Dec</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; padding: 0px 20px; margin-top: 10px;">
+                    <img src="./images/icon-view.png" alt="view" style="width: 35px; height: 35px;">
+                    <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">2 views</p>
+                </div>
+                <div style="padding: 20px;">
+                    <h3 style="font-weight: bolder; text-wrap: wrap;" class="text-show-3">กรมการขนส่งทางบกร่วมกับ DGA
+                        ให้ ซูเปอร์ ‘แอป ทางรัฐ’ อำนวยความสะดวกประชาชนเข้าถึงข้อมูลทะเบียนรถ ใบอนุญาตขับขี่ สะดวก...
+                    </h3>
+                    <p style="text-wrap: wrap; color: #67687B; margin-top: 15px;" class="text-show-4">
+                        กรมการขนส่งทางบกร่วมกับ สำนักงานพัฒนารัฐบาลดิจิทัล (องค์การมหาชน) หรือ GDA
+                        ลงนามบันทึกข้อตกลงความร่วมมือ ‘โครงการเชื่อมโยงข้อมูลและบริการด้านการขนส่งทางบก’ ผ่าน
+                        ซูเปอร์กรมการขนส่งทางบกร่วมกับ สำนักงานพัฒนารัฐบาลดิจิทัล (องค์การมหาชน) หรือ GDA
+                        ลงนามบันทึกข้อตกลงความร่วมมือ ‘โครงการเชื่อมโยงข้อมูลและบริการด้านการขนส่งทางบก’ ผ่าน ซูเปอร์...
+                    </p>
+                    <button type="button" class="btn-org" style="margin-top: 20px;">อ่านต่อ
+                        <i class="fa fa-long-arrow-right"
+                            style="font-weight: bold; color: #fff; font-size: 20px; margin-left: 10px;"></i>
+                    </button>
+                </div>
+
+            </div>
+            <div class="card-news">
+                <div style="padding: 20px;">
+                    <h2 style="font-weight: bolder; color: #F05123;">บทความเพิ่มเติม</h2>
+                </div>
+                <div style="padding: 0px 20px;">
+                    <div style="border-bottom: 1px solid #E5E5E5; padding: 15px 0px;">
+                        <h3>
+                            DGA เดินต่อร่วมกับ สพฉ. เชื่อมบริการ
+                            iDEMS บน แอปทางรัฐ...
+                        </h3>
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center; margin-top: 10px;">
+                                <img src="./images/icon-view.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">2 views</p>
+                            </div>
+                            <div style="display: flex; align-items: center; margin-top: 10px; margin-left: 20px;">
+                                <img src="./images/icon-calendar.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">12 Dec 67</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="border-bottom: 1px solid #E5E5E5; padding: 15px 0px;">
+                        <h3>
+                            DGA เดินต่อร่วมกับ สพฉ. เชื่อมบริการ
+                            iDEMS บน แอปทางรัฐ...
+                        </h3>
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center; margin-top: 10px;">
+                                <img src="./images/icon-view.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">2 views</p>
+                            </div>
+                            <div style="display: flex; align-items: center; margin-top: 10px; margin-left: 20px;">
+                                <img src="./images/icon-calendar.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">12 Dec 67</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="border-bottom: 1px solid #E5E5E5; padding: 15px 0px;">
+                        <h3>
+                            DGA เดินต่อร่วมกับ สพฉ. เชื่อมบริการ
+                            iDEMS บน แอปทางรัฐ...
+                        </h3>
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center; margin-top: 10px;">
+                                <img src="./images/icon-view.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">2 views</p>
+                            </div>
+                            <div style="display: flex; align-items: center; margin-top: 10px; margin-left: 20px;">
+                                <img src="./images/icon-calendar.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">12 Dec 67</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="padding: 15px 0px;">
+                        <h3>
+                            DGA เดินต่อร่วมกับ สพฉ. เชื่อมบริการ
+                            iDEMS บน แอปทางรัฐ...
+                        </h3>
+                        <div style="display: flex;">
+                            <div style="display: flex; align-items: center; margin-top: 10px;">
+                                <img src="./images/icon-view.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">2 views</p>
+                            </div>
+                            <div style="display: flex; align-items: center; margin-top: 10px; margin-left: 20px;">
+                                <img src="./images/icon-calendar.png" alt="view" style="width: 35px; height: 35px;">
+                                <p style="margin-left: 10px; font-size: 14px; color: #A5A6B1;">12 Dec 67</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <section
+        style="padding: 100px; margin-top: 100px; background: #06163A; display: flex; justify-content: space-between;">
+        <!-- <div style=""> -->
+        <div>
+            <h1 style="color: #F05123; ">DGA Channel</h1>
+            <h1 style="color: #fff; margin-top: -10px; ">สื่อความรู้</h1>
+            <!-- <div style="display: flex; justify-content: space-between;"> -->
+            <p style="color: #fff; margin-top: 20px;">Digital Government Development Plan</p>
+            <button type="button" class="btn-org" style="margin-top: 100px;">More
+                <i class="fa fa-long-arrow-right"
+                    style="font-weight: bold; color: #fff; font-size: 20px; margin-left: 10px;"></i>
+            </button>
+            <!-- </div> -->
+        </div>
+        <div style="width: 70%;">
+            <!-- Swiper -->
+            <div class="swiper mySwiper2">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" style="height: 300px;">
+                        <iframe width="424" height="300"
+                            src="https://www.youtube.com/embed/R4B5KysaSh4?si=tMNnmawX0e79X-2Z"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="swiper-slide" style="height: 300px;">
+                        <iframe width="424" height="300"
+                            src="https://www.youtube.com/embed/R4B5KysaSh4?si=tMNnmawX0e79X-2Z"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="swiper-slide" style="height: 300px;">
+                        <iframe width="424" height="300"
+                            src="https://www.youtube.com/embed/R4B5KysaSh4?si=tMNnmawX0e79X-2Z"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="swiper-slide" style="height: 300px;">
+                        <iframe width="424" height="300"
+                            src="https://www.youtube.com/embed/R4B5KysaSh4?si=tMNnmawX0e79X-2Z"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="swiper-pagination"></div>
+
+                </div>
+                <!-- <div style="display: flex; align-items: center; justify-content: center;">
+                        <div class="button-prev">
+                            <button class="btn-next">
+                                <i class="fa fa-angle-left" style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                            </button>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="button-next">
+                            <button class="btn-next">
+                                <i class="fa fa-angle-right" style="font-weight: bold; color: #1D174A; font-size: 20px;"></i>
+                            </button>
+                        </div>
+        
+                    </div> -->
+            </div>
+
+            <!-- Swiper JS -->
+            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+            <!-- Initialize Swiper -->
+            <script>
+                var swiper = new Swiper(".mySwiper2", {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                    freeMode: true,
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: ".button-next",
+                        prevEl: ".button-prev",
+                    },
+                });
+            </script>
+        </div>
+
+        <!-- </div> -->
+    </section>
+    <section style="padding: 0px 100px; margin-top: 100px;">
+        <div style="display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;">
+            <h1 style="color: #F05123; ">DGA Auditorium</h1>
+
+            <!-- <div style="display: flex; justify-content: space-between;"> -->
+
+            <button type="button" class="btn-black-border" style="margin-top: 10px;">More
+                <i class="fa fa-long-arrow-right"
+                    style="font-weight: bold; color: #1D174A; font-size: 20px; margin-left: 10px;"></i>
+            </button>
+
+            <p style="color: #67687B; margin-top: 30px;">Digital Government Development Plan</p>
+            <!-- </div> -->
+        </div>
+        <div>
+            <div style="display: flex; justify-content: center; margin-top: 350px; position: relative;">
+                <div style="position: absolute; display: flex; justify-content: space-between; top: -270px">
+                    <div>
+                        <img src="./images/trophy-mock.png" alt="logo-citizen" style="height: 300px;">
+                    </div>
+                    <div>
+                        <img src="./images/trophy-mock.png" alt="logo-citizen" style="height: 300px;">
+                    </div>
+                    <div>
+                        <img src="./images/trophy-mock.png" alt="logo-citizen" style="height: 300px;">
+                    </div>
+                    <div>
+                        <img src="./images/trophy-mock.png" alt="logo-citizen" style="height: 300px;">
+                    </div>
+                </div>
+                <img src="./images/stand-dga.png" alt="logo-citizen" style="max-height: 830px; border-radius: 34px;">
+
+            </div>
+        </div>
+    </section>
+    <section style="padding: 0px 100px; margin-top: 50px;">
+        <div style="display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;">
+            <h1 style="color: #F05123; ">DGA Books</h1>
+
+            <!-- <div style="display: flex; justify-content: space-between;"> -->
+
+            <button type="button" class="btn-black-border" style="margin-top: 10px;">More
+                <i class="fa fa-long-arrow-right"
+                    style="font-weight: bold; color: #1D174A; font-size: 20px; margin-left: 10px;"></i>
+            </button>
+
+            <p style="color: #67687B; margin-top: 30px;">Digital Government Development Plan</p>
+            <!-- </div> -->
+        </div>
+        <div>
+            <div style="display: flex; justify-content: center; margin-top: 350px; position: relative;">
+                <div style="position: absolute; display: flex; justify-content: space-between; top: -230px">
+                    <div style="margin: 0px 20px;">
+                        <img src="./images/book-mock.jpg" alt="logo-citizen" style="height: 250px;">
+                    </div>
+                    <div style="margin: 0px 20px;">
+                        <img src="./images/book-mock.jpg" alt="logo-citizen" style="height: 250px;">
+                    </div>
+                    <div style="margin: 0px 20px;">
+                        <img src="./images/book-mock.jpg" alt="logo-citizen" style="height: 250px;">
+                    </div>
+                    <div style="margin: 0px 20px;">
+                        <img src="./images/book-mock.jpg" alt="logo-citizen" style="height: 250px;">
+                    </div>
+                </div>
+                <img src="./images/stand-dga.png" alt="logo-citizen" style="max-height: 830px; border-radius: 34px;">
+
+            </div>
+        </div>
+    </section>
+    <section style=" margin-top: 20px; position: relative;">
+        <div>
+            <img src="./images/bg-express.jpg" alt="logo-citizen" style="width: 100%;">
+        </div>
+        <div class="abs-font-express">
+            <div>
+                <h1 style="color: #F05123; text-align: center;">Digital Express</h1>
+                <h1 style="color: #fff; text-align: center; margin-top: -10px;">Link</h1>
+                <p style="color: #fff; text-align: center;">Digital Government Development Plan</p>
+
+            </div>
+            <div
+                style="display: flex; align-items: center; justify-content: space-evenly;  width: 100%; margin-top: 60px;">
+                <div class="button-prev">
+                    <button class="btn-next-2">
+                        <i class="fa fa-angle-left" style="font-weight: bold; color: #fff; font-size: 20px;"></i>
+                    </button>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; flex-direction: column; align-items: center; margin: 0px 10px;">
+                        <img src="./images/logo-workd.png" alt="logo-citizen" style="width: 120px;">
+                        <p style="color: #fff; font-size: 20px; margin-top: 10px;">WorkD Platform</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; margin: 0px 10px;">
+                        <img src="./images/logo-workd.png" alt="logo-citizen" style="width: 120px;">
+                        <p style="color: #fff; font-size: 20px; margin-top: 10px;">WorkD Platform</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; margin: 0px 10px;">
+                        <img src="./images/logo-workd.png" alt="logo-citizen" style="width: 120px;">
+                        <p style="color: #fff; font-size: 20px; margin-top: 10px;">WorkD Platform</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; margin: 0px 10px;">
+                        <img src="./images/logo-workd.png" alt="logo-citizen" style="width: 120px;">
+                        <p style="color: #fff; font-size: 20px; margin-top: 10px;">WorkD Platform</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; margin: 0px 10px;">
+                        <img src="./images/logo-workd.png" alt="logo-citizen" style="width: 120px;">
+                        <p style="color: #fff; font-size: 20px; margin-top: 10px;">WorkD Platform</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; margin: 0px 10px;">
+                        <img src="./images/logo-workd.png" alt="logo-citizen" style="width: 120px;">
+                        <p style="color: #fff; font-size: 20px; margin-top: 10px;">WorkD Platform</p>
+                    </div>
+                </div>
+
+                <div class="button-next">
+                    <button class="btn-next-2">
+                        <i class="fa fa-angle-right" style="font-weight: bold; color: #fff; font-size: 20px;"></i>
+                    </button>
+                </div>
+                <!-- <div class="swiper-pagination"></div> -->
+            </div>
+
+        </div>
+    </section>
+    <section style="margin-top: -7px;">
+        <footer style="background: #122244; padding: 0px 100px; color: #AFB8CA;">
+            <div
+                style="display: flex; justify-content: space-between; height: 144px; align-items: center; border-bottom: 2px solid #263A65;">
+                <button type="button" class="btn-org-phone" style="margin-top: 20px;">
+                    <i class="fa fa-phone"
+                        style="font-weight: bold; color: #fff; font-size: 20px; margin-right: 10px;"></i>
+                    Hotline: 02-612-6060
+
+                </button>
+                <div style="display: flex;align-items: center;">
+                    <p style="color: #fff; ">Connect With Us</p>
+                    <div style="margin-left: 30px;">
+                        <img src="./images/logo-fb-contact.png" alt="view" style="width: 48px; height: 48px;">
+                        <img src="./images/logo-x-contact.png" alt="view" style="width: 48px; height: 48px;">
+                        <img src="./images/logo-ig-contact.png" alt="view" style="width: 48px; height: 48px;">
+                        <img src="./images/logo-yt-contact.png" alt="view" style="width: 48px; height: 48px;">
+                        <img src="./images/logo-line-contact.png" alt="view" style="width: 48px; height: 48px;">
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 50px 0px;">
+                <div>
+                    <div>
+                        <img src="./images/logo-dga.png" alt="logo dga" style="width: 100px;">
+                        <p>สำนักงานพัฒนารัฐบาลดิจิทัล (องค์กรมหาชน) (สพร.) <br>
+                            อาคารสถาบันเพื่อการบุติธรรมแห่งประเทศไทย (TIJ) <br>
+                            ชั้น 4 เลขที่ 999 ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง <br>
+                            เขตหลักสี่ กรุงเทพฯ 10210</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p>
+                            <i class="fa fa-phone"
+                                style="font-weight: bold; color: #AFB8CA; font-size: 20px; margin-right: 10px;"></i>
+                            (+66) 02 612 6011-12
+                        </p>
+                        <p>
+                            <i class="fa fa-envelope"
+                                style="font-weight: bold; color: #AFB8CA; font-size: 20px; margin-right: 10px;"></i>
+                            contact@dga.or.th
+                        </p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p style="font-weight: bolder; color: #fff;">งานรับ-ส่งหนังสือ และงานสารบรรณ:</p>
+                        <p>
+                            <i class="fa fa-phone"
+                                style="font-weight: bold; color: #AFB8CA; font-size: 20px; margin-right: 10px;"></i>
+                            (+66) 02 612 6000
+                        </p>
+                        <p>
+                            <i class="fa fa-envelope"
+                                style="font-weight: bold; color: #AFB8CA; font-size: 20px; margin-right: 10px;"></i>
+                            sarabun@dga.or.th
+                        </p>
+                    </div>
+                    <div style="margin-top: 20px; padding-bottom: 60px;">
+                        <p style="font-weight: bolder; color: #fff;">DGA Contact Center:</p>
+                        <p>
+                            <i class="fa fa-phone"
+                                style="font-weight: bold; color: #AFB8CA; font-size: 20px; margin-right: 10px;"></i>
+                            (+66) 02 612 6060
+                        </p>
+
+                    </div>
+                    <div>
+
+                    </div>
+
+                </div>
+                <div style="margin-top: 20px;">
+                    <p style="color: #fff; font-size: 32px; font-weight: bold;">Service</p>
+                    <ul>
+                        <li>Consulting Service</li>
+                        <li>Government Data Exchange : GDX</li>
+                        <li>ระบบพอร์ทัลกลางเพื่อประชาชน : Citizen Portal</li>
+                        <li>BizPortal</li>
+                        <li>แอปพลิเคชันทางรัฐ</li>
+                        <li>Government Smart Kiosk</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p style="color: #fff; font-size: 32px; font-weight: bold;">Other</p>
+                    <ul>
+                        <li>แผนที่</li>
+                        <li>ร่วมงานกับเรา</li>
+                        <li>แผนผังเว็บไซต์</li>
+                        <li>ติดต่อเรา</li>
+                        <li>แจ้งเรื่องร้องเรียนบริการ</li>
+                        <li>การแจ้งเบาะแสและข้อร้องเรียนการทุจริต</li>
+                        <li>นโยบายเว็บไซต์</li>
+                        <li>นโยบายความมั่นคงปลอดภัยสารสนเทศทางไซเบอร์</li>
+                        <li>นโยบายการคุ้มครองข้อมูลส่วนบุคคล</li>
+                        <li>ข้อกำหนดและเงื่อนไขการให้บริการ</li>
+                        <li>ขั้นตอนการแจ้ง Take Down Notice</li>
+                    </ul>
+                </div>
+            </div>
+          
+        </footer>
+          <div style="background: #06163A; color: #AFB8CA; font-size: 12px; padding: 20px;">
+                <p style="text-align: center;">All rights reserved 2015. Digital Government Development Agency (Public Organization) (DGA)</p>
+            </div>
+    </section>
+</body>
+
+</html>
