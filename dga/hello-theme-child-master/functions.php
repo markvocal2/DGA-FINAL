@@ -108,6 +108,18 @@ define( 'DGA_THEME_VERSION', '1.0.1' );
 define( 'DGA_ERROR_MESSAGE_TH', 'เกิดข้อผิดพลาด' );
 define( 'DGA_ERROR_RETRY_MESSAGE_TH', 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง' );
 define( 'DGA_INVALID_NONCE_MESSAGE', 'Invalid nonce' );
+define( 'DGA_PERMISSION_DENIED_MESSAGE', 'Permission denied' );
+define( 'DGA_POST_NOT_FOUND_MESSAGE', DGA_POST_NOT_FOUND_MESSAGE );
+define( 'DGA_UNAUTHORIZED_ACCESS_MESSAGE', DGA_UNAUTHORIZED_ACCESS_MESSAGE );
+
+// Date format constants
+define( 'DGA_DATETIME_FORMAT_TH', DGA_DATETIME_FORMAT_TH );
+
+// HTML constants
+define( 'DGA_ALT_EMPTY_ATTRIBUTE', '' . DGA_ALT_EMPTY_ATTRIBUTE' );
+
+// WordPress file constants
+define( 'DGA_WP_FILE_INCLUDE_PATH', DGA_WP_FILE_INCLUDE_PATH );
 
 // Login related constants
 define( 'DGA_LOGIN_TEXT_TH', 'เข้าสู่ระบบ' );
@@ -5893,7 +5905,7 @@ function edit_wpcontent_ajax_save() {
     
     // ตรวจสอบสิทธิ์การแก้ไข
     if (!current_user_can('edit_post', $post_id)) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
     }
     
     // อัปเดตโพสต์ตาม field ที่กำหนด
@@ -6031,7 +6043,7 @@ function wcag_compliance_checker_shortcode() {
         
         // แสดงวันที่ตรวจสอบล่าสุด
         if ($last_check) {
-            $output .= '<div class="wcag-last-check">ตรวจสอบล่าสุด: ' . date_i18n('j F Y เวลา H:i', strtotime($last_check)) . '</div>';
+            $output .= '<div class="wcag-last-check">ตรวจสอบล่าสุด: ' . date_i18n(DGA_DATETIME_FORMAT_TH, strtotime($last_check)) . '</div>';
         }
     } elseif (!$is_admin) {
         // ถ้าไม่มี saved grade และไม่ใช่ admin
@@ -6102,7 +6114,7 @@ function wcag_get_saved_grade() {
             'lastCheck' => $last_check
         ));
     } else {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'Post not found'));
+        wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_POST_NOT_FOUND_MESSAGE));
     }
 }
 add_action('wp_ajax_wcag_get_saved_grade', 'wcag_get_saved_grade');
@@ -6120,7 +6132,7 @@ function wcag_run_compliance_check() {
     
     // Check if user is administrator
     if (!current_user_can(DGA_ADMIN_ROLE)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'Unauthorized access'));
+        wp_send_json_error(array(DGA_MESSAGE_KEY => DGA_UNAUTHORIZED_ACCESS_MESSAGE));
         return;
     }
     
@@ -6196,12 +6208,11 @@ add_action('wp_ajax_wcag_check', 'wcag_run_compliance_check');
 add_action('wp_ajax_nopriv_wcag_check', 'wcag_run_compliance_check');
 
 // Complete accessibility check with all manual checks (ฟังก์ชันเดิม)
-function wcag_complete_accessibility_check($html_content, $severity = 'medium') {
-    global $wpdb;
-    wcag_log_error('Starting complete accessibility check');
-    
-    // Initialize results
-    $checks = array(
+/**
+ * Helper function to initialize accessibility check results
+ */
+function wcag_initialize_checks() {
+    return array(
         'contrast' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
         'alt_text' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
         'headers' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
@@ -6210,8 +6221,12 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         'forms' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0),
         'links' => array('passed' => true, 'violations' => array(), DGA_TOTAL_FIELD_KEY => 0, 'checked' => 0)
     );
-    
-    // Parse HTML
+}
+
+/**
+ * Helper function to parse HTML content
+ */
+function wcag_parse_html($html_content) {
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
     
@@ -6221,21 +6236,17 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     if (!$loaded) {
         wcag_log_error('Failed to parse HTML');
         libxml_clear_errors();
-        return array(
-            'grade' => null,
-            'checks' => $checks,
-            'score' => 0,
-            'severity' => $severity,
-            DGA_ERROR_STATUS => 'ไม่สามารถวิเคราะห์ HTML ได้'
-        );
+        return null;
     }
     
     libxml_clear_errors();
-    
-    // Create XPath for queries
-    $xpath = new DOMXPath($dom);
-    
-    // 1. Check images (alt text)
+    return $dom;
+}
+
+/**
+ * Helper function to check image alt text
+ */
+function wcag_check_images($dom, &$checks) {
     wcag_log_error('Checking images for alt text');
     $images = $dom->getElementsByTagName('img');
     $checks['alt_text'][DGA_TOTAL_FIELD_KEY] = $images->length;
@@ -6251,8 +6262,12 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
             $checks['alt_text']['passed'] = false;
         }
     }
-    
-    // 2. Check links
+}
+
+/**
+ * Helper function to check links
+ */
+function wcag_check_links($dom, &$checks) {
     wcag_log_error('Checking links');
     $links = $dom->getElementsByTagName('a');
     $checks['links'][DGA_TOTAL_FIELD_KEY] = $links->length;
@@ -6273,8 +6288,12 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
             $checks['links']['passed'] = false;
         }
     }
-    
-    // 3. Check headings structure
+}
+
+/**
+ * Helper function to check heading structure
+ */
+function wcag_check_headers($dom, &$checks) {
     wcag_log_error('Checking heading structure');
     $headings = array();
     for ($i = 1; $i <= 6; $i++) {
@@ -6288,7 +6307,6 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     $checks['headers']['checked'] = count($headings);
     
     if (count($headings) > 0) {
-        // Sort by document order
         usort($headings, function($a, $b) {
             return $a['element']->getLineNo() - $b['element']->getLineNo();
         });
@@ -6308,12 +6326,14 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
             $prev = $level;
         }
     }
-    
-    // 4. Check forms
-    wcag_log_error('Checking forms');
+}
+
+/**
+ * Helper function to get form elements
+ */
+function wcag_get_form_elements($dom) {
     $form_elements = array();
     
-    // Get all form elements
     $inputs = $dom->getElementsByTagName('input');
     foreach ($inputs as $input) {
         $type = $input->getAttribute('type');
@@ -6322,15 +6342,55 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         }
     }
     
-    $selects = $dom->getElementsByTagName('select');
-    foreach ($selects as $select) {
+    foreach ($dom->getElementsByTagName('select') as $select) {
         $form_elements[] = $select;
     }
     
-    $textareas = $dom->getElementsByTagName('textarea');
-    foreach ($textareas as $textarea) {
+    foreach ($dom->getElementsByTagName('textarea') as $textarea) {
         $form_elements[] = $textarea;
     }
+    
+    return $form_elements;
+}
+
+/**
+ * Helper function to check if element has label
+ */
+function wcag_element_has_label($element, $xpath) {
+    // Check for associated label
+    $id = $element->getAttribute('id');
+    if ($id) {
+        $labels = $xpath->query("//label[@for='$id']");
+        if ($labels->length > 0) {
+            return true;
+        }
+    }
+    
+    // Check for ARIA labels
+    if ($element->hasAttribute('aria-label') || 
+        $element->hasAttribute('aria-labelledby') || 
+        $element->hasAttribute(DGA_TITLE_FIELD)) {
+        return true;
+    }
+    
+    // Check if wrapped in label
+    $parent = $element->parentNode;
+    while ($parent && $parent->nodeName !== 'body') {
+        if ($parent->nodeName === DGA_LABEL_FIELD) {
+            return true;
+        }
+        $parent = $parent->parentNode;
+    }
+    
+    return false;
+}
+
+/**
+ * Helper function to check forms
+ */
+function wcag_check_forms($dom, $xpath, &$checks) {
+    wcag_log_error('Checking forms');
+    $form_elements = wcag_get_form_elements($dom);
     
     $checks['forms'][DGA_TOTAL_FIELD_KEY] = count($form_elements);
     $checks['forms']['checked'] = count($form_elements);
@@ -6338,57 +6398,33 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     wcag_log_error('Found form elements', count($form_elements));
     
     foreach ($form_elements as $element) {
-        $has_label = false;
-        
-        // Check for associated label
-        $id = $element->getAttribute('id');
-        if ($id) {
-            $labels = $xpath->query("//label[@for='$id']");
-            if ($labels->length > 0) {
-                $has_label = true;
-            }
-        }
-        
-        // Check for ARIA labels
-        if ($element->hasAttribute('aria-label') || 
-            $element->hasAttribute('aria-labelledby') || 
-            $element->hasAttribute(DGA_TITLE_FIELD)) {
-            $has_label = true;
-        }
-        
-        // Check if wrapped in label
-        $parent = $element->parentNode;
-        while ($parent && $parent->nodeName !== 'body') {
-            if ($parent->nodeName === DGA_LABEL_FIELD) {
-                $has_label = true;
-                break;
-            }
-            $parent = $parent->parentNode;
-        }
-        
-        if (!$has_label) {
+        if (!wcag_element_has_label($element, $xpath)) {
             $checks['forms']['violations'][] = array(
                 DGA_MESSAGE_KEY => 'ฟอร์มไม่มี label',
                 'impact' => 'serious',
                 'element' => wcag_get_element_snippet($element),
-                'details' => 'Element: ' . $element->nodeName . ', Type: ' . $element->getAttribute('type') . ', ID: ' . $id
+                'details' => 'Element: ' . $element->nodeName . ', Type: ' . $element->getAttribute('type') . ', ID: ' . $element->getAttribute('id')
             );
             $checks['forms']['passed'] = false;
         }
     }
-    
-    // 5. Check ARIA usage
+}
+
+/**
+ * Helper function to check ARIA usage
+ */
+function wcag_check_aria($dom, $xpath, &$checks) {
     wcag_log_error('Checking ARIA usage');
     $aria_elements = $xpath->query('//*[@role or @aria-label or @aria-labelledby or @aria-describedby]');
     $checks['aria'][DGA_TOTAL_FIELD_KEY] = $aria_elements->length;
     $checks['aria']['checked'] = $aria_elements->length;
     
+    $valid_roles = array('button', 'navigation', 'main', 'banner', 'contentinfo', 'complementary', 'search', 'form', 'region', 'alert', 'dialog', 'menu', 'menubar', 'menuitem', 'tab', 'tablist', 'tabpanel');
+    
     foreach ($aria_elements as $element) {
         // Check for invalid role values
         if ($element->hasAttribute('role')) {
             $role = $element->getAttribute('role');
-            $valid_roles = array('button', 'navigation', 'main', 'banner', 'contentinfo', 'complementary', 'search', 'form', 'region', 'alert', 'dialog', 'menu', 'menubar', 'menuitem', 'tab', 'tablist', 'tabpanel');
-            
             if ($role && !in_array($role, $valid_roles)) {
                 $checks['aria']['violations'][] = array(
                     DGA_MESSAGE_KEY => 'ARIA role ไม่ถูกต้อง: ' . $role,
@@ -6416,21 +6452,21 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
             }
         }
     }
-    
-    // 6. Check keyboard navigation
+}
+
+/**
+ * Helper function to check keyboard navigation
+ */
+function wcag_check_keyboard($dom, $xpath, &$checks) {
     wcag_log_error('Checking keyboard navigation');
     $interactive_elements = $xpath->query('//a[@href] | //button | //input | //select | //textarea | //*[@tabindex]');
     $checks['keyboard'][DGA_TOTAL_FIELD_KEY] = $interactive_elements->length;
     $checks['keyboard']['checked'] = $interactive_elements->length;
     
-    $tabindex_values = array();
-    
     foreach ($interactive_elements as $element) {
         // Check tabindex values
         if ($element->hasAttribute('tabindex')) {
             $tabindex = $element->getAttribute('tabindex');
-            $tabindex_values[] = intval($tabindex);
-            
             if (intval($tabindex) > 0) {
                 $checks['keyboard']['violations'][] = array(
                     DGA_MESSAGE_KEY => 'tabindex มีค่าเป็นบวก (' . $tabindex . ') ซึ่งอาจทำให้ลำดับการนำทางไม่เป็นธรรมชาติ',
@@ -6442,7 +6478,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         }
         
         // Check if element is keyboard accessible
-        if ($element->nodeName === 'div' || $element->nodeName === 'span') {
+        if (in_array($element->nodeName, ['div', 'span'])) {
             if ($element->hasAttribute('onclick') && !$element->hasAttribute('tabindex')) {
                 $checks['keyboard']['violations'][] = array(
                     DGA_MESSAGE_KEY => 'Element ที่มี onclick แต่ไม่สามารถเข้าถึงด้วยแป้นพิมพ์ได้',
@@ -6453,8 +6489,12 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
             }
         }
     }
-    
-    // 7. Check color contrast (simplified)
+}
+
+/**
+ * Helper function to check color contrast
+ */
+function wcag_check_contrast($dom, $xpath, &$checks) {
     wcag_log_error('Checking color contrast');
     $text_elements = $xpath->query('//p | //span | //div | //h1 | //h2 | //h3 | //h4 | //h5 | //h6 | //a | //li | //td | //th');
     $contrast_checked = 0;
@@ -6475,7 +6515,6 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
                 if (preg_match('/color:\s*#([0-9a-fA-F]{3,6})/', $style, $fg_match) &&
                     preg_match('/background(-color)?:\s*#([0-9a-fA-F]{3,6})/', $style, $bg_match)) {
                     
-                    // This is a simplified check - in reality we'd calculate actual contrast ratio
                     $checks['contrast']['violations'][] = array(
                         DGA_MESSAGE_KEY => 'อาจมีปัญหาความคมชัดของสี (ต้องตรวจสอบด้วยตนเอง)',
                         'impact' => 'moderate',
@@ -6490,8 +6529,14 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
     
     $checks['contrast'][DGA_TOTAL_FIELD_KEY] = $contrast_checked;
     $checks['contrast']['checked'] = $contrast_checked;
+}
+
+/**
+ * Helper function to get guideline info from database
+ */
+function wcag_get_guideline_info() {
+    global $wpdb;
     
-    // Check from database if available
     $guideline = $wpdb->get_row("
         SELECT guideline_id, title, abbr 
         FROM guidelines 
@@ -6523,6 +6568,42 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         wcag_log_error('Database checks found', count($check_ids));
     }
     
+    return $guideline_info;
+}
+
+function wcag_complete_accessibility_check($html_content, $severity = 'medium') {
+    wcag_log_error('Starting complete accessibility check');
+    
+    // Initialize results
+    $checks = wcag_initialize_checks();
+    
+    // Parse HTML
+    $dom = wcag_parse_html($html_content);
+    if (!$dom) {
+        return array(
+            'grade' => null,
+            'checks' => $checks,
+            'score' => 0,
+            'severity' => $severity,
+            DGA_ERROR_STATUS => 'ไม่สามารถวิเคราะห์ HTML ได้'
+        );
+    }
+    
+    // Create XPath for queries
+    $xpath = new DOMXPath($dom);
+    
+    // Run all accessibility checks
+    wcag_check_images($dom, $checks);
+    wcag_check_links($dom, $checks);
+    wcag_check_headers($dom, $checks);
+    wcag_check_forms($dom, $xpath, $checks);
+    wcag_check_aria($dom, $xpath, $checks);
+    wcag_check_keyboard($dom, $xpath, $checks);
+    wcag_check_contrast($dom, $xpath, $checks);
+    
+    // Get guideline information
+    $guideline_info = wcag_get_guideline_info();
+    
     // Log final check counts
     foreach ($checks as $category => $check) {
         wcag_log_error("Final count for $category", array(
@@ -6532,7 +6613,7 @@ function wcag_complete_accessibility_check($html_content, $severity = 'medium') 
         ));
     }
     
-    // Calculate score
+    // Calculate score and grade
     $score = wcag_calculate_score_verbose($checks);
     $grade = wcag_determine_grade($score, $severity);
     
@@ -7324,7 +7405,7 @@ function at_upload_featured_image_kse749() {
 
     // โหลดไลบรารีที่จำเป็น
     require_once(ABSPATH . 'wp-admin/includes/image.php');
-    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
     require_once(ABSPATH . 'wp-admin/includes/media.php');
 
     // อัพโหลดไฟล์และสร้างเป็น attachment
@@ -7420,7 +7501,7 @@ function at_handle_article_submission_kse749() {
 
     // Verify user capabilities
     if (!current_user_can('publish_posts')) {
-        wp_send_json_error(__('Permission denied', DGA_TEXT_DOMAIN));
+        wp_send_json_error(__(DGA_PERMISSION_DENIED_MESSAGE, DGA_TEXT_DOMAIN));
     }
 
     if (!isset($_POST['article_title']) || !isset($_POST['post_types'])) {
@@ -7460,7 +7541,7 @@ function at_handle_article_submission_kse749() {
     if ($featured_image_id == 0 && !empty($_FILES['article_images']['name'])) {
         // โหลดไลบรารีการจัดการไฟล์และรูปภาพ
         require_once(ABSPATH . 'wp-admin/includes/image.php');
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
         require_once(ABSPATH . 'wp-admin/includes/media.php');
         
         // อัพโหลดภาพไปยัง WordPress Media Library โดยยังไม่ผูกกับโพสต์ใด
@@ -8103,7 +8184,7 @@ function handle_profile_update_pmg728() {
     // Handle avatar upload
     if (!empty($_FILES['avatar'])) {
         require_once(ABSPATH . 'wp-admin/includes/image.php');
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
         require_once(ABSPATH . 'wp-admin/includes/media.php');
         
         // Add custom upload validation
@@ -13580,7 +13661,7 @@ function ajax_get_users_data_hjk789() {
     check_ajax_referer('wp_user_manager_nonce', 'security');
     
     if (!current_user_can('list_users')) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         return;
     }
     
@@ -13669,7 +13750,7 @@ function ajax_update_user_role_hjk789() {
     check_ajax_referer('wp_user_manager_nonce', 'security');
     
     if (!current_user_can('edit_users')) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         return;
     }
     
@@ -13700,7 +13781,7 @@ function ajax_delete_wp_user_hjk789() {
     check_ajax_referer('wp_user_manager_nonce', 'security');
     
     if (!current_user_can('delete_users')) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         return;
     }
     
@@ -15240,7 +15321,7 @@ function ppgroup_editor_update() {
     
     // ตรวจสอบสิทธิ์
     if (!current_user_can(DGA_EDIT_POSTS_CAP)) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
     }
     
     $post_id = intval($_POST[DGA_POST_ID_FIELD]);
@@ -16891,7 +16972,7 @@ function tdep_update_taxonomy() {
     check_ajax_referer('tdep_nonce', 'nonce');
     
     if (!current_user_can(DGA_EDIT_POSTS_CAP)) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         return;
     }
     
@@ -17803,7 +17884,7 @@ class UserPermissionController {
         check_ajax_referer('user_permission_nonce', 'nonce');
         
         if (!current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
-            wp_send_json_error('Unauthorized access');
+            wp_send_json_error(DGA_UNAUTHORIZED_ACCESS_MESSAGE);
         }
     
         global $wp_roles;
@@ -17918,7 +17999,7 @@ class UserPermissionController {
         check_ajax_referer('user_permission_nonce', 'nonce');
         
         if (!current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
-            wp_send_json_error('Unauthorized access');
+            wp_send_json_error(DGA_UNAUTHORIZED_ACCESS_MESSAGE);
         }
 
         $page_id = intval($_POST['page_id']);
@@ -18242,7 +18323,7 @@ function get_egp_post($request) {
     $post = get_post($post_id);
 
     if (empty($post) || $post->post_type !== 'egp') {
-        return new WP_Error('no_post', 'Post not found', array(DGA_STATUS_FIELD => 404));
+        return new WP_Error('no_post', DGA_POST_NOT_FOUND_MESSAGE, array(DGA_STATUS_FIELD => 404));
     }
 
     $post_data = format_egp_data($post);
@@ -18478,7 +18559,7 @@ function get_mpeople_post($request) {
     $post = get_post($post_id);
 
     if (empty($post) || $post->post_type !== 'mpeople') {
-        return new WP_Error('no_post', 'Post not found', array(DGA_STATUS_FIELD => 404));
+        return new WP_Error('no_post', DGA_POST_NOT_FOUND_MESSAGE, array(DGA_STATUS_FIELD => 404));
     }
 
     $post_data = format_mpeople_data($post);
@@ -18712,7 +18793,7 @@ function get_news_post($request) {
     $post = get_post($post_id);
 
     if (empty($post) || $post->post_type !== 'news') {
-        return new WP_Error('no_post', 'Post not found', array(DGA_STATUS_FIELD => 404));
+        return new WP_Error('no_post', DGA_POST_NOT_FOUND_MESSAGE, array(DGA_STATUS_FIELD => 404));
     }
 
     $post_data = format_news_data($post);
@@ -19922,7 +20003,7 @@ function get_pending_posts() {
     check_ajax_referer('pending-posts-nonce', 'nonce');
     
     if (!current_user_can(DGA_EDIT_POSTS_CAP)) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         return;
     }
 
@@ -20751,7 +20832,7 @@ function fpe_ajax_save_vkj785() {
     
     // Check permissions
     if (!current_user_can(DGA_EDIT_POSTS_CAP)) {
-        wp_send_json_error(__('Permission denied', DGA_TEXT_DOMAIN));
+        wp_send_json_error(__(DGA_PERMISSION_DENIED_MESSAGE, DGA_TEXT_DOMAIN));
     }
     
     $post_id = intval($_POST[DGA_POST_ID_FIELD]);
@@ -20813,7 +20894,7 @@ function fpe_ajax_delete_vkj785() {
     
     // Check permissions
     if (!current_user_can('delete_posts')) {
-        wp_send_json_error(__('Permission denied', DGA_TEXT_DOMAIN));
+        wp_send_json_error(__(DGA_PERMISSION_DENIED_MESSAGE, DGA_TEXT_DOMAIN));
     }
     
     $post_id = intval($_POST[DGA_POST_ID_FIELD]);
@@ -24919,7 +25000,7 @@ function org_links_settings_page() {
         // Handle logo upload or URL
         if (!empty($_FILES['logo']['name'])) {
             require_once(ABSPATH . 'wp-admin/includes/image.php');
-            require_once(ABSPATH . 'wp-admin/includes/file.php');
+            require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
             require_once(ABSPATH . 'wp-admin/includes/media.php');
             
             $attachment_id = media_handle_upload('logo', 0);
@@ -25009,7 +25090,7 @@ function org_links_settings_page() {
                             <?php foreach ($items as $item) : ?>
                                 <tr data-id="<?php echo esc_attr($item['id']); ?>">
                                     <td class="org-link-logo">
-                                        <img src="<?php echo esc_url($item['logo']); ?>" alt="" width="60">
+                                        <img src="<?php echo esc_url($item['logo']); ?>' . DGA_ALT_EMPTY_ATTRIBUTE width="60">
                                     </td>
                                     <td><?php echo esc_html($item[DGA_TITLE_FIELD]); ?></td>
                                     <td><a href="<?php echo esc_url($item['url']); ?>" target="_blank"><?php echo esc_url($item['url']); ?></a></td>
@@ -28842,7 +28923,7 @@ add_action('wp_ajax_nopriv_ckan_download_file', 'ckan_handle_file_download_xrt25
 // Make sure we have the required WordPress file upload functionality
 function ckan_includes_for_media_upload_xrt259() {
     if (!function_exists('wp_handle_upload')) {
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
     }
     if (!function_exists('wp_generate_attachment_metadata')) {
         require_once(ABSPATH . 'wp-admin/includes/image.php');
@@ -33255,7 +33336,7 @@ function ckan_history_shortcode($atts) {
     foreach ($history_items as $item) {
         $user_info = get_userdata($item->user_id);
         $username = $user_info ? $user_info->display_name : 'ไม่ระบุ';
-        $date_time = mysql2date('j F Y เวลา H:i', $item->revision_date);
+        $date_time = mysql2date(DGA_DATETIME_FORMAT_TH, $item->revision_date);
         $time_elapsed = ckan_time_elapsed_string($item->revision_date);
         
         $output .= '<div class="ckan-history-item" data-history-id="' . esc_attr($item->id) . '">';
@@ -33379,7 +33460,7 @@ function ckan_get_all_history() {
             'id' => $item->id,
             'user_id' => $item->user_id,
             'username' => $username,
-            'date' => mysql2date('j F Y เวลา H:i', $item->revision_date),
+            'date' => mysql2date(DGA_DATETIME_FORMAT_TH, $item->revision_date),
             'time_elapsed' => $time_elapsed,
             DGA_TITLE_FIELD => $item->new_title,
             'change_summary' => $change_summary,
@@ -33449,7 +33530,7 @@ function ckan_get_revision_diff() {
         DGA_POST_ID_FIELD => $history_item->post_id,
         'user_id' => $history_item->user_id,
         'username' => $username,
-        'date' => mysql2date('j F Y เวลา H:i', $history_item->revision_date),
+        'date' => mysql2date(DGA_DATETIME_FORMAT_TH, $history_item->revision_date),
         'time_elapsed' => $time_elapsed,
         'old_title' => $history_item->old_title,
         'new_title' => $history_item->new_title,
@@ -33986,7 +34067,7 @@ function egp_save_file() {
         if ($upload_type === 'direct' && isset($_FILES['file_upload']) && !empty($_FILES['file_upload']['name'])) {
             // อัพโหลดไฟล์ใหม่
             if (!function_exists('wp_handle_upload')) {
-                require_once(ABSPATH . 'wp-admin/includes/file.php');
+                require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
             }
             
             $response['debug']['upload_process'] = 'Direct upload started';
@@ -34816,7 +34897,7 @@ class CKAN_DGA_Integration {
         
         // Check permission
         if (!current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
-            wp_send_json_error('Permission denied');
+            wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         }
         
         // Sync logic here
@@ -36909,7 +36990,7 @@ function cpd_delete_post_ajax() {
     
     // Check if user is an administrator
     if (!current_user_can(DGA_ADMIN_ROLE)) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
         exit;
     }
     
@@ -37064,7 +37145,7 @@ function post_featured_images_set_default($batch_size = 50) {
     // Make sure the required files are included
     if (!function_exists('media_handle_sideload')) {
         require_once(ABSPATH . 'wp-admin/includes/media.php');
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
         require_once(ABSPATH . 'wp-admin/includes/image.php');
     }
     
@@ -37150,7 +37231,7 @@ function post_featured_images_set_image($post_id, $image_url) {
     // Make sure the required files are included
     if (!function_exists('media_handle_sideload')) {
         require_once(ABSPATH . 'wp-admin/includes/media.php');
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . DGA_WP_FILE_INCLUDE_PATH);
         require_once(ABSPATH . 'wp-admin/includes/image.php');
     }
     
@@ -37275,7 +37356,7 @@ function post_featured_images_process_existing_posts_ajax() {
     
     // Check permissions
     if (!current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
-        wp_send_json_error('Permission denied');
+        wp_send_json_error(DGA_PERMISSION_DENIED_MESSAGE);
     }
     
     // Process batch
