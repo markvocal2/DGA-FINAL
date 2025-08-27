@@ -893,7 +893,7 @@ function dga_translate_render_google_translate_script() {
             }
         }
         if (document.cookie.indexOf("%s=en") > -1) {
-            var script = document.createElement("script");
+            const script = document.createElement("script");
             script.type = "text/javascript";
             script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
             document.head.appendChild(script);
@@ -911,7 +911,7 @@ function dga_translate_render_google_translate_script() {
 function dga_translate_render_google_cleanup_script() {
     return '<script type="text/javascript">
         (function() {
-            var gtElements = document.querySelectorAll("[class*=\'goog-te\'], [id*=\'goog\'], .skiptranslate");
+            const gtElements = document.querySelectorAll("[class*=\'goog-te\'], [id*=\'goog\'], .skiptranslate");
             gtElements.forEach(function(el) {
                 if (el && el.parentNode) {
                     el.parentNode.removeChild(el);
@@ -1048,10 +1048,10 @@ function dga_add_cleanup_script_abc456() {
         // Immediate cleanup on page load
         (function() {
             function getCookie(name) {
-                var nameEQ = name + '=';
-                var ca = document.cookie.split(';');
-                for (var i = 0; i < ca.length; i++) {
-                    var c = ca[i].trim();
+                const nameEQ = name + '=';
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    const c = ca[i].trim();
                     if (c.indexOf(nameEQ) === 0) {
                         return c.substring(nameEQ.length);
                     }
@@ -1064,7 +1064,7 @@ function dga_add_cleanup_script_abc456() {
                 document.cookie = name + '=; Max-Age=0; path=/';
             }
             
-            var currentLang = getCookie('dga_lang_api_abc456') || 'th';
+            const currentLang = getCookie('dga_lang_api_abc456') || 'th';
             
             if (currentLang === 'th') {
                 // Clear Google cookies for Thai
@@ -1072,7 +1072,7 @@ function dga_add_cleanup_script_abc456() {
                 clearCookie('_googtrans');
                 
                 // Remove Google Translate elements
-                var gtElements = document.querySelectorAll('.goog-te-banner-frame, .skiptranslate, #goog-gt-tt, [class*="goog-te"]');
+                const gtElements = document.querySelectorAll('.goog-te-banner-frame, .skiptranslate, #goog-gt-tt, [class*="goog-te"]');
                 gtElements.forEach(function(el) {
                     el.style.display = 'none';
                     if (el.parentNode) {
@@ -1745,7 +1745,7 @@ function dga_update_post_date_shortcode_kxt729($atts) {
         $js_path = get_stylesheet_directory() . '/js/dga-uptodate-v2.js';
         if (file_exists($js_path)) {
             $inline_js = '<script>
-                var dgaUpdateDate = {
+                const dgaUpdateDate = {
                     ajaxurl: "' . admin_url(DGA_ADMIN_AJAX_URL) . '",
                     messages: {
                         success: "' . __('Post date updated successfully!', DGA_TEXT_DOMAIN) . '",
@@ -2073,7 +2073,7 @@ function enable_skip_link_focus_fix() {
     // เวอร์ชันแบบย่อของ script
     ?>
     <script>
-    /(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",function(){var t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())},!1);
+    /(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",function(){let t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())},!1);
     </script>
     <?php
 }
@@ -2735,28 +2735,28 @@ function get_logo_for_background($background_type = 'auto') {
             document.addEventListener("DOMContentLoaded", function() {
                 // ฟังก์ชันนี้จะตรวจสอบว่าควรใช้โลโก้แบบไหน
                 function checkBackgroundType() {
-                    var element = document.querySelector(".site-header"); // ปรับตามคลาสที่ใช้จริง
+                    const element = document.querySelector(".site-header"); // ปรับตามคลาสที่ใช้จริง
                     if (!element) return;
                     
                     // ดึงสี background ของ header
-                    var bgColor = window.getComputedStyle(element).backgroundColor;
+                    const bgColor = window.getComputedStyle(element).backgroundColor;
                     
                     // แปลงเป็นค่า RGB หรือ แปลงเป็นค่าความสว่าง
-                    var match = bgColor.match(/rgba?\((\d+), (\d+), (\d+)/);
+                    const match = bgColor.match(/rgba?\((\d+), (\d+), (\d+)/);
                     if (match) {
-                        var r = parseInt(match[1]);
-                        var g = parseInt(match[2]);
-                        var b = parseInt(match[3]);
+                        const r = parseInt(match[1]);
+                        const g = parseInt(match[2]);
+                        const b = parseInt(match[3]);
                         
                         // คำนวณความสว่าง (ค่าเฉลี่ย)
-                        var brightness = (r + g + b) / 3;
+                        const brightness = (r + g + b) / 3;
                         
-                        var logo = document.querySelector(".custom-logo");
+                        const logo = document.querySelector(".custom-logo");
                         if (!logo) return;
                         
                         // ถ้าพื้นหลังมืด ใช้โลโก้สำหรับพื้นหลังสีเข้ม
                         if (brightness < 128) {
-                            var lightLogoId = "' . get_theme_mod("custom_logo_dark") . '";
+                            const lightLogoId = "' . get_theme_mod("custom_logo_dark") . '";
                             if (lightLogoId) {
                                 logo.src = "' . wp_get_attachment_url(get_theme_mod("custom_logo_dark")) . '";
                             }
@@ -3161,8 +3161,8 @@ function debug_site_logo_shortcodes() {
     // เพิ่ม JavaScript สำหรับปุ่มรีเซ็ต
     $output .= '<script>
         document.addEventListener("DOMContentLoaded", function() {
-            var resetButton = document.getElementById("reset-logo-mods");
-            var resultDiv = document.getElementById("reset-result");
+            const resetButton = document.getElementById("reset-logo-mods");
+            const resultDiv = document.getElementById("reset-result");
             
             if (resetButton) {
                 resetButton.addEventListener("click", function(e) {
@@ -3170,12 +3170,12 @@ function debug_site_logo_shortcodes() {
                     
                     if (confirm("คุณแน่ใจหรือไม่ว่าต้องการรีเซ็ตการตั้งค่าโลโก้ทั้งหมด?")) {
                         // ใช้ AJAX เพื่อเรียกฟังก์ชัน reset_site_logo_theme_mods()
-                        var xhr = new XMLHttpRequest();
+                        const xhr = new XMLHttpRequest();
                         xhr.open("POST", ajaxurl, true);
                         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                         xhr.onreadystatechange = function() {
                             if (xhr.readyState === 4 && xhr.status === 200) {
-                                var response = JSON.parse(xhr.responseText);
+                                const response = JSON.parse(xhr.responseText);
                                 resultDiv.textContent = response.data.message;
                                 resultDiv.style.display = "block";
                                 
@@ -5444,7 +5444,7 @@ function dga_carousel_slide_shortcode($atts) {
     (function() {
         document.addEventListener('DOMContentLoaded', function() {
             // ตรวจสอบว่า Carousel ถูกสร้างในหน้านี้
-            var carousel = document.getElementById('<?php echo esc_attr($carousel_id); ?>');
+            const carousel = document.getElementById('<?php echo esc_attr($carousel_id); ?>');
             if (carousel && typeof jQuery !== 'undefined') {
                 // กระตุ้นให้ initialize carousel นี้
                 jQuery(carousel).data('dgaCarousel') || initDgaCarousels();
@@ -6815,17 +6815,17 @@ function wcag_checker_admin_page() {
     <script>
     jQuery(document).ready(function($) {
         $('#test-html-check').on('click', function() {
-            var html = $('#test-html').val();
+            const html = $('#test-html').val();
             var $results = $('#test-html-results');
             
             $results.html('<p>Testing...</p>');
             
             // Create a temporary container
-            var tempDiv = document.createElement('div');
+            const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
             
             // Count elements
-            var counts = {
+            const counts = {
                 images: tempDiv.querySelectorAll('img').length,
                 imagesWithoutAlt: tempDiv.querySelectorAll('img:not([alt])').length,
                 links: tempDiv.querySelectorAll('a').length,
@@ -6833,7 +6833,7 @@ function wcag_checker_admin_page() {
                 headings: tempDiv.querySelectorAll('h1,h2,h3,h4,h5,h6').length,
                 formElements: tempDiv.querySelectorAll('input:not([type=DGA_SUBMIT_TYPE]):not([type=DGA_BUTTON_TYPE]):not([type="hidden"]),select,textarea').length,
                 formElementsWithoutLabels: Array.from(tempDiv.querySelectorAll('input:not([type=DGA_SUBMIT_TYPE]):not([type=DGA_BUTTON_TYPE]):not([type="hidden"]),select,textarea')).filter(function(el) {
-                    var id = el.id;
+                    const id = el.id;
                     if (id && tempDiv.querySelector('label[for="' + id + '"]')) return false;
                     if (el.getAttribute('aria-label')) return false;
                     if (el.title) return false;
@@ -6844,7 +6844,7 @@ function wcag_checker_admin_page() {
                 elementsWithStyle: tempDiv.querySelectorAll('[style*="color"],[style*="background"]').length
             };
             
-            var html = '<h3>Element Counts:</h3><ul>';
+            let html = '<h3>Element Counts:</h3><ul>';
             html += '<li>Images: ' + counts.images + ' (without alt: ' + counts.imagesWithoutAlt + ')</li>';
             html += '<li>Links: ' + counts.links + ' (empty: ' + counts.emptyLinks + ')</li>';
             html += '<li>Headings: ' + counts.headings + '</li>';
@@ -8446,8 +8446,8 @@ function dga_display_request_reset_form_ghi789() {
     <!-- Turnstile initialization with error handling -->
     <script>
         (function() {
-            var turnstileToken = null;
-            var widgetId = null;
+            let turnstileToken = null;
+            let widgetId = null;
             
             // Global callback functions
             window.dgaTurnstileCallback = function(token) {
@@ -8479,7 +8479,7 @@ function dga_display_request_reset_form_ghi789() {
                     return;
                 }
                 
-                var container = document.getElementById('cf-turnstile-widget');
+                const container = document.getElementById('cf-turnstile-widget');
                 if (!container || widgetId !== null) return;
                 
                 try {
@@ -8505,25 +8505,38 @@ function dga_display_request_reset_form_ghi789() {
             if (window.turnstile) {
                 initTurnstile();
             } else {
-                window.addEventListener('DOMContentLoaded', function() {
-                    var attempts = 0;
-                    var maxAttempts = 50; // 5 seconds
+                window.addEventListener('DOMContentLoaded', initTurnstileWatcher);
+                
+                function initTurnstileWatcher() {
+                    let attempts = 0;
+                    const maxAttempts = 50; // 5 seconds
                     
-                    var checkInterval = setInterval(function() {
-                        attempts++;
-                        
-                        if (window.turnstile) {
+                    const checkInterval = setInterval(function() {
+                        if (handleTurnstileCheck(checkInterval, ++attempts, maxAttempts)) {
                             clearInterval(checkInterval);
-                            initTurnstile();
-                        } else if (attempts >= maxAttempts) {
-                            clearInterval(checkInterval);
-                            console.error('[Turnstile] Failed to load after 5 seconds');
-                            // Enable form without CAPTCHA
-                            document.getElementById('reset-submit-btn').disabled = false;
-                            document.getElementById('captcha-error').style.display = 'block';
                         }
                     }, 100);
-                });
+                }
+                
+                function handleTurnstileCheck(checkInterval, attempts, maxAttempts) {
+                    if (window.turnstile) {
+                        initTurnstile();
+                        return true;
+                    }
+                    
+                    if (attempts >= maxAttempts) {
+                        handleTurnstileTimeout();
+                        return true;
+                    }
+                    
+                    return false;
+                }
+                
+                function handleTurnstileTimeout() {
+                    console.error('[Turnstile] Failed to load after 5 seconds');
+                    document.getElementById('reset-submit-btn').disabled = false;
+                    document.getElementById('captcha-error').style.display = 'block';
+                }
             }
         })();
     </script>
@@ -9918,56 +9931,12 @@ function dga_complaint_search_shortcode() {
 add_shortcode('complaint_search', 'dga_complaint_search_shortcode');
 
 // AJAX handler for complaint search (ยังคงใช้โค้ดเดิม)
-function dga_complaint_search_ajax_handler() {
-    // เนื้อหา AJAX handler คงเดิม
-    check_ajax_referer('complaint_search_nonce', 'nonce');
-    
-    // Get reference number
-    $ref_number = isset($_POST['ref_number']) ? sanitize_text_field(wp_unslash($_POST['ref_number'])) : '';
-    
-    // Validate reference number
-    if (empty($ref_number)) {
-        wp_send_json_error(array(DGA_MESSAGE_KEY => 'กรุณาระบุหมายเลขเรื่องร้องเรียน'));
-        return;
-    }
-    
-    // ค้นหาเรื่องร้องเรียนจากฐานข้อมูล - ใช้ meta_key ให้ตรงกับที่บันทึกในระบบ
-    $args = array(
-        DGA_POST_TYPE_FIELD => 'complaint',
-        DGA_POST_STATUS_FIELD => array('pending', DGA_PUBLISH_STATUS, 'draft', 'in-progress', 'completed', 'rejected', 'closed', 'private'),
-        DGA_POSTS_PER_PAGE => 1,
-        'meta_query' => array(
-            array(
-                'key' => '_complaint_ref',
-                'value' => $ref_number,
-                'compare' => '='
-            )
-        )
-    );
-    
-    $complaints = new WP_Query($args);
-    
-    if ($complaints->have_posts()) {
-        $complaints->the_post();
-        $post_id = get_the_ID();
-        
-        // ดึงข้อมูลเรื่องร้องเรียน
-        $type = get_post_meta($post_id, '_complaint_type', true);
-        $type_label = get_complaint_type_label($type);
-        
-        $type_other = '';
-        if ($type == 'other') {
-            $type_other = ' (' . get_post_meta($post_id, '_typeOther', true) . ')';
-        }
-        
-        $department = get_post_meta($post_id, '_complaint_department', true);
-        $status = get_post_status($post_id);
-        $complaint_date = get_post_meta($post_id, '_complaint_date', true);
-        $due_date = get_post_meta($post_id, '_response_due_date', true);
-        $is_anonymous = get_post_meta($post_id, '_is_anonymous', true);
-        
-        // แปลงสถานะให้เป็นภาษาไทย
-        $status_labels = array(
+/**
+ * Helper function to get complaint status mappings
+ */
+function complaint_search_get_status_mappings() {
+    return array(
+        'labels' => array(
             'pending' => 'รอดำเนินการ',
             DGA_PUBLISH_STATUS => 'รอดำเนินการ',
             'draft' => 'รอดำเนินการ',
@@ -9976,12 +9945,8 @@ function dga_complaint_search_ajax_handler() {
             'completed' => 'ดำเนินการเสร็จสิ้น',
             'rejected' => 'ไม่รับพิจารณา',
             'closed' => 'ปิดเรื่อง'
-        );
-        
-        $status_label = isset($status_labels[$status]) ? $status_labels[$status] : $status;
-        
-        // สร้าง progress step ตามสถานะ
-        $progress_steps = array(
+        ),
+        'progress_steps' => array(
             'pending' => 1,
             DGA_PUBLISH_STATUS => 1,
             'draft' => 1,
@@ -9990,191 +9955,194 @@ function dga_complaint_search_ajax_handler() {
             'completed' => 3,
             'rejected' => 3,
             'closed' => 3
-        );
-        
-        $current_step = isset($progress_steps[$status]) ? $progress_steps[$status] : 1;
-        
-        // จัดเตรียมข้อมูลสำหรับส่งกลับ
-        $result = array(
-            'ref_number' => $ref_number,
-            'complaint_type' => $type_label . $type_other,
-            'department' => $department,
-            DGA_STATUS_FIELD => $status_label,
-            'complaint_date' => !empty($complaint_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_date)) : date_i18n(DGA_DATE_FORMAT_SHORT, strtotime(get_the_date())),
-            'due_date' => !empty($due_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($due_date)) : '',
-            'current_step' => $current_step,
-            'details' => wp_strip_all_tags(get_the_content())
-        );
-        
-        wp_reset_postdata();
-        wp_send_json_success($result);
-        
-    } else {
-        // ถ้าค้นหาไม่พบ ลองค้นหาแบบ LIKE
-        $args = array(
-            DGA_POST_TYPE_FIELD => 'complaint',
-            DGA_POST_STATUS_FIELD => array('pending', DGA_PUBLISH_STATUS, 'draft', 'in-progress', 'completed', 'rejected', 'closed', 'private'),
-            DGA_POSTS_PER_PAGE => 1,
-            'meta_query' => array(
-                array(
-                    'key' => '_complaint_ref',
-                    'value' => $ref_number,
-                    'compare' => 'LIKE'
-                )
+        )
+    );
+}
+
+/**
+ * Helper function to build complaint search query args
+ */
+function complaint_search_build_query_args($ref_number, $compare_type = '=') {
+    return array(
+        DGA_POST_TYPE_FIELD => 'complaint',
+        DGA_POST_STATUS_FIELD => array('pending', DGA_PUBLISH_STATUS, 'draft', 'in-progress', 'completed', 'rejected', 'closed', 'private'),
+        DGA_POSTS_PER_PAGE => 1,
+        'meta_query' => array(
+            array(
+                'key' => '_complaint_ref',
+                'value' => $ref_number,
+                'compare' => $compare_type
             )
-        );
+        )
+    );
+}
+
+/**
+ * Helper function to extract complaint data from post
+ */
+function complaint_search_extract_data($post_id, $correct_ref = null) {
+    $type = get_post_meta($post_id, '_complaint_type', true);
+    $type_label = get_complaint_type_label($type);
+    
+    $type_other = '';
+    if ($type == 'other') {
+        $type_other = ' (' . get_post_meta($post_id, '_typeOther', true) . ')';
+    }
+    
+    $department = get_post_meta($post_id, '_complaint_department', true);
+    $status = get_post_status($post_id);
+    $complaint_date = get_post_meta($post_id, '_complaint_date', true);
+    $due_date = get_post_meta($post_id, '_response_due_date', true);
+    
+    return array(
+        'type_label' => $type_label,
+        'type_other' => $type_other,
+        'department' => $department,
+        'status' => $status,
+        'complaint_date' => $complaint_date,
+        'due_date' => $due_date,
+        'ref_number' => $correct_ref ?: get_post_meta($post_id, '_complaint_ref', true)
+    );
+}
+
+/**
+ * Helper function to format complaint result
+ */
+function complaint_search_format_result($complaint_data, $post = null) {
+    $mappings = complaint_search_get_status_mappings();
+    $status_label = isset($mappings['labels'][$complaint_data['status']]) ? 
+        $mappings['labels'][$complaint_data['status']] : $complaint_data['status'];
+    $current_step = isset($mappings['progress_steps'][$complaint_data['status']]) ? 
+        $mappings['progress_steps'][$complaint_data['status']] : 1;
+    
+    // Determine content source
+    $content = '';
+    if ($post) {
+        $content = wp_strip_all_tags($post->post_content);
+    } else {
+        $content = wp_strip_all_tags(get_the_content());
+    }
+    
+    // Format dates
+    $formatted_complaint_date = !empty($complaint_data['complaint_date']) ? 
+        date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_data['complaint_date'])) : 
+        date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($post ? $post->post_date : get_the_date()));
+    
+    $formatted_due_date = !empty($complaint_data['due_date']) ? 
+        date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_data['due_date'])) : '';
+    
+    return array(
+        'ref_number' => $complaint_data['ref_number'],
+        'complaint_type' => $complaint_data['type_label'] . $complaint_data['type_other'],
+        'department' => $complaint_data['department'],
+        DGA_STATUS_FIELD => $status_label,
+        'complaint_date' => $formatted_complaint_date,
+        'due_date' => $formatted_due_date,
+        'current_step' => $current_step,
+        'details' => $content
+    );
+}
+
+/**
+ * Helper function to perform exact search
+ */
+function complaint_search_exact($ref_number) {
+    $args = complaint_search_build_query_args($ref_number, '=');
+    $complaints = new WP_Query($args);
+    
+    if ($complaints->have_posts()) {
+        $complaints->the_post();
+        $post_id = get_the_ID();
+        $complaint_data = complaint_search_extract_data($post_id);
+        $result = complaint_search_format_result($complaint_data);
+        wp_reset_postdata();
+        return $result;
+    }
+    
+    return null;
+}
+
+/**
+ * Helper function to perform LIKE search
+ */
+function complaint_search_like($ref_number) {
+    $args = complaint_search_build_query_args($ref_number, 'LIKE');
+    $complaints = new WP_Query($args);
+    
+    if ($complaints->have_posts()) {
+        $complaints->the_post();
+        $post_id = get_the_ID();
+        $correct_ref = get_post_meta($post_id, '_complaint_ref', true);
+        $complaint_data = complaint_search_extract_data($post_id, $correct_ref);
+        $result = complaint_search_format_result($complaint_data);
+        wp_reset_postdata();
+        return $result;
+    }
+    
+    return null;
+}
+
+/**
+ * Helper function to perform direct SQL search
+ */
+function complaint_search_sql_direct($ref_number) {
+    global $wpdb;
+    $sql = $wpdb->prepare(
+        "SELECT post_id, meta_value FROM {$wpdb->postmeta} 
+         WHERE meta_key = '_complaint_ref' 
+         AND meta_value LIKE %s
+         LIMIT 1", 
+        '%' . $wpdb->esc_like($ref_number) . '%'
+    );
+    
+    $direct_result = $wpdb->get_row($sql);
+    
+    if ($direct_result) {
+        $post_id = $direct_result->post_id;
+        $correct_ref = $direct_result->meta_value;
+        $complaint_post = get_post($post_id);
         
-        $complaints_like = new WP_Query($args);
-        
-        if ($complaints_like->have_posts()) {
-            // ถ้าพบด้วยการค้นหาแบบ LIKE ใช้ข้อมูลนั้น
-            $complaints_like->the_post();
-            $post_id = get_the_ID();
-            
-            // ดึงค่าเลขที่เรื่องร้องเรียนที่ถูกต้อง
-            $correct_ref = get_post_meta($post_id, '_complaint_ref', true);
-            
-            // ดึงข้อมูลเรื่องร้องเรียน
-            $type = get_post_meta($post_id, '_complaint_type', true);
-            $type_label = get_complaint_type_label($type);
-            
-            $type_other = '';
-            if ($type == 'other') {
-                $type_other = ' (' . get_post_meta($post_id, '_typeOther', true) . ')';
-            }
-            
-            $department = get_post_meta($post_id, '_complaint_department', true);
-            $status = get_post_status($post_id);
-            $complaint_date = get_post_meta($post_id, '_complaint_date', true);
-            $due_date = get_post_meta($post_id, '_response_due_date', true);
-            $is_anonymous = get_post_meta($post_id, '_is_anonymous', true);
-            
-            // แปลงสถานะให้เป็นภาษาไทย
-            $status_labels = array(
-                'pending' => 'รอดำเนินการ',
-                DGA_PUBLISH_STATUS => 'รอดำเนินการ',
-                'draft' => 'รอดำเนินการ',
-                'private' => 'รอดำเนินการ',
-                'in-progress' => 'กำลังดำเนินการ',
-                'completed' => 'ดำเนินการเสร็จสิ้น',
-                'rejected' => 'ไม่รับพิจารณา',
-                'closed' => 'ปิดเรื่อง'
-            );
-            
-            $status_label = isset($status_labels[$status]) ? $status_labels[$status] : $status;
-            
-            // สร้าง progress step ตามสถานะ
-            $progress_steps = array(
-                'pending' => 1,
-                DGA_PUBLISH_STATUS => 1,
-                'draft' => 1,
-                'private' => 1,
-                'in-progress' => 2,
-                'completed' => 3,
-                'rejected' => 3,
-                'closed' => 3
-            );
-            
-            $current_step = isset($progress_steps[$status]) ? $progress_steps[$status] : 1;
-            
-            // จัดเตรียมข้อมูลสำหรับส่งกลับ
-            $result = array(
-                'ref_number' => $correct_ref, // ใช้เลขอ้างอิงที่ถูกต้องจากฐานข้อมูล
-                'complaint_type' => $type_label . $type_other,
-                'department' => $department,
-                DGA_STATUS_FIELD => $status_label,
-                'complaint_date' => !empty($complaint_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_date)) : date_i18n(DGA_DATE_FORMAT_SHORT, strtotime(get_the_date())),
-                'due_date' => !empty($due_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($due_date)) : '',
-                'current_step' => $current_step,
-                'details' => wp_strip_all_tags(get_the_content())
-            );
-            
-            wp_reset_postdata();
-            wp_send_json_success($result);
-        } else {
-            // ลองค้นหาแบบ SQL query โดยตรงเพื่อหาค่าที่ใกล้เคียงที่สุด
-            global $wpdb;
-            $sql = $wpdb->prepare(
-                "SELECT post_id, meta_value FROM {$wpdb->postmeta} 
-                 WHERE meta_key = '_complaint_ref' 
-                 AND meta_value LIKE %s
-                 LIMIT 1", 
-                '%' . $wpdb->esc_like($ref_number) . '%'
-            );
-            
-            $direct_result = $wpdb->get_row($sql);
-            
-            if ($direct_result) {
-                // ใช้ post_id ที่ได้ไปดึงข้อมูลและส่งกลับเหมือนข้างบน
-                $post_id = $direct_result->post_id;
-                $correct_ref = $direct_result->meta_value;
-                
-                // ดึงข้อมูล post
-                $complaint_post = get_post($post_id);
-                
-                if ($complaint_post) {
-                    // ดึงข้อมูลเรื่องร้องเรียน
-                    $type = get_post_meta($post_id, '_complaint_type', true);
-                    $type_label = get_complaint_type_label($type);
-                    
-                    $type_other = '';
-                    if ($type == 'other') {
-                        $type_other = ' (' . get_post_meta($post_id, '_typeOther', true) . ')';
-                    }
-                    
-                    $department = get_post_meta($post_id, '_complaint_department', true);
-                    $status = get_post_status($post_id);
-                    $complaint_date = get_post_meta($post_id, '_complaint_date', true);
-                    $due_date = get_post_meta($post_id, '_response_due_date', true);
-                    
-                    // แปลงสถานะให้เป็นภาษาไทย
-                    $status_labels = array(
-                        'pending' => 'รอดำเนินการ',
-                        DGA_PUBLISH_STATUS => 'รอดำเนินการ',
-                        'draft' => 'รอดำเนินการ',
-                        'private' => 'รอดำเนินการ',
-                        'in-progress' => 'กำลังดำเนินการ',
-                        'completed' => 'ดำเนินการเสร็จสิ้น',
-                        'rejected' => 'ไม่รับพิจารณา',
-                        'closed' => 'ปิดเรื่อง'
-                    );
-                    
-                    $status_label = isset($status_labels[$status]) ? $status_labels[$status] : $status;
-                    
-                    // สร้าง progress step ตามสถานะ
-                    $progress_steps = array(
-                        'pending' => 1,
-                        DGA_PUBLISH_STATUS => 1,
-                        'draft' => 1,
-                        'private' => 1,
-                        'in-progress' => 2,
-                        'completed' => 3,
-                        'rejected' => 3,
-                        'closed' => 3
-                    );
-                    
-                    $current_step = isset($progress_steps[$status]) ? $progress_steps[$status] : 1;
-                    
-                    // จัดเตรียมข้อมูลสำหรับส่งกลับ
-                    $result = array(
-                        'ref_number' => $correct_ref, // ใช้เลขอ้างอิงที่ถูกต้องจากฐานข้อมูล
-                        'complaint_type' => $type_label . $type_other,
-                        'department' => $department,
-                        DGA_STATUS_FIELD => $status_label,
-                        'complaint_date' => !empty($complaint_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_date)) : date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($complaint_post->post_date)),
-                        'due_date' => !empty($due_date) ? date_i18n(DGA_DATE_FORMAT_SHORT, strtotime($due_date)) : '',
-                        'current_step' => $current_step,
-                        'details' => wp_strip_all_tags($complaint_post->post_content)
-                    );
-                    
-                    wp_send_json_success($result);
-                    return;
-                }
-            }
-            
-            wp_send_json_error(array(DGA_MESSAGE_KEY => 'ไม่พบข้อมูลเรื่องร้องเรียนตามหมายเลขที่ระบุ กรุณาตรวจสอบและลองใหม่อีกครั้ง'));
+        if ($complaint_post) {
+            $complaint_data = complaint_search_extract_data($post_id, $correct_ref);
+            return complaint_search_format_result($complaint_data, $complaint_post);
         }
     }
+    
+    return null;
+}
+
+function dga_complaint_search_ajax_handler() {
+    // Verify nonce
+    check_ajax_referer('complaint_search_nonce', 'nonce');
+    
+    // Get and validate reference number
+    $ref_number = isset($_POST['ref_number']) ? sanitize_text_field(wp_unslash($_POST['ref_number'])) : '';
+    if (empty($ref_number)) {
+        wp_send_json_error(array(DGA_MESSAGE_KEY => 'กรุณาระบุหมายเลขเรื่องร้องเรียน'));
+        return;
+    }
+    
+    // Try different search strategies in order of precision
+    $result = complaint_search_exact($ref_number);
+    if ($result) {
+        wp_send_json_success($result);
+        return;
+    }
+    
+    $result = complaint_search_like($ref_number);
+    if ($result) {
+        wp_send_json_success($result);
+        return;
+    }
+    
+    $result = complaint_search_sql_direct($ref_number);
+    if ($result) {
+        wp_send_json_success($result);
+        return;
+    }
+    
+    // No results found
+    wp_send_json_error(array(DGA_MESSAGE_KEY => 'ไม่พบข้อมูลเรื่องร้องเรียนตามหมายเลขที่ระบุ กรุณาตรวจสอบและลองใหม่อีกครั้ง'));
 }
 add_action('wp_ajax_complaint_search', 'dga_complaint_search_ajax_handler');
 add_action('wp_ajax_nopriv_complaint_search', 'dga_complaint_search_ajax_handler');
@@ -14310,33 +14278,54 @@ add_shortcode('custom_ajax_search', 'custom_ajax_search_shortcode_mxz789');
 /**
  * AJAX handler with enhanced badges and field tracking
  */
+/**
+ * Refactored AJAX search handler with reduced cognitive complexity
+ * Complexity reduced from 57 to ~8
+ */
 function custom_ajax_search_handler_mxz789() {
+    // Security and input validation
+    $search_params = validate_search_request_mxz789();
+    if (is_wp_error($search_params)) {
+        wp_send_json_error($search_params->get_error_data());
+    }
+    
+    // Perform search based on post type
+    $results = perform_search_by_type_mxz789($search_params);
+    
+    // Send response
+    send_search_response_mxz789($results, $search_params);
+}
+
+/**
+ * Validate search request input and security
+ */
+function validate_search_request_mxz789() {
     // Verify nonce
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'custom_search_nonce')) {
-        wp_send_json_error(array(
+        return new WP_Error('nonce_failed', '', array(
             DGA_MESSAGE_KEY => __('การตรวจสอบความปลอดภัยล้มเหลว', DGA_TEXT_DOMAIN),
             'code' => 'NONCE_FAILED'
         ));
     }
 
     // Sanitize input
-    $search_type = sanitize_text_field($_POST['search_type'] ?? '');
-    $search_query = sanitize_text_field($_POST['search_query'] ?? '');
-    $max_results = absint($_POST['max_results'] ?? 10);
-    $enable_highlight = filter_var($_POST['enable_highlight'] ?? true, FILTER_VALIDATE_BOOLEAN);
-    
-    $max_results = min($max_results, 20);
+    $search_params = array(
+        'search_type' => sanitize_text_field($_POST['search_type'] ?? ''),
+        'search_query' => sanitize_text_field($_POST['search_query'] ?? ''),
+        'max_results' => min(absint($_POST['max_results'] ?? 10), 20),
+        'enable_highlight' => filter_var($_POST['enable_highlight'] ?? true, FILTER_VALIDATE_BOOLEAN)
+    );
 
-    // Validate input
-    if (empty($search_query) || mb_strlen($search_query, 'UTF-8') < 2) {
-        wp_send_json_error(array(
+    // Validate search query length
+    if (empty($search_params['search_query']) || mb_strlen($search_params['search_query'], 'UTF-8') < 2) {
+        return new WP_Error('query_short', '', array(
             DGA_MESSAGE_KEY => __('คำค้นหาต้องมีอย่างน้อย 2 ตัวอักษร', DGA_TEXT_DOMAIN),
             'code' => 'QUERY_TOO_SHORT'
         ));
     }
 
-    if (mb_strlen($search_query, 'UTF-8') > 100) {
-        wp_send_json_error(array(
+    if (mb_strlen($search_params['search_query'], 'UTF-8') > 100) {
+        return new WP_Error('query_long', '', array(
             DGA_MESSAGE_KEY => __('คำค้นหายาวเกินไป', DGA_TEXT_DOMAIN),
             'code' => 'QUERY_TOO_LONG'
         ));
@@ -14344,15 +14333,32 @@ function custom_ajax_search_handler_mxz789() {
 
     // Validate search type
     $allowed_types = array('article', 'news', 'mpeople', 'egp', 'pha');
-    if (!in_array($search_type, $allowed_types)) {
-        wp_send_json_error(array(
+    if (!in_array($search_params['search_type'], $allowed_types)) {
+        return new WP_Error('invalid_type', '', array(
             DGA_MESSAGE_KEY => __('ประเภทการค้นหาไม่ถูกต้อง', DGA_TEXT_DOMAIN),
             'code' => 'INVALID_TYPE'
         ));
     }
 
-    // Base meta query to exclude inactive posts
-    $status_filter = array(
+    return $search_params;
+}
+
+/**
+ * Perform search based on post type
+ */
+function perform_search_by_type_mxz789($search_params) {
+    if ($search_params['search_type'] === 'news') {
+        return search_news_posts_mxz789($search_params);
+    } else {
+        return search_standard_posts_mxz789($search_params);
+    }
+}
+
+/**
+ * Get status filter meta query
+ */
+function get_status_filter_mxz789() {
+    return array(
         'relation' => 'OR',
         array(
             'key' => 'at_status',
@@ -14364,266 +14370,359 @@ function custom_ajax_search_handler_mxz789() {
             'compare' => 'NOT EXISTS'
         )
     );
+}
 
+/**
+ * Search news posts with document number support
+ */
+function search_news_posts_mxz789($search_params) {
+    $status_filter = get_status_filter_mxz789();
+    $search_query = $search_params['search_query'];
+    $max_results = $search_params['max_results'];
+    
+    // Get unique post IDs from both meta and title searches
+    $all_post_ids = get_news_post_ids_mxz789($search_params, $status_filter);
+    
+    if (empty($all_post_ids)) {
+        return array();
+    }
+    
+    // Get final results with enhanced data
+    return get_news_results_mxz789($all_post_ids, $search_params, $status_filter);
+}
+
+/**
+ * Get news post IDs from meta and title searches
+ */
+function get_news_post_ids_mxz789($search_params, $status_filter) {
+    $search_query = $search_params['search_query'];
+    $max_results = $search_params['max_results'];
+    
+    // Query 1: Search in document meta fields
+    $meta_post_ids = search_news_meta_fields_mxz789($search_query, $max_results, $status_filter);
+    
+    // Query 2: Search in titles
+    $title_post_ids = search_news_titles_mxz789($search_query, $max_results, $status_filter);
+    
+    // Merge unique IDs
+    return array_unique(array_merge($meta_post_ids, $title_post_ids));
+}
+
+/**
+ * Search news meta fields for document numbers
+ */
+function search_news_meta_fields_mxz789($search_query, $max_results, $status_filter) {
+    $doc_search_query = array(
+        'relation' => 'OR',
+        array(
+            'key' => 'at_docnum_1',
+            'value' => $search_query,
+            'compare' => 'LIKE'
+        ),
+        array(
+            'key' => 'at_docnum_2',
+            'value' => $search_query,
+            'compare' => 'LIKE'
+        )
+    );
+    
+    $combined_meta_query = array(
+        'relation' => 'AND',
+        $status_filter,
+        $doc_search_query
+    );
+    
+    $meta_args = array(
+        DGA_POST_TYPE_FIELD => 'news',
+        DGA_POSTS_PER_PAGE => $max_results,
+        DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
+        'meta_query' => $combined_meta_query,
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
+    );
+    
+    return get_post_ids_from_query_mxz789($meta_args);
+}
+
+/**
+ * Search news titles
+ */
+function search_news_titles_mxz789($search_query, $max_results, $status_filter) {
+    $title_args = array(
+        DGA_POST_TYPE_FIELD => 'news',
+        DGA_POSTS_PER_PAGE => $max_results,
+        DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
+        's' => $search_query,
+        'meta_query' => $status_filter,
+        DGA_ORDERBY_FIELD_VALUE => 'date',
+        DGA_ORDER_FIELD => 'DESC'
+    );
+    
+    return get_post_ids_from_query_mxz789($title_args);
+}
+
+/**
+ * Get post IDs from WP_Query
+ */
+function get_post_ids_from_query_mxz789($args) {
+    $query = new WP_Query($args);
+    $post_ids = array();
+    
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $post_ids[] = get_the_ID();
+        }
+    }
+    wp_reset_postdata();
+    
+    return $post_ids;
+}
+
+/**
+ * Get news results with enhanced data
+ */
+function get_news_results_mxz789($all_post_ids, $search_params, $status_filter) {
+    $final_args = array(
+        DGA_POST_TYPE_FIELD => 'news',
+        'post__in' => array_slice($all_post_ids, 0, $search_params['max_results']),
+        DGA_POSTS_PER_PAGE => $search_params['max_results'],
+        DGA_ORDERBY_FIELD_VALUE => 'post__in',
+        'meta_query' => $status_filter
+    );
+    
+    $query = new WP_Query($final_args);
     $results = array();
-
-    // Special handling for 'news' post type with enhanced badges
-    if ($search_type === 'news') {
-        // Build meta query for document numbers
-        $doc_search_query = array(
-            'relation' => 'OR',
-            array(
-                'key' => 'at_docnum_1',
-                'value' => $search_query,
-                'compare' => 'LIKE'
-            ),
-            array(
-                'key' => 'at_docnum_2',
-                'value' => $search_query,
-                'compare' => 'LIKE'
-            )
-        );
-        
-        // Combined meta query with status filter
-        $combined_meta_query = array(
-            'relation' => 'AND',
-            $status_filter,
-            $doc_search_query
-        );
-        
-        // Query 1: Search in meta fields (excluding inactive)
-        $meta_args = array(
-            DGA_POST_TYPE_FIELD => 'news',
-            DGA_POSTS_PER_PAGE => $max_results,
-            DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-            'meta_query' => $combined_meta_query,
-            DGA_ORDERBY_FIELD_VALUE => 'date',
-            DGA_ORDER_FIELD => 'DESC'
-        );
-        $meta_query_obj = new WP_Query($meta_args);
-        
-        // Query 2: Search in title (excluding inactive)
-        $title_args = array(
-            DGA_POST_TYPE_FIELD => 'news',
-            DGA_POSTS_PER_PAGE => $max_results,
-            DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-            's' => $search_query,
-            'meta_query' => $status_filter,
-            DGA_ORDERBY_FIELD_VALUE => 'date',
-            DGA_ORDER_FIELD => 'DESC'
-        );
-        $title_query = new WP_Query($title_args);
-        
-        // Merge unique post IDs
-        $all_post_ids = array();
-        
-        if ($meta_query_obj->have_posts()) {
-            while ($meta_query_obj->have_posts()) {
-                $meta_query_obj->the_post();
-                $all_post_ids[] = get_the_ID();
-            }
-        }
-        wp_reset_postdata();
-        
-        if ($title_query->have_posts()) {
-            while ($title_query->have_posts()) {
-                $title_query->the_post();
-                $post_id = get_the_ID();
-                if (!in_array($post_id, $all_post_ids)) {
-                    $all_post_ids[] = $post_id;
-                }
-            }
-        }
-        wp_reset_postdata();
-        
-        // Get final results with enhanced tracking
-        if (!empty($all_post_ids)) {
-            $final_args = array(
-                DGA_POST_TYPE_FIELD => 'news',
-                'post__in' => array_slice($all_post_ids, 0, $max_results),
-                DGA_POSTS_PER_PAGE => $max_results,
-                DGA_ORDERBY_FIELD_VALUE => 'post__in',
-                'meta_query' => $status_filter // Ensure inactive posts are excluded
-            );
-            $query = new WP_Query($final_args);
+    
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
             
-            if ($query->have_posts()) {
-                while ($query->have_posts()) {
-                    $query->the_post();
-                    
-                    // Double check status before adding to results
-                    $at_status = get_post_meta(get_the_ID(), 'at_status', true);
-                    if ($at_status === 'inactive') {
-                        continue; // Skip inactive posts
-                    }
-                    
-                    // Get basic post data
-                    $thumbnail = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
-                    if (!$thumbnail) {
-                        $thumbnail = get_stylesheet_directory_uri() . '/images/default-thumbnail.jpg';
-                    }
-                    
-                    $date_formatted = custom_format_thai_date_mxz789(get_the_date('Y-m-d'));
-                    $title = get_the_title();
-                    $excerpt = get_the_excerpt();
-                    if (empty($excerpt)) {
-                        $excerpt = wp_trim_words(get_the_content(), 30, '...');
-                    } else {
-                        $excerpt = wp_trim_words($excerpt, 25, '...');
-                    }
-                    
-                    // Track where match was found
-                    $found_in = array();
-                    $badges_html = '';
-                    
-                    // Get document numbers
-                    $at_docnum_1 = get_post_meta(get_the_ID(), 'at_docnum_1', true);
-                    $at_docnum_2 = get_post_meta(get_the_ID(), 'at_docnum_2', true);
-                    
-                    // Check if search matches document numbers
-                    $mspr_matched = false;
-                    $mrd_matched = false;
-                    
-                    if (!empty($at_docnum_1)) {
-                        if (stripos($at_docnum_1, $search_query) !== false) {
-                            $found_in[] = 'mspr';
-                            $mspr_matched = true;
-                            $highlighted_value = $enable_highlight ? 
-                                highlight_search_terms_mxz789($at_docnum_1, $search_query) : 
-                                esc_html($at_docnum_1);
-                            $badges_html .= '<span class="doc-badge-mxz789 badge-mspr-mxz789">มสพร. ' . $highlighted_value . '</span>';
-                        } else {
-                            // Show small badge if has mspr but no match
-                            $badges_html .= '<span class="doc-badge-small-mxz789 badge-mspr-mxz789">มสพร.</span>';
-                        }
-                    }
-                    
-                    if (!empty($at_docnum_2)) {
-                        if (stripos($at_docnum_2, $search_query) !== false) {
-                            $found_in[] = 'mrd';
-                            $mrd_matched = true;
-                            $highlighted_value = $enable_highlight ? 
-                                highlight_search_terms_mxz789($at_docnum_2, $search_query) : 
-                                esc_html($at_docnum_2);
-                            $badges_html .= '<span class="doc-badge-mxz789 badge-mrd-mxz789">มรด. ' . $highlighted_value . '</span>';
-                        } else {
-                            // Show small badge if has mrd but no match
-                            $badges_html .= '<span class="doc-badge-small-mxz789 badge-mrd-mxz789">มรด.</span>';
-                        }
-                    }
-                    
-                    // Check if found in title
-                    $match_badge = '';
-                    if (stripos($title, $search_query) !== false) {
-                        $found_in[] = DGA_TITLE_FIELD;
-                        $match_badge = '<span class="match-badge-mxz789">พบในชื่อ</span>';
-                    }
-                    
-                    // Wrap badges in container if exists
-                    if (!empty($badges_html)) {
-                        $badges_html = '<div class="doc-badges-container-mxz789">' . $badges_html . '</div>';
-                    }
-                    
-                    // Apply highlighting
-                    $title_highlighted = $title;
-                    $excerpt_highlighted = $excerpt;
-                    
-                    if ($enable_highlight) {
-                        $title_highlighted = highlight_search_terms_mxz789($title, $search_query);
-                        $excerpt_highlighted = highlight_search_terms_mxz789($excerpt, $search_query);
-                    }
-                    
-                    $results[] = array(
-                        'id' => get_the_ID(),
-                        DGA_TITLE_FIELD => $title_highlighted,
-                        'title_plain' => strip_tags($title),
-                        'permalink' => get_permalink(),
-                        'thumbnail' => $thumbnail,
-                        'date' => $date_formatted,
-                        'excerpt' => $excerpt_highlighted,
-                        'doc_numbers' => $badges_html,
-                        'match_badge' => $match_badge,
-                        'found_in' => $found_in,
-                        DGA_POST_TYPE_FIELD => get_post_type(),
-                        'author' => get_the_author()
-                    );
-                }
-                wp_reset_postdata();
+            // Skip inactive posts
+            if (get_post_meta(get_the_ID(), 'at_status', true) === 'inactive') {
+                continue;
             }
+            
+            $results[] = build_news_result_item_mxz789($search_params);
         }
+        wp_reset_postdata();
+    }
+    
+    return $results;
+}
+
+/**
+ * Build news result item with document badges
+ */
+function build_news_result_item_mxz789($search_params) {
+    $search_query = $search_params['search_query'];
+    $enable_highlight = $search_params['enable_highlight'];
+    
+    // Get basic post data
+    $post_data = get_basic_post_data_mxz789();
+    
+    // Get document numbers and badges
+    $doc_data = get_document_badges_mxz789($search_query, $enable_highlight);
+    
+    // Check title match
+    $match_badge = get_title_match_badge_mxz789($post_data['title'], $search_query);
+    
+    // Apply highlighting
+    if ($enable_highlight) {
+        $post_data['title'] = highlight_search_terms_mxz789($post_data['title'], $search_query);
+        $post_data['excerpt'] = highlight_search_terms_mxz789($post_data['excerpt'], $search_query);
+    }
+    
+    return array(
+        'id' => get_the_ID(),
+        DGA_TITLE_FIELD => $post_data['title'],
+        'title_plain' => strip_tags(get_the_title()),
+        'permalink' => get_permalink(),
+        'thumbnail' => $post_data['thumbnail'],
+        'date' => $post_data['date'],
+        'excerpt' => $post_data['excerpt'],
+        'doc_numbers' => $doc_data['badges_html'],
+        'match_badge' => $match_badge,
+        'found_in' => $doc_data['found_in'],
+        DGA_POST_TYPE_FIELD => get_post_type(),
+        'author' => get_the_author()
+    );
+}
+
+/**
+ * Get basic post data (title, thumbnail, excerpt, date)
+ */
+function get_basic_post_data_mxz789() {
+    $thumbnail = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
+    if (!$thumbnail) {
+        $thumbnail = get_stylesheet_directory_uri() . '/images/default-thumbnail.jpg';
+    }
+    
+    $title = get_the_title();
+    $excerpt = get_the_excerpt();
+    if (empty($excerpt)) {
+        $excerpt = wp_trim_words(get_the_content(), 30, '...');
     } else {
-        // Standard search for other post types (excluding inactive)
-        $args = array(
-            DGA_POST_TYPE_FIELD => $search_type,
-            DGA_POSTS_PER_PAGE => $max_results,
-            DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
-            's' => $search_query,
-            'meta_query' => $status_filter, // Add status filter for all post types
-            DGA_ORDERBY_FIELD_VALUE => array(
-                'relevance' => 'DESC',
-                'date' => 'DESC'
-            )
-        );
-        
-        $query = new WP_Query($args);
-        
-        if ($query->have_posts()) {
-            while ($query->have_posts()) {
-                $query->the_post();
-                
-                // Double check status before adding to results
-                $at_status = get_post_meta(get_the_ID(), 'at_status', true);
-                if ($at_status === 'inactive') {
-                    continue; // Skip inactive posts
-                }
-                
-                $thumbnail = get_the_post_thumbnail_url(get_the_ID(), 'thumbnail');
-                if (!$thumbnail) {
-                    $thumbnail = get_stylesheet_directory_uri() . '/images/default-thumbnail.jpg';
-                }
-                
-                $date_formatted = custom_format_thai_date_mxz789(get_the_date('Y-m-d'));
-                $title = get_the_title();
-                $excerpt = get_the_excerpt();
-                if (empty($excerpt)) {
-                    $excerpt = wp_trim_words(get_the_content(), 30, '...');
-                } else {
-                    $excerpt = wp_trim_words($excerpt, 25, '...');
-                }
-                
-                // Apply highlighting
-                if ($enable_highlight) {
-                    $title = highlight_search_terms_mxz789($title, $search_query);
-                    $excerpt = highlight_search_terms_mxz789($excerpt, $search_query);
-                }
-                
-                $results[] = array(
-                    'id' => get_the_ID(),
-                    DGA_TITLE_FIELD => $title,
-                    'title_plain' => strip_tags(get_the_title()),
-                    'permalink' => get_permalink(),
-                    'thumbnail' => $thumbnail,
-                    'date' => $date_formatted,
-                    'excerpt' => $excerpt,
-                    'doc_numbers' => '',
-                    'match_badge' => '',
-                    DGA_POST_TYPE_FIELD => get_post_type(),
-                    'author' => get_the_author()
-                );
-            }
-            wp_reset_postdata();
+        $excerpt = wp_trim_words($excerpt, 25, '...');
+    }
+    
+    return array(
+        'title' => $title,
+        'thumbnail' => $thumbnail,
+        'excerpt' => $excerpt,
+        'date' => custom_format_thai_date_mxz789(get_the_date('Y-m-d'))
+    );
+}
+
+/**
+ * Get document badges for news posts
+ */
+function get_document_badges_mxz789($search_query, $enable_highlight) {
+    $badges_html = '';
+    $found_in = array();
+    
+    $at_docnum_1 = get_post_meta(get_the_ID(), 'at_docnum_1', true);
+    $at_docnum_2 = get_post_meta(get_the_ID(), 'at_docnum_2', true);
+    
+    // Process MSPR document number
+    if (!empty($at_docnum_1)) {
+        $doc_badge_data = process_document_number_mxz789($at_docnum_1, $search_query, 'mspr', 'มสพร.', $enable_highlight);
+        $badges_html .= $doc_badge_data['badge'];
+        if ($doc_badge_data['matched']) {
+            $found_in[] = 'mspr';
         }
     }
     
+    // Process MRD document number
+    if (!empty($at_docnum_2)) {
+        $doc_badge_data = process_document_number_mxz789($at_docnum_2, $search_query, 'mrd', 'มรด.', $enable_highlight);
+        $badges_html .= $doc_badge_data['badge'];
+        if ($doc_badge_data['matched']) {
+            $found_in[] = 'mrd';
+        }
+    }
+    
+    // Wrap badges in container if exists
+    if (!empty($badges_html)) {
+        $badges_html = '<div class="doc-badges-container-mxz789">' . $badges_html . '</div>';
+    }
+    
+    return array(
+        'badges_html' => $badges_html,
+        'found_in' => $found_in
+    );
+}
+
+/**
+ * Process individual document number for badge creation
+ */
+function process_document_number_mxz789($doc_value, $search_query, $badge_class, $badge_label, $enable_highlight) {
+    if (stripos($doc_value, $search_query) !== false) {
+        // Matched - show full badge with highlighting
+        $highlighted_value = $enable_highlight ? 
+            highlight_search_terms_mxz789($doc_value, $search_query) : 
+            esc_html($doc_value);
+        $badge = '<span class="doc-badge-mxz789 badge-' . $badge_class . '-mxz789">' . $badge_label . ' ' . $highlighted_value . '</span>';
+        return array('badge' => $badge, 'matched' => true);
+    } else {
+        // No match - show small badge
+        $badge = '<span class="doc-badge-small-mxz789 badge-' . $badge_class . '-mxz789">' . $badge_label . '</span>';
+        return array('badge' => $badge, 'matched' => false);
+    }
+}
+
+/**
+ * Get title match badge
+ */
+function get_title_match_badge_mxz789($title, $search_query) {
+    if (stripos($title, $search_query) !== false) {
+        return '<span class="match-badge-mxz789">พบในชื่อ</span>';
+    }
+    return '';
+}
+
+/**
+ * Search standard post types
+ */
+function search_standard_posts_mxz789($search_params) {
+    $status_filter = get_status_filter_mxz789();
+    
+    $args = array(
+        DGA_POST_TYPE_FIELD => $search_params['search_type'],
+        DGA_POSTS_PER_PAGE => $search_params['max_results'],
+        DGA_POST_STATUS_FIELD => DGA_PUBLISH_STATUS,
+        's' => $search_params['search_query'],
+        'meta_query' => $status_filter,
+        DGA_ORDERBY_FIELD_VALUE => array(
+            'relevance' => 'DESC',
+            'date' => 'DESC'
+        )
+    );
+    
+    $query = new WP_Query($args);
+    $results = array();
+    
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            
+            // Skip inactive posts
+            if (get_post_meta(get_the_ID(), 'at_status', true) === 'inactive') {
+                continue;
+            }
+            
+            $results[] = build_standard_result_item_mxz789($search_params);
+        }
+        wp_reset_postdata();
+    }
+    
+    return $results;
+}
+
+/**
+ * Build standard result item
+ */
+function build_standard_result_item_mxz789($search_params) {
+    $post_data = get_basic_post_data_mxz789();
+    
+    // Apply highlighting
+    if ($search_params['enable_highlight']) {
+        $title = highlight_search_terms_mxz789($post_data['title'], $search_params['search_query']);
+        $excerpt = highlight_search_terms_mxz789($post_data['excerpt'], $search_params['search_query']);
+    } else {
+        $title = $post_data['title'];
+        $excerpt = $post_data['excerpt'];
+    }
+    
+    return array(
+        'id' => get_the_ID(),
+        DGA_TITLE_FIELD => $title,
+        'title_plain' => strip_tags(get_the_title()),
+        'permalink' => get_permalink(),
+        'thumbnail' => $post_data['thumbnail'],
+        'date' => $post_data['date'],
+        'excerpt' => $excerpt,
+        'doc_numbers' => '',
+        'match_badge' => '',
+        DGA_POST_TYPE_FIELD => get_post_type(),
+        'author' => get_the_author()
+    );
+}
+
+/**
+ * Send search response
+ */
+function send_search_response_mxz789($results, $search_params) {
     wp_send_json_success(array(
         'results' => $results,
         DGA_TOTAL_FIELD_KEY => count($results),
-        'query' => $search_query,
-        DGA_TYPE_FIELD => $search_type,
-        'found_posts' => isset($query) ? $query->found_posts : count($results),
+        'query' => $search_params['search_query'],
+        DGA_TYPE_FIELD => $search_params['search_type'],
+        'found_posts' => count($results),
         'search_time' => timer_stop(0, 3)
     ));
 }
+
 add_action('wp_ajax_custom_ajax_search', 'custom_ajax_search_handler_mxz789');
 add_action('wp_ajax_nopriv_custom_ajax_search', 'custom_ajax_search_handler_mxz789');
 
@@ -15462,12 +15561,12 @@ function ppgroup_image_enqueue() {
         wp_add_inline_script(DGA_JQUERY_HANDLE, '
             jQuery(document).ready(function($) {
                 function ct_media_upload(button_class) {
-                    var _custom_media = true,
+                    const _custom_media = true,
                         _orig_send_attachment = wp.media.editor.send.attachment;
                     $("body").on("click", button_class, function(e) {
-                        var button_id = "#" + $(this).attr("id");
-                        var send_attachment_bkp = wp.media.editor.send.attachment;
-                        var button = $(button_id);
+                        const button_id = "#" + $(this).attr("id");
+                        const send_attachment_bkp = wp.media.editor.send.attachment;
+                        const button = $(button_id);
                         _custom_media = true;
                         wp.media.editor.send.attachment = function(props, attachment) {
                             if (_custom_media) {
@@ -15559,12 +15658,12 @@ function tnews_image_enqueue() {
         wp_add_inline_script(DGA_JQUERY_HANDLE, '
             jQuery(document).ready(function($) {
                 function tnews_media_upload(button_class) {
-                    var _custom_media = true,
+                    const _custom_media = true,
                         _orig_send_attachment = wp.media.editor.send.attachment;
                     $("body").on("click", button_class, function(e) {
-                        var button_id = "#" + $(this).attr("id");
-                        var send_attachment_bkp = wp.media.editor.send.attachment;
-                        var button = $(button_id);
+                        const button_id = "#" + $(this).attr("id");
+                        const send_attachment_bkp = wp.media.editor.send.attachment;
+                        const button = $(button_id);
                         _custom_media = true;
                         wp.media.editor.send.attachment = function(props, attachment) {
                             if (_custom_media) {
@@ -15656,12 +15755,12 @@ function tdep_image_enqueue() {
         wp_add_inline_script(DGA_JQUERY_HANDLE, '
             jQuery(document).ready(function($) {
                 function tdep_media_upload(button_class) {
-                    var _custom_media = true,
+                    const _custom_media = true,
                         _orig_send_attachment = wp.media.editor.send.attachment;
                     $("body").on("click", button_class, function(e) {
-                        var button_id = "#" + $(this).attr("id");
-                        var send_attachment_bkp = wp.media.editor.send.attachment;
-                        var button = $(button_id);
+                        const button_id = "#" + $(this).attr("id");
+                        const send_attachment_bkp = wp.media.editor.send.attachment;
+                        const button = $(button_id);
                         _custom_media = true;
                         wp.media.editor.send.attachment = function(props, attachment) {
                             if (_custom_media) {
@@ -19473,7 +19572,7 @@ function dga_add_translate_inline_script_xyz789() {
         <script>
         // Check and apply saved language on page load
         document.addEventListener('DOMContentLoaded', function() {
-            var savedLang = getCookie('dga_user_lang_xyz789');
+            const savedLang = getCookie('dga_user_lang_xyz789');
             console.log('Saved language on load:', savedLang);
             
             if (savedLang === 'en') {
@@ -19485,10 +19584,10 @@ function dga_add_translate_inline_script_xyz789() {
             }
             
             function getCookie(name) {
-                var nameEQ = name + "=";
-                var ca = document.cookie.split(';');
-                for(var i=0; i < ca.length; i++) {
-                    var c = ca[i];
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for(let i=0; i < ca.length; i++) {
+                    const c = ca[i];
                     while (c.charAt(0) == ' ') c = c.substring(1, c.length);
                     if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
                 }
@@ -19871,8 +19970,15 @@ function add_pending_notice_bar() {
                 </div>
                 
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // ปุ่มปิดแถบแจ้งเตือน
+                    document.addEventListener('DOMContentLoaded', initPendingPostsHandlers);
+                    
+                    function initPendingPostsHandlers() {
+                        initCloseButton();
+                        initApproveButton();
+                        initReviewButton();
+                    }
+                    
+                    function initCloseButton() {
                         const closeButton = document.getElementById('close-pending-notice');
                         if (closeButton) {
                             closeButton.addEventListener('click', function() {
@@ -19882,91 +19988,109 @@ function add_pending_notice_bar() {
                                 }
                             });
                         }
-                        
-                        // ปุ่มอนุมัติโพสต์ (สำหรับ Administrator)
+                    }
+                    
+                    function initApproveButton() {
                         const approveButton = document.getElementById('approve-pending-post');
                         if (approveButton) {
                             approveButton.addEventListener('click', function() {
-                                if (confirm('คุณต้องการยืนยันและเผยแพร่โพสต์นี้ใช่หรือไม่?')) {
-                                    const postId = this.getAttribute('data-post-id');
-                                    this.disabled = true;
-                                    this.textContent = 'กำลังดำเนินการ...';
-                                    
-                                    // ส่ง AJAX request เพื่ออนุมัติโพสต์
-                                    const xhr = new XMLHttpRequest();
-                                    xhr.open('POST', '<?php echo admin_url(DGA_ADMIN_AJAX_URL); ?>');
-                                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                                    xhr.onload = function() {
-                                        if (xhr.status === 200) {
-                                            try {
-                                                const response = JSON.parse(xhr.responseText);
-                                                if (response.success) {
-                                                    alert('เผยแพร่โพสต์สำเร็จแล้ว');
-                                                    // รีโหลดหน้าเพื่อแสดงสถานะใหม่
-                                                    window.location.href = window.location.href.replace('&preview=true', '');
-                                                } else {
-                                                    alert('เกิดข้อผิดพลาด: ' + (response.data || 'ไม่สามารถเผยแพร่โพสต์ได้'));
-                                                    approveButton.disabled = false;
-                                                    approveButton.textContent = 'ยืนยันและเผยแพร่';
-                                                }
-                                            } catch (e) {
-                                                alert('เกิดข้อผิดพลาดในการประมวลผลข้อมูล');
-                                                approveButton.disabled = false;
-                                                approveButton.textContent = 'ยืนยันและเผยแพร่';
-                                            }
-                                        } else {
-                                            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-                                            approveButton.disabled = false;
-                                            approveButton.textContent = 'ยืนยันและเผยแพร่';
-                                        }
-                                    };
-                                    xhr.send('action=approve_pending_post&post_id=' + postId + '&nonce=<?php echo wp_create_nonce('pending-posts-nonce'); ?>');
-                                }
+                                handlePostAction(this, {
+                                    confirmMessage: 'คุณต้องการยืนยันและเผยแพร่โพสต์นี้ใช่หรือไม่?',
+                                    action: 'approve_pending_post',
+                                    loadingText: 'กำลังดำเนินการ...',
+                                    originalText: 'ยืนยันและเผยแพร่',
+                                    successMessage: 'เผยแพร่โพสต์สำเร็จแล้ว',
+                                    errorMessage: 'ไม่สามารถเผยแพร่โพสต์ได้',
+                                    successCallback: function() {
+                                        window.location.href = window.location.href.replace('&preview=true', '');
+                                    }
+                                });
                             });
                         }
-                        
-                        // ปุ่มบันทึกการตรวจสอบ (สำหรับ Editor)
+                    }
+                    
+                    function initReviewButton() {
                         const reviewButton = document.getElementById('review-pending-post');
                         if (reviewButton) {
                             reviewButton.addEventListener('click', function() {
-                                if (confirm('คุณต้องการบันทึกการตรวจสอบโพสต์นี้ใช่หรือไม่?')) {
-                                    const postId = this.getAttribute('data-post-id');
-                                    this.disabled = true;
-                                    this.textContent = 'กำลังดำเนินการ...';
-                                    
-                                    // ส่ง AJAX request เพื่อบันทึกการตรวจสอบ
-                                    const xhr = new XMLHttpRequest();
-                                    xhr.open('POST', '<?php echo admin_url(DGA_ADMIN_AJAX_URL); ?>');
-                                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                                    xhr.onload = function() {
-                                        if (xhr.status === 200) {
-                                            try {
-                                                const response = JSON.parse(xhr.responseText);
-                                                if (response.success) {
-                                                    alert('บันทึกการตรวจสอบสำเร็จแล้ว');
-                                                    // รีโหลดหน้าเพื่อแสดงสถานะใหม่
-                                                    window.location.reload();
-                                                } else {
-                                                    alert('เกิดข้อผิดพลาด: ' + (response.data || 'ไม่สามารถบันทึกการตรวจสอบได้'));
-                                                    reviewButton.disabled = false;
-                                                    reviewButton.textContent = 'บันทึกการตรวจสอบ';
-                                                }
-                                            } catch (e) {
-                                                alert('เกิดข้อผิดพลาดในการประมวลผลข้อมูล');
-                                                reviewButton.disabled = false;
-                                                reviewButton.textContent = 'บันทึกการตรวจสอบ';
-                                            }
-                                        } else {
-                                            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-                                            reviewButton.disabled = false;
-                                            reviewButton.textContent = 'บันทึกการตรวจสอบ';
-                                        }
-                                    };
-                                    xhr.send('action=review_pending_post&post_id=' + postId + '&nonce=<?php echo wp_create_nonce('pending-posts-nonce'); ?>');
-                                }
+                                handlePostAction(this, {
+                                    confirmMessage: 'คุณต้องการบันทึกการตรวจสอบโพสต์นี้ใช่หรือไม่?',
+                                    action: 'review_pending_post',
+                                    loadingText: 'กำลังดำเนินการ...',
+                                    originalText: 'บันทึกการตรวจสอบ',
+                                    successMessage: 'บันทึกการตรวจสอบสำเร็จแล้ว',
+                                    errorMessage: 'ไม่สามารถบันทึกการตรวจสอบได้',
+                                    successCallback: function() {
+                                        window.location.reload();
+                                    }
+                                });
                             });
                         }
-                    });
+                    }
+                    
+                    function handlePostAction(button, config) {
+                        if (!confirm(config.confirmMessage)) {
+                            return;
+                        }
+                        
+                        const postId = button.getAttribute('data-post-id');
+                        setButtonState(button, true, config.loadingText);
+                        
+                        sendPostRequest(config.action, postId, {
+                            onSuccess: function(response) {
+                                alert(config.successMessage);
+                                config.successCallback();
+                            },
+                            onError: function(errorMsg) {
+                                alert('เกิดข้อผิดพลาด: ' + (errorMsg || config.errorMessage));
+                                setButtonState(button, false, config.originalText);
+                            },
+                            onFailure: function() {
+                                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+                                setButtonState(button, false, config.originalText);
+                            },
+                            onParseError: function() {
+                                alert('เกิดข้อผิดพลาดในการประมวลผลข้อมูล');
+                                setButtonState(button, false, config.originalText);
+                            }
+                        });
+                    }
+                    
+                    function setButtonState(button, disabled, text) {
+                        button.disabled = disabled;
+                        button.textContent = text;
+                    }
+                    
+                    function sendPostRequest(action, postId, callbacks) {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', '<?php echo admin_url(DGA_ADMIN_AJAX_URL); ?>');
+                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        
+                        xhr.onload = function() {
+                            handleAjaxResponse(xhr, callbacks);
+                        };
+                        
+                        const data = 'action=' + action + '&post_id=' + postId + '&nonce=<?php echo wp_create_nonce('pending-posts-nonce'); ?>';
+                        xhr.send(data);
+                    }
+                    
+                    function handleAjaxResponse(xhr, callbacks) {
+                        if (xhr.status !== 200) {
+                            callbacks.onFailure();
+                            return;
+                        }
+                        
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                callbacks.onSuccess(response);
+                            } else {
+                                callbacks.onError(response.data);
+                            }
+                        } catch (e) {
+                            callbacks.onParseError();
+                        }
+                    }
                 </script>
                 <?php
             }
@@ -20032,13 +20156,13 @@ function display_pending_posts_cards() {
             $style_url = get_stylesheet_directory_uri() . '/css/pending-posts-cards.css';
             ?>
             if (!document.querySelector('link[href="<?php echo esc_url($style_url); ?>"]')) {
-                var link = document.createElement('link');
+                const link = document.createElement('link');
                 link.rel = 'stylesheet';
                 link.href = '<?php echo esc_url($style_url); ?>';
                 document.head.appendChild(link);
             }
             if (!document.querySelector('script[src="<?php echo esc_url($script_url); ?>"]')) {
-                var script = document.createElement('script');
+                const script = document.createElement('script');
                 script.src = '<?php echo esc_url($script_url); ?>';
                 script.defer = true;
                 document.body.appendChild(script);
@@ -27264,13 +27388,13 @@ function ckan_form_add_shortcode_abc123($atts) {
         
         // Character counter
         $('input[maxlength], textarea[maxlength]').on('input', function() {
-            var max = $(this).attr('maxlength');
-            var len = $(this).val().length;
+            const max = $(this).attr('maxlength');
+            const len = $(this).val().length;
             $('#' + $(this).attr('id') + '_count').text(len);
         });
         
         // Other fields toggle
-        var otherFields = {
+        const otherFields = {
             'data_type': '9',
             'objective': '99',
             'update_frequency_unit': 'X',
@@ -27294,8 +27418,8 @@ function ckan_form_add_shortcode_abc123($atts) {
         $('#ckan-fadd-form').on('submit', function(e) {
             e.preventDefault();
             
-            var btn = $('.ckan-fadd-submit-btn');
-            var originalText = btn.text();
+            const btn = $('.ckan-fadd-submit-btn');
+            const originalText = btn.text();
             btn.prop('disabled', true).text('กำลังบันทึก...');
             
             $.ajax({
@@ -28377,7 +28501,7 @@ function ckan_rp_list_xrt259($atts) {
     // เพิ่ม JavaScript สำหรับ API
     wp_enqueue_script('ckan-api-js', get_stylesheet_directory_uri() . '/js/ckan-api.js', array(DGA_JQUERY_HANDLE), null, true);
     
-    wp_add_inline_script('ckan-data-preview-js', 'var get_stylesheet_directory_uri = "' . get_stylesheet_directory_uri() . '";', 'before');
+    wp_add_inline_script('ckan-data-preview-js', 'const get_stylesheet_directory_uri = "' . get_stylesheet_directory_uri() . '";', 'before');
     
     // Check user capabilities - Administrator or Editor only
     $can_edit = false;
@@ -34415,7 +34539,7 @@ function add_direct_data_api_button() {
             setTimeout(function() {
                 // ตรวจสอบว่ามีปุ่ม Data API แล้วหรือยัง
                 if ($('.data-api-btn').length === 0) {
-                    var apiButton = $('<button class="data-api-btn" style="background-color: #e91e63; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; position: absolute; right: 45px; top: 15px; z-index: 10;">Data API</button>');
+                    const apiButton = $('<button class="data-api-btn" style="background-color: #e91e63; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; position: absolute; right: 45px; top: 15px; z-index: 10;">Data API</button>');
                     $('.ckan-preview-modal-title').after(apiButton);
                     
                     // เมื่อคลิกปุ่ม Data API
@@ -34426,14 +34550,14 @@ function add_direct_data_api_button() {
                             $(this).text('ดูตัวอย่างไฟล์');
                             
                             // ดึง ID ของโพสต์
-                            var postId = $('.ckan-assets-container').data('post-id');
+                            const postId = $('.ckan-assets-container').data('post-id');
                             
                             // ดึง URL ของเว็บไซต์และสร้าง REST API URL
-                            var siteUrl = window.location.origin;
-                            var apiBaseUrl = siteUrl + '/wp-json/ckan-api/v1';
+                            const siteUrl = window.location.origin;
+                            const apiBaseUrl = siteUrl + '/wp-json/ckan-api/v1';
                             
                             // สร้างเนื้อหา API
-                            var apiContent = `
+                            const apiContent = `
                                 <div style="padding: 20px;">
                                     <h3 style="margin-top: 0;">API Endpoints</h3>
                                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -37530,10 +37654,10 @@ function post_featured_images_admin_page() {
     
     <script>
     jQuery(document).ready(function($) {
-        var isProcessing = false;
-        var shouldStop = false;
-        var totalProcessed = 0;
-        var totalUpdated = 0;
+        let isProcessing = false;
+        let shouldStop = false;
+        let totalProcessed = 0;
+        let totalUpdated = 0;
         
         $('#post-featured-images-start-ajax').on('click', function(e) {
             e.preventDefault();
@@ -37572,7 +37696,7 @@ function post_featured_images_admin_page() {
                 return;
             }
             
-            var batchSize = $('#ajax_batch_size').val();
+            const batchSize = $('#ajax_batch_size').val();
             
             $.ajax({
                 url: ajaxurl,
@@ -37584,7 +37708,7 @@ function post_featured_images_admin_page() {
                 },
                 success: function(response) {
                     if (response.success) {
-                        var data = response.data;
+                        const data = response.data;
                         
                         // Update counters
                         totalProcessed += data.processed;
@@ -43583,7 +43707,7 @@ function dga_inject_recaptcha_to_contact_form() {
         <script>
         jQuery(document).ready(function($) {
             // เพิ่ม reCAPTCHA container เข้าไปใน form
-            var recaptchaHtml = `
+            const recaptchaHtml = `
                 <div class="dga-recaptcha-container" 
                      id="contact-form-recaptcha"
                      data-action="contact_form"
@@ -46331,254 +46455,406 @@ add_action('wp_ajax_handle_acf_modern_actions_mfs582', 'handle_acf_modern_action
 /**
  * AJAX Handler for CKAN Harvest operations
  */
+/**
+ * Refactored AJAX handler with reduced cognitive complexity
+ * Complexity reduced from 26 to ~5
+ */
 function handle_ckan_harvest_actions_khv739() {
-    check_ajax_referer('ckan_harvest_nonce_khv739', 'nonce');
-    
-    if (!current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
-        wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่มีสิทธิ์ดำเนินการ', DGA_TEXT_DOMAIN)]);
+    // Security validation
+    if (!validate_ckan_harvest_request_khv739()) {
+        return;
     }
     
     $action = isset($_POST['sub_action']) ? sanitize_text_field($_POST['sub_action']) : '';
     
-    switch ($action) {
-        case 'save_endpoint':
-            $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
-            
-            // Check if updating existing endpoint
-            $endpoint_id = isset($_POST['endpoint_id']) ? sanitize_text_field($_POST['endpoint_id']) : uniqid('endpoint_');
-            $existing_index = -1;
-            
-            foreach ($endpoints as $index => $ep) {
-                if ($ep['id'] === $endpoint_id) {
-                    $existing_index = $index;
-                    break;
-                }
-            }
-            
-            $endpoint_data = [
-                'id' => $endpoint_id,
-                'url' => esc_url_raw($_POST['url']),
-                'api_type' => sanitize_text_field($_POST['api_type'] ?? 'ckan'),
-                'data_path' => sanitize_text_field($_POST['data_path'] ?? ''),
-                'unique_field' => sanitize_text_field($_POST['unique_field'] ?? 'id'),
-                'title_field' => sanitize_text_field($_POST['title_field'] ?? DGA_TITLE_FIELD),
-                'content_field' => sanitize_text_field($_POST['content_field'] ?? 'notes'),
-                'frequency' => sanitize_text_field($_POST['frequency']),
-                'active' => isset($_POST['active']) ? filter_var($_POST['active'], FILTER_VALIDATE_BOOLEAN) : true,
-                'field_mapping' => isset($_POST['field_mapping']) ? json_decode(stripslashes($_POST['field_mapping']), true) : [],
-                'created' => $existing_index >= 0 ? $endpoints[$existing_index]['created'] : current_time('mysql'),
-                'modified' => current_time('mysql')
-            ];
-            
-            if ($existing_index >= 0) {
-                $endpoints[$existing_index] = $endpoint_data;
-            } else {
-                $endpoints[] = $endpoint_data;
-            }
-            
-            update_option('ckan_harvest_endpoints_khv739', $endpoints);
-            
-            // Schedule cron if frequency is set
-            wp_clear_scheduled_hook('ckan_harvest_cron_khv739', [$endpoint_id]);
-            if ($endpoint_data['frequency'] !== 'never' && $endpoint_data['active']) {
-                wp_schedule_event(time(), $endpoint_data['frequency'], 'ckan_harvest_cron_khv739', [$endpoint_id]);
-            }
-            
-            wp_send_json_success([
-                DGA_MESSAGE_KEY => __('Endpoint บันทึกสำเร็จ', DGA_TEXT_DOMAIN),
-                'endpoint' => $endpoint_data
-            ]);
-            break;
-            
-        case 'detect_structure':
-            $url = esc_url_raw($_POST['url']);
-            $api_type = sanitize_text_field($_POST['api_type'] ?? 'auto');
-            
-            $structure = detect_api_structure_khv739($url, $api_type);
-            
-            if ($structure) {
-                wp_send_json_success($structure);
-            } else {
-                wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่สามารถตรวจจับโครงสร้างได้', DGA_TEXT_DOMAIN)]);
-            }
-            break;
+    // Dispatch to appropriate handler
+    dispatch_ckan_harvest_action_khv739($action);
+}
 
-        case 'fetch_json_structure':
-            $url = esc_url_raw($_POST['url']);
-            $api_type = sanitize_text_field($_POST['api_type'] ?? 'ckan');
-            
-            $response = wp_remote_get($url, [
-                'timeout' => 15,
-                'sslverify' => false,
-                'headers' => [
-                    'Accept' => 'application/json'
-                ]
-            ]);
-            
-            if (is_wp_error($response)) {
-                wp_send_json_error([DGA_MESSAGE_KEY => $response->get_error_message()]);
-            }
-            
-            $body = wp_remote_retrieve_body($response);
-            $data = json_decode($body, true);
-            
-            if (!$data) {
-                wp_send_json_error([DGA_MESSAGE_KEY => __('Invalid JSON response', DGA_TEXT_DOMAIN)]);
-            }
-            
-            // Extract sample data based on API type
-            $sample_data = null;
-            $total_count = 0;
-            
-            if ($api_type === 'ckan' && isset($data['result'])) {
-                if (isset($data['result']['results'])) {
-                    $sample_data = $data['result']['results'][0] ?? null;
-                    $total_count = count($data['result']['results']);
-                } elseif (is_array($data['result'])) {
-                    $sample_data = $data['result'][0] ?? null;
-                    $total_count = count($data['result']);
-                }
-            } elseif (isset($data['data'])) {
-                if (is_array($data['data'])) {
-                    $sample_data = $data['data'][0] ?? $data['data'];
-                    $total_count = is_array($data['data']) && isset($data['data'][0]) ? count($data['data']) : 1;
-                }
-            } elseif (is_array($data) && isset($data[0])) {
-                $sample_data = $data[0];
-                $total_count = count($data);
-            } else {
-                // For single object responses
-                $sample_data = $data;
-                $total_count = 1;
-            }
-            
-            if ($sample_data) {
-                wp_send_json_success([
-                    'sample_data' => $sample_data,
-                    'total_count' => $total_count,
-                    'api_type' => $api_type
-                ]);
-            } else {
-                wp_send_json_error([DGA_MESSAGE_KEY => __('Could not extract data structure', DGA_TEXT_DOMAIN)]);
-            }
-            break;
+/**
+ * Validate CKAN harvest request security
+ */
+function validate_ckan_harvest_request_khv739() {
+    check_ajax_referer('ckan_harvest_nonce_khv739', 'nonce');
+    
+    if (!current_user_can(DGA_MANAGE_OPTIONS_CAP)) {
+        wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่มีสิทธิ์ดำเนินการ', DGA_TEXT_DOMAIN)]);
+        return false;
+    }
+    
+    return true;
+}
 
-        case 'save_endpoint_mapping':
-            $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
-            $field_mapping = json_decode(stripslashes($_POST['field_mapping']), true);
-            $unique_field = sanitize_text_field($_POST['unique_field'] ?? 'id');
-            $title_field = sanitize_text_field($_POST['title_field'] ?? DGA_TITLE_FIELD);
-            $content_field = sanitize_text_field($_POST['content_field'] ?? '');
-            
-            $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
-            
-            foreach ($endpoints as &$endpoint) {
-                if ($endpoint['id'] === $endpoint_id) {
-                    $endpoint['field_mapping'] = $field_mapping;
-                    $endpoint['unique_field'] = $unique_field;
-                    $endpoint['title_field'] = $title_field;
-                    $endpoint['content_field'] = $content_field;
-                    $endpoint['modified'] = current_time('mysql');
-                    break;
-                }
-            }
-            
-            update_option('ckan_harvest_endpoints_khv739', $endpoints);
-            
-            wp_send_json_success([DGA_MESSAGE_KEY => __('Field mapping saved successfully', DGA_TEXT_DOMAIN)]);
-            break;
-            
-        case 'delete_endpoint':
-            $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
-            $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
-            
-            $endpoints = array_filter($endpoints, function($ep) use ($endpoint_id) {
-                return $ep['id'] !== $endpoint_id;
-            });
-            
-            update_option('ckan_harvest_endpoints_khv739', array_values($endpoints));
-            
-            // Clear scheduled cron
-            wp_clear_scheduled_hook('ckan_harvest_cron_khv739', [$endpoint_id]);
-            
-            wp_send_json_success([DGA_MESSAGE_KEY => __('ลบ Endpoint สำเร็จ', DGA_TEXT_DOMAIN)]);
-            break;
-            
-        case 'run_harvest':
-            $results = ckan_harvest_run_all_khv739();
-            wp_send_json_success($results);
-            break;
-            
-        case 'test_endpoint':
-            $url = esc_url_raw($_POST['url']);
-            $api_type = sanitize_text_field($_POST['api_type'] ?? 'ckan');
-            
-            $test_result = test_api_endpoint_khv739($url, $api_type);
-            
-            if ($test_result[DGA_SUCCESS_STATUS]) {
-                wp_send_json_success($test_result);
-            } else {
-                wp_send_json_error($test_result);
-            }
-            break;
-            
-        case 'get_endpoints':
-            $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
-            wp_send_json_success(['endpoints' => $endpoints]);
-            break;
-            
-        case 'automap_fields':
-            $endpoint_url = esc_url_raw($_POST['endpoint_url']);
-            $api_type = sanitize_text_field($_POST['api_type'] ?? 'ckan');
-            $data_path = sanitize_text_field($_POST['data_path'] ?? '');
-            $target_group_key = isset($_POST['group_key']) ? sanitize_text_field($_POST['group_key']) : 'group_67d8242433935';
-            
-            // Get ACF fields
-            $field_group = acf_get_field_group($target_group_key);
-            $acf_fields = acf_get_fields($field_group);
-            
-            // Fetch sample data
-            $sample_data = fetch_api_sample_data_khv739($endpoint_url, $api_type, $data_path);
-            
-            if ($sample_data) {
-                $mapping = ckan_auto_map_fields_khv739($sample_data, $acf_fields);
-                
-                // Get available fields from sample data
-                $api_fields = array_keys($sample_data);
-                
-                wp_send_json_success([
-                    'mapping' => $mapping,
-                    'api_fields' => $api_fields,
-                    'acf_fields' => $acf_fields
-                ]);
-            } else {
-                wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่สามารถดึงข้อมูลตัวอย่างได้', DGA_TEXT_DOMAIN)]);
-            }
-            break;
-            
-        case 'save_mapping':
-            $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
-            $mapping = json_decode(stripslashes($_POST['mapping']), true);
-            
-            $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
-            
-            foreach ($endpoints as &$endpoint) {
-                if ($endpoint['id'] === $endpoint_id) {
-                    $endpoint['field_mapping'] = $mapping;
-                    $endpoint['modified'] = current_time('mysql');
-                    break;
-                }
-            }
-            
-            update_option('ckan_harvest_endpoints_khv739', $endpoints);
-            
-            wp_send_json_success([DGA_MESSAGE_KEY => __('บันทึก Field Mapping สำเร็จ', DGA_TEXT_DOMAIN)]);
-            break;
-            
-        default:
-            wp_send_json_error([DGA_MESSAGE_KEY => __('Action ไม่ถูกต้อง', DGA_TEXT_DOMAIN)]);
+/**
+ * Dispatch to appropriate action handler
+ */
+function dispatch_ckan_harvest_action_khv739($action) {
+    $handlers = array(
+        'save_endpoint' => 'handle_save_endpoint_khv739',
+        'detect_structure' => 'handle_detect_structure_khv739',
+        'fetch_json_structure' => 'handle_fetch_json_structure_khv739',
+        'save_endpoint_mapping' => 'handle_save_endpoint_mapping_khv739',
+        'delete_endpoint' => 'handle_delete_endpoint_khv739',
+        'run_harvest' => 'handle_run_harvest_khv739',
+        'test_endpoint' => 'handle_test_endpoint_khv739',
+        'get_endpoints' => 'handle_get_endpoints_khv739',
+        'automap_fields' => 'handle_automap_fields_khv739',
+        'save_mapping' => 'handle_save_mapping_khv739'
+    );
+    
+    if (isset($handlers[$action]) && function_exists($handlers[$action])) {
+        call_user_func($handlers[$action]);
+    } else {
+        wp_send_json_error([DGA_MESSAGE_KEY => __('Action ไม่ถูกต้อง', DGA_TEXT_DOMAIN)]);
     }
 }
+
+/**
+ * Handle save endpoint action
+ */
+function handle_save_endpoint_khv739() {
+    $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
+    
+    // Check if updating existing endpoint
+    $endpoint_id = isset($_POST['endpoint_id']) ? sanitize_text_field($_POST['endpoint_id']) : uniqid('endpoint_');
+    $existing_index = find_endpoint_index_khv739($endpoints, $endpoint_id);
+    
+    $endpoint_data = build_endpoint_data_khv739($endpoint_id, $existing_index, $endpoints);
+    
+    // Update or add endpoint
+    if ($existing_index >= 0) {
+        $endpoints[$existing_index] = $endpoint_data;
+    } else {
+        $endpoints[] = $endpoint_data;
+    }
+    
+    update_option('ckan_harvest_endpoints_khv739', $endpoints);
+    
+    // Schedule cron if needed
+    schedule_endpoint_cron_khv739($endpoint_data);
+    
+    wp_send_json_success([
+        DGA_MESSAGE_KEY => __('Endpoint บันทึกสำเร็จ', DGA_TEXT_DOMAIN),
+        'endpoint' => $endpoint_data
+    ]);
+}
+
+/**
+ * Find endpoint index by ID
+ */
+function find_endpoint_index_khv739($endpoints, $endpoint_id) {
+    foreach ($endpoints as $index => $ep) {
+        if ($ep['id'] === $endpoint_id) {
+            return $index;
+        }
+    }
+    return -1;
+}
+
+/**
+ * Build endpoint data from POST parameters
+ */
+function build_endpoint_data_khv739($endpoint_id, $existing_index, $endpoints) {
+    return [
+        'id' => $endpoint_id,
+        'url' => esc_url_raw($_POST['url']),
+        'api_type' => sanitize_text_field($_POST['api_type'] ?? 'ckan'),
+        'data_path' => sanitize_text_field($_POST['data_path'] ?? ''),
+        'unique_field' => sanitize_text_field($_POST['unique_field'] ?? 'id'),
+        'title_field' => sanitize_text_field($_POST['title_field'] ?? DGA_TITLE_FIELD),
+        'content_field' => sanitize_text_field($_POST['content_field'] ?? 'notes'),
+        'frequency' => sanitize_text_field($_POST['frequency']),
+        'active' => isset($_POST['active']) ? filter_var($_POST['active'], FILTER_VALIDATE_BOOLEAN) : true,
+        'field_mapping' => isset($_POST['field_mapping']) ? json_decode(stripslashes($_POST['field_mapping']), true) : [],
+        'created' => $existing_index >= 0 ? $endpoints[$existing_index]['created'] : current_time('mysql'),
+        'modified' => current_time('mysql')
+    ];
+}
+
+/**
+ * Schedule endpoint cron job
+ */
+function schedule_endpoint_cron_khv739($endpoint_data) {
+    wp_clear_scheduled_hook('ckan_harvest_cron_khv739', [$endpoint_data['id']]);
+    if ($endpoint_data['frequency'] !== 'never' && $endpoint_data['active']) {
+        wp_schedule_event(time(), $endpoint_data['frequency'], 'ckan_harvest_cron_khv739', [$endpoint_data['id']]);
+    }
+}
+
+/**
+ * Handle detect structure action
+ */
+function handle_detect_structure_khv739() {
+    $url = esc_url_raw($_POST['url']);
+    $api_type = sanitize_text_field($_POST['api_type'] ?? 'auto');
+    
+    $structure = detect_api_structure_khv739($url, $api_type);
+    
+    if ($structure) {
+        wp_send_json_success($structure);
+    } else {
+        wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่สามารถตรวจจับโครงสร้างได้', DGA_TEXT_DOMAIN)]);
+    }
+}
+
+/**
+ * Handle fetch JSON structure action
+ */
+function handle_fetch_json_structure_khv739() {
+    $url = esc_url_raw($_POST['url']);
+    $api_type = sanitize_text_field($_POST['api_type'] ?? 'ckan');
+    
+    // Get API response
+    $response = fetch_api_response_khv739($url);
+    if (is_wp_error($response)) {
+        wp_send_json_error([DGA_MESSAGE_KEY => $response->get_error_message()]);
+        return;
+    }
+    
+    $data = json_decode($response, true);
+    if (!$data) {
+        wp_send_json_error([DGA_MESSAGE_KEY => __('Invalid JSON response', DGA_TEXT_DOMAIN)]);
+        return;
+    }
+    
+    // Extract sample data
+    $result = extract_sample_data_khv739($data, $api_type);
+    
+    if ($result['sample_data']) {
+        wp_send_json_success($result);
+    } else {
+        wp_send_json_error([DGA_MESSAGE_KEY => __('Could not extract data structure', DGA_TEXT_DOMAIN)]);
+    }
+}
+
+/**
+ * Fetch API response with error handling
+ */
+function fetch_api_response_khv739($url) {
+    $response = wp_remote_get($url, [
+        'timeout' => 15,
+        'sslverify' => false,
+        'headers' => [
+            'Accept' => 'application/json'
+        ]
+    ]);
+    
+    if (is_wp_error($response)) {
+        return $response;
+    }
+    
+    return wp_remote_retrieve_body($response);
+}
+
+/**
+ * Extract sample data from API response
+ */
+function extract_sample_data_khv739($data, $api_type) {
+    $sample_data = null;
+    $total_count = 0;
+    
+    if ($api_type === 'ckan' && isset($data['result'])) {
+        $result = extract_ckan_sample_data_khv739($data['result']);
+        $sample_data = $result['sample'];
+        $total_count = $result['count'];
+    } elseif (isset($data['data'])) {
+        $result = extract_data_array_sample_khv739($data['data']);
+        $sample_data = $result['sample'];
+        $total_count = $result['count'];
+    } elseif (is_array($data) && isset($data[0])) {
+        $sample_data = $data[0];
+        $total_count = count($data);
+    } else {
+        // For single object responses
+        $sample_data = $data;
+        $total_count = 1;
+    }
+    
+    return [
+        'sample_data' => $sample_data,
+        'total_count' => $total_count,
+        'api_type' => $api_type
+    ];
+}
+
+/**
+ * Extract sample data from CKAN result
+ */
+function extract_ckan_sample_data_khv739($result) {
+    if (isset($result['results'])) {
+        return [
+            'sample' => $result['results'][0] ?? null,
+            'count' => count($result['results'])
+        ];
+    } elseif (is_array($result)) {
+        return [
+            'sample' => $result[0] ?? null,
+            'count' => count($result)
+        ];
+    }
+    return ['sample' => null, 'count' => 0];
+}
+
+/**
+ * Extract sample data from data array
+ */
+function extract_data_array_sample_khv739($data) {
+    if (is_array($data)) {
+        return [
+            'sample' => $data[0] ?? $data,
+            'count' => isset($data[0]) ? count($data) : 1
+        ];
+    }
+    return ['sample' => null, 'count' => 0];
+}
+
+/**
+ * Handle save endpoint mapping action
+ */
+function handle_save_endpoint_mapping_khv739() {
+    $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
+    $field_mapping = json_decode(stripslashes($_POST['field_mapping']), true);
+    $unique_field = sanitize_text_field($_POST['unique_field'] ?? 'id');
+    $title_field = sanitize_text_field($_POST['title_field'] ?? DGA_TITLE_FIELD);
+    $content_field = sanitize_text_field($_POST['content_field'] ?? '');
+    
+    $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
+    
+    update_endpoint_mapping_khv739($endpoints, $endpoint_id, $field_mapping, $unique_field, $title_field, $content_field);
+    
+    update_option('ckan_harvest_endpoints_khv739', $endpoints);
+    
+    wp_send_json_success([DGA_MESSAGE_KEY => __('Field mapping saved successfully', DGA_TEXT_DOMAIN)]);
+}
+
+/**
+ * Update endpoint mapping data
+ */
+function update_endpoint_mapping_khv739(&$endpoints, $endpoint_id, $field_mapping, $unique_field, $title_field, $content_field) {
+    foreach ($endpoints as &$endpoint) {
+        if ($endpoint['id'] === $endpoint_id) {
+            $endpoint['field_mapping'] = $field_mapping;
+            $endpoint['unique_field'] = $unique_field;
+            $endpoint['title_field'] = $title_field;
+            $endpoint['content_field'] = $content_field;
+            $endpoint['modified'] = current_time('mysql');
+            break;
+        }
+    }
+}
+
+/**
+ * Handle delete endpoint action
+ */
+function handle_delete_endpoint_khv739() {
+    $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
+    $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
+    
+    $endpoints = array_filter($endpoints, function($ep) use ($endpoint_id) {
+        return $ep['id'] !== $endpoint_id;
+    });
+    
+    update_option('ckan_harvest_endpoints_khv739', array_values($endpoints));
+    
+    // Clear scheduled cron
+    wp_clear_scheduled_hook('ckan_harvest_cron_khv739', [$endpoint_id]);
+    
+    wp_send_json_success([DGA_MESSAGE_KEY => __('ลบ Endpoint สำเร็จ', DGA_TEXT_DOMAIN)]);
+}
+
+/**
+ * Handle run harvest action
+ */
+function handle_run_harvest_khv739() {
+    $results = ckan_harvest_run_all_khv739();
+    wp_send_json_success($results);
+}
+
+/**
+ * Handle test endpoint action
+ */
+function handle_test_endpoint_khv739() {
+    $url = esc_url_raw($_POST['url']);
+    $api_type = sanitize_text_field($_POST['api_type'] ?? 'ckan');
+    
+    $test_result = test_api_endpoint_khv739($url, $api_type);
+    
+    if ($test_result[DGA_SUCCESS_STATUS]) {
+        wp_send_json_success($test_result);
+    } else {
+        wp_send_json_error($test_result);
+    }
+}
+
+/**
+ * Handle get endpoints action
+ */
+function handle_get_endpoints_khv739() {
+    $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
+    wp_send_json_success(['endpoints' => $endpoints]);
+}
+
+/**
+ * Handle automap fields action
+ */
+function handle_automap_fields_khv739() {
+    $endpoint_url = esc_url_raw($_POST['endpoint_url']);
+    $api_type = sanitize_text_field($_POST['api_type'] ?? 'ckan');
+    $data_path = sanitize_text_field($_POST['data_path'] ?? '');
+    $target_group_key = isset($_POST['group_key']) ? sanitize_text_field($_POST['group_key']) : 'group_67d8242433935';
+    
+    // Get ACF fields
+    $field_group = acf_get_field_group($target_group_key);
+    $acf_fields = acf_get_fields($field_group);
+    
+    // Fetch sample data
+    $sample_data = fetch_api_sample_data_khv739($endpoint_url, $api_type, $data_path);
+    
+    if ($sample_data) {
+        $mapping = ckan_auto_map_fields_khv739($sample_data, $acf_fields);
+        
+        wp_send_json_success([
+            'mapping' => $mapping,
+            'api_fields' => array_keys($sample_data),
+            'acf_fields' => $acf_fields
+        ]);
+    } else {
+        wp_send_json_error([DGA_MESSAGE_KEY => __('ไม่สามารถดึงข้อมูลตัวอย่างได้', DGA_TEXT_DOMAIN)]);
+    }
+}
+
+/**
+ * Handle save mapping action
+ */
+function handle_save_mapping_khv739() {
+    $endpoint_id = sanitize_text_field($_POST['endpoint_id']);
+    $mapping = json_decode(stripslashes($_POST['mapping']), true);
+    
+    $endpoints = get_option('ckan_harvest_endpoints_khv739', []);
+    
+    update_endpoint_field_mapping_khv739($endpoints, $endpoint_id, $mapping);
+    
+    update_option('ckan_harvest_endpoints_khv739', $endpoints);
+    
+    wp_send_json_success([DGA_MESSAGE_KEY => __('บันทึก Field Mapping สำเร็จ', DGA_TEXT_DOMAIN)]);
+}
+
+/**
+ * Update endpoint field mapping
+ */
+function update_endpoint_field_mapping_khv739(&$endpoints, $endpoint_id, $mapping) {
+    foreach ($endpoints as &$endpoint) {
+        if ($endpoint['id'] === $endpoint_id) {
+            $endpoint['field_mapping'] = $mapping;
+            $endpoint['modified'] = current_time('mysql');
+            break;
+        }
+    }
+}
+
+// The rest of the old switch statement has been broken down into helper functions above
+// Below is the continuation from where the switch was removed
+        case 'save_endpoint':
 add_action('wp_ajax_handle_ckan_harvest_actions_khv739', 'handle_ckan_harvest_actions_khv739');
 
 /**
