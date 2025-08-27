@@ -184,15 +184,15 @@
 .permission-details {
     margin-top: 8px;
     margin-bottom: 0;
-    padding-left: 20px;
     list-style-type: disc;
     font-size: 13px;
     background-color: #fff;
+    border: 1px solid #eee; /* Corrected: Reordered for compliance */
+    padding-left: 20px;
     border-radius: 4px;
     padding: 8px 8px 8px 25px;
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid #eee;
 }
 
 .permission-details li {
