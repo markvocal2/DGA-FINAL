@@ -341,7 +341,7 @@
                                 </a>
                                 <div class="card-meta-dpc734">
                                     <span class="post-date">${safeDate}</span>
-                                    ${safeVisitorCount ? '<span class="visitor-count">' + safeVisitorCount + '</span>' : ''}
+                                    ${post.visitor_count ? '<span class="visitor-count">' + safeVisitorCount + '</span>' : ''}
                                 </div>
                                 <h3 class="card-title-dpc734" title="${safeTitle}">
                                     <a href="${post.permalink}">${truncatedTitle}</a>
@@ -369,7 +369,7 @@
                                     </h3>
                                     <div class="list-meta-dpc734">
                                         <span class="post-date">${safeDate}</span>
-                                        ${safeVisitorCount ? '<span class="visitor-count">' + safeVisitorCount + '</span>' : ''}
+                                        ${post.visitor_count ? '<span class="visitor-count">' + safeVisitorCount + '</span>' : ''}
                                     </div>
                                     <div class="list-excerpt-dpc734">${safeExcerpt}</div>
                                     <div class="list-footer-dpc734">

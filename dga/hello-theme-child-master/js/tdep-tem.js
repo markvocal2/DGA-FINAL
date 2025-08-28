@@ -172,7 +172,7 @@
         function handleAnimationEnd(event) {
             event.stopPropagation();
             node.classList.remove(animationName);
-            callback && callback();
+            if (callback) callback();
         }
 
         node.addEventListener('animationend', handleAnimationEnd, {once: true});

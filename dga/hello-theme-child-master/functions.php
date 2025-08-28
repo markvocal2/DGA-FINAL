@@ -6817,7 +6817,7 @@ function wcag_checker_admin_page() {
             <h2>Test HTML Elements</h2>
             <form method="post" action="">
                 <textarea id="test-html" rows="10" style="width: 100%;">
-<html>
+<html lang="th">
 <body>
     <h1>Test Page</h1>
     <h3>Skipped heading level</h3>
@@ -8856,7 +8856,7 @@ function dga_send_password_reset_email_stu901($user, $reset_link) {
     
     $message = '
     <!DOCTYPE html>
-    <html>
+    <html lang="th">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41644,7 +41644,7 @@ function dga_send_welcome_email_hjk456($email, $reset_link, $role) {
     
     // Email template
     $message = '<!DOCTYPE html>
-    <html>
+    <html lang="th">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43559,7 +43559,7 @@ if (!isset($users) || !is_array($users)) {
 $date = current_time(\'Y-m-d H:i:s\');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <title>รายงานบทบาทและสิทธิ์ของผู้ใช้</title>

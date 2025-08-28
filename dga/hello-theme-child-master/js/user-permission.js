@@ -376,7 +376,7 @@ jQuery(document).ready(function($) {
             `).appendTo('body');
             
             // Trigger reflow and add show class
-            toast[0].offsetHeight;
+            void toast[0].offsetHeight;
             toast.addClass('show');
             
             setTimeout(() => {

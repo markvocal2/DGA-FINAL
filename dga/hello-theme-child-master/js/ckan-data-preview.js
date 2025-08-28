@@ -62,7 +62,7 @@ jQuery(document).ready(function($) {
                     // Handle different file types
                     if (data.type === 'pdf' || extension === 'pdf') {
                         // Use special PDF URL for Thai filename support
-                        displayPDFPreview(data.pdf_url || fileUrl);
+                        displayPDFPreview(data.pdf_url && data.pdf_url !== fileUrl ? data.pdf_url : fileUrl);
                     } else if (extension === 'csv') {
                         displayCSVPreview(data.content);
                     } else if (extension === 'xls' || extension === 'xlsx') {

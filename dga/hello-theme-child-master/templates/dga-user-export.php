@@ -20,7 +20,7 @@ if (!isset($users) || !is_array($users)) {
 $date = current_time('Y-m-d H:i:s');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="th" xml:lang="th">
 <head>
     <meta charset="UTF-8">
     <title>รายงานบทบาทและสิทธิ์ของผู้ใช้</title>

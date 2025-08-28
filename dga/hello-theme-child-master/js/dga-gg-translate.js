@@ -5,12 +5,15 @@
 
 // Initialize Google Translate Element
 function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
+    const translateElement = new google.translate.TranslateElement({
         pageLanguage: 'th',
         includedLanguages: 'en,th',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
     }, 'google_translate_element_gt01');
+    
+    // Store reference for potential future use
+    window.dgaTranslateElement = translateElement;
 }
 
 // Trigger translation programmatically
@@ -38,7 +41,7 @@ function updateInternalLinks_gt01(lang) {
         }
 
         try {
-            const url = new URL(link.href, document.baseURI);
+            const url = new URL(href, document.baseURI);
             if (url.hostname === currentHost) {
                 url.searchParams.set('lang', lang);
                 link.href = url.toString();
