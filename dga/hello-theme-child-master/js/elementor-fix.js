@@ -17,9 +17,7 @@
                 return;
             }
             
-            // สำรองฟังก์ชันเดิม
             const MediaControl = window.elementor.modules.controls.Media;
-            const originalInitFrame = MediaControl.prototype.initFrame;
             
             // สร้างฟังก์ชันใหม่
             MediaControl.prototype.initFrame = function() {

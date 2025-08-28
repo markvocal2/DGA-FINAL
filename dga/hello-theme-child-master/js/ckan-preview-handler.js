@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
     // เพิ่ม event listener สำหรับ AJAX preview request
     $(document).ajaxSend(function(event, jqxhr, settings) {
         // ตรวจสอบว่าเป็น request สำหรับ preview หรือไม่
-        if (settings.data && settings.data.indexOf('action=ckan_get_file_preview') !== -1) {
+        if (settings.data?.indexOf('action=ckan_get_file_preview') !== -1) {
             var attachmentId = $('#ckan-preview-modal').data('attachment-id');
             
             // ถ้ามี attachment ID ให้เพิ่มเข้าไปใน request

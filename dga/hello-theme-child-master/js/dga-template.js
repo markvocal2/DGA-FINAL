@@ -76,7 +76,7 @@
                         }, 1500);
                     } else {
                         let errorMsg = dga_template_vars.error_message;
-                        if (response.data && response.data.message) {
+                        if (response.data?.message) {
                             errorMsg = response.data.message;
                         }
                         messageContainer.html('<div class="dga-error">' + errorMsg + '</div>');

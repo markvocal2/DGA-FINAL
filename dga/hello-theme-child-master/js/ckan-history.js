@@ -243,7 +243,7 @@ jQuery(document).ready(function($) {
         
         // Filter out empty datasets
         const datasets = data.datasets.filter(dataset => 
-            dataset.data && dataset.data.some(value => value > 0)
+            dataset.data?.some(value => value > 0)
         );
         
         if (datasets.length === 0) {

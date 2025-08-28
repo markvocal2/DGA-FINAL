@@ -75,7 +75,7 @@
 
         // Initialize tabs - priority: 1) URL param, 2) current_tab from PHP, 3) localStorage, 4) first tab
         var urlTab = getUrlParameter('tab');
-        var phpTab = ckan_permission_data && ckan_permission_data.current_tab ? ckan_permission_data.current_tab : '';
+        var phpTab = ckan_permission_data?.current_tab || '';
         var storageTab = '';
         
         try {

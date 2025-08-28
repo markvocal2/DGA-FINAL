@@ -157,7 +157,7 @@
                 search: term
             },
             success: function(response) {
-                if (response && response.success && response.data && response.data.items && response.data.items.length > 0) {
+                if (response?.success && response.data?.items?.length > 0) {
                     displayAutocomplete(response.data.items);
                 } else {
                     autocompleteBox.empty().hide();
@@ -231,7 +231,7 @@
             success: function(response) {
                 console.log('AJAX response received:', response);
                 
-                if (response && response.success && response.data && response.data.html) {
+                if (response?.success && response.data?.html) {
                     // Hide skeleton and show content with fade effect
                     skeletonArea.fadeOut(300, function() {
                         contentArea.html(response.data.html).fadeIn(300);

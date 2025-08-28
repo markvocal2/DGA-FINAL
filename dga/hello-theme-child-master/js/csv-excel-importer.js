@@ -195,7 +195,7 @@
             }
             
             // สร้างการแจ้งเตือน
-            var notification = $('<div class="importer-notification ' + type + '">' + 
+            const notification = $('<div class="importer-notification ' + type + '">' + 
                                 '<span class="message">' + message + '</span>' +
                                 '<span class="close-notification">&times;</span>' +
                                 '</div>');
@@ -216,9 +216,9 @@
                 }, 300);
             }, 5000);
             
-            // จัดการปุ่มปิด
-            $('.close-notification').on('click', function() {
-                $(this).parent().removeClass('show');
+            // จัดการปุ่มปิด - ใช้ notification-specific selector
+            notification.find('.close-notification').on('click', function() {
+                notification.removeClass('show');
                 setTimeout(function() {
                     notification.remove();
                 }, 300);

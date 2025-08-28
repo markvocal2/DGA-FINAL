@@ -438,7 +438,7 @@ jQuery(document).ready(function($) {
 
     // Enhanced error handling for AJAX failures
     $(document).ajaxError(function(event, xhr, settings) {
-        if (settings.data && settings.data.includes('get_calendar_posts')) {
+        if (settings.data?.includes('get_calendar_posts')) {
             if (retryCount < maxRetries) {
                 retryLoadCalendar();
             }
@@ -447,7 +447,7 @@ jQuery(document).ready(function($) {
 
     // Reset retry count on successful load
     $(document).ajaxSuccess(function(event, xhr, settings) {
-        if (settings.data && settings.data.includes('get_calendar_posts')) {
+        if (settings.data?.includes('get_calendar_posts')) {
             retryCount = 0;
         }
     });

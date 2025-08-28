@@ -98,9 +98,7 @@ jQuery(document).ready(function($) {
     }
     
     function getArticleContent() {
-        return (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) 
-            ? tinyMCE.get('article_content_kse749').getContent() 
-            : $('#article_content_kse749').val();
+        return tinyMCE?.get('article_content_kse749')?.getContent() || $('#article_content_kse749').val();
     }
     
     // Save draft to localStorage
@@ -179,7 +177,7 @@ jQuery(document).ready(function($) {
     function restoreArticleContent(draft) {
         if (!draft.articleContent) return;
         
-        if (typeof tinyMCE !== 'undefined' && tinyMCE.get?.('article_content_kse749')) {
+        if (tinyMCE?.get?.('article_content_kse749')) {
             tinyMCE.get('article_content_kse749').setContent(draft.articleContent);
         } else {
             $('#article_content_kse749').val(draft.articleContent);
@@ -417,7 +415,7 @@ jQuery(document).ready(function($) {
     // ============ Image upload handling ===============
     // Handle file selection - immediate upload
     $(document).on('change', '#article_images_kse749', function(e) {
-        if (this.files && this.files.length > 0) {
+        if (this.files?.length > 0) {
             uploadFeaturedImage(this.files[0]);
         }
     });
@@ -844,7 +842,7 @@ jQuery(document).ready(function($) {
         $('input[name="post_types[]"]').prop('checked', false);
         
         // Reset TinyMCE editor if available
-        if (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) {
+        if (tinyMCE?.get('article_content_kse749')) {
             tinyMCE.get('article_content_kse749').setContent('');
         }
         
@@ -856,7 +854,7 @@ jQuery(document).ready(function($) {
     function createPostLinks(posts) {
         if (Array.isArray(posts)) {
             return createMultiplePostLinks(posts);
-        } else if (posts && posts.post_url) {
+        } else if (posts?.post_url) {
             return createSinglePostLink(posts.post_url);
         }
         return '';

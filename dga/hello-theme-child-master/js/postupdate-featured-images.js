@@ -338,7 +338,7 @@
                 
                 console.log('Upload response:', response);
                 
-                if (response && response.success && response.data && response.data.id) {
+                if (response?.success && response.data?.id) {
                     // แสดงข้อความสำเร็จ
                     showStatus($statusMsg, 'อัพโหลดไฟล์สำเร็จ', 'success');
                     
@@ -369,7 +369,7 @@
                 
                 try {
                     const response = JSON.parse(xhr.responseText);
-                    if (response && response.data && response.data.message) {
+                    if (response?.data?.message) {
                         errorMsg += ': ' + response.data.message;
                     } else {
                         errorMsg += ': ' + error;
@@ -483,8 +483,7 @@
                 } else {
                     $progressBar.css('width', '0%');
                     
-                    const errorMsg = (response && response.data && response.data.message) ? 
-                        response.data.message : 
+                    const errorMsg = response?.data?.message || 
                         (typeof postupdateData !== 'undefined' && postupdateData.strings ? 
                             postupdateData.strings.error : 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
                     
@@ -578,8 +577,7 @@
                             window.location.reload();
                         }, 1500);
                     } else {
-                        const errorMsg = (response && response.data && response.data.message) ? 
-                            response.data.message : 'เกิดข้อผิดพลาดในการลบภาพหน้าปก';
+                        const errorMsg = response?.data?.message || 'เกิดข้อผิดพลาดในการลบภาพหน้าปก';
                         
                         showStatus($statusMsg, errorMsg, 'error');
                         

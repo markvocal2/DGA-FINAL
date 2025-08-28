@@ -135,12 +135,12 @@
                     } else {
                         var errorMessage = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
                         
-                        if (response.data && response.data.message) {
+                        if (response.data?.message) {
                             errorMessage += ': ' + response.data.message;
                         }
                         
                         // แสดง debug info ถ้ามี
-                        if (response.data && response.data.debug) {
+                        if (response.data?.debug) {
                             console.error('Debug info:', response.data.debug);
                         }
                         

@@ -204,7 +204,7 @@
                     }, 3000);
                     
                 } else {
-                    const errorMsg = data.data && data.data.message ? data.data.message : dgaUpdateDate.messages.error;
+                    const errorMsg = data.data?.message || dgaUpdateDate.messages.error;
                     showMessage(errorMsg, 'error');
                     console.error('Update failed:', data);
                 }

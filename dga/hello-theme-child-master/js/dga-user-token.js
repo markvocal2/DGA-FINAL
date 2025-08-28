@@ -6,8 +6,6 @@
             // Modal elements
             const updateModal = $('#dga-token-modal');
             const deleteModal = $('#dga-delete-modal');
-            const updateModalMessage = $('#dga-modal-message');
-            const deleteModalMessage = $('#dga-delete-modal-message');
             const apiKeyInput = $('#dga-api-key');
             
             // Open update modal when button is clicked

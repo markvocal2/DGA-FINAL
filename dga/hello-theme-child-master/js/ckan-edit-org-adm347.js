@@ -113,7 +113,7 @@
         populateSelect(data) {
             let html = '<option value="">-- Select Organization --</option>';
             
-            if (data.terms && data.terms.length) {
+            if (data.terms?.length) {
                 data.terms.forEach(term => {
                     const selected = term.selected ? 'selected' : '';
                     html += `<option value="${term.id}" ${selected}>${this.escapeHtml(term.name)}</option>`;

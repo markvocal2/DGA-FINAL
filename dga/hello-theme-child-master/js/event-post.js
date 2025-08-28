@@ -77,7 +77,7 @@ jQuery(document).ready(function($) {
     }
 
     function createPostHtml(post) {
-        const imageUrl = post.featured_image.thumb || post.featured_image.full || event_post_ajax.placeholder;
+        const imageUrl = post.featured_image?.thumb || post.featured_image?.full || event_post_ajax.placeholder;
         const postUrl = post.permalink; // URL จาก PHP
         
         const dateParts = post.date.split('/');
@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
         const formattedDate = `${dateParts[0]}/${dateParts[1]}/${buddhistYear}`;
         
         let categoriesHtml = '';
-        if(post.categories && post.categories.length) {
+        if(post.categories?.length) {
             post.categories.forEach(function(category) {
                 categoriesHtml += `<span class="event-post-category">${category.name}</span>`;
             });
@@ -124,12 +124,12 @@ jQuery(document).ready(function($) {
             const $count = $item.find('.event-post-count');
             const imagesData = $count.data('images');
             
-            if(imagesData && imagesData.length > 0) {
+            if(imagesData?.length > 0) {
                 $item.hover(
                     function() {
                         let currentIndex = 0;
                         const firstImage = imagesData[0];
-                        const firstImageUrl = firstImage.thumb || firstImage.full;
+                        const firstImageUrl = firstImage?.thumb || firstImage?.full;
                         
                         if(firstImageUrl) {
                             $slideshow.html(`<img src="${firstImageUrl}" alt="${firstImage.alt || ''}">`);
@@ -137,7 +137,7 @@ jQuery(document).ready(function($) {
                             slideIntervals[$(this).data('id')] = setInterval(function() {
                                 currentIndex = (currentIndex + 1) % imagesData.length;
                                 const nextImage = imagesData[currentIndex];
-                                const nextImageUrl = nextImage.thumb || nextImage.full;
+                                const nextImageUrl = nextImage?.thumb || nextImage?.full;
                                 
                                 $slideshow.fadeOut(200, function() {
                                     $(this).html(`<img src="${nextImageUrl}" alt="${nextImage.alt || ''}">`).fadeIn(200);
@@ -158,7 +158,7 @@ jQuery(document).ready(function($) {
             e.preventDefault();
             e.stopPropagation();
             const images = $(this).data('images');
-            if(images && images.length) {
+            if(images?.length) {
                 const modal = $('#event-post-modal');
                 const gridHtml = createModalGrid(images);
                 modal.find('.modal-gallery-grid').html(gridHtml);
@@ -174,10 +174,10 @@ jQuery(document).ready(function($) {
 
     function createModalGrid(images) {
         let html = '';
-        if(images && images.length > 0) {
+        if(images?.length > 0) {
             images.forEach(function(image) {
-                const imageUrl = image.thumb || image.full;
-                const fullImageUrl = image.full || image.thumb;
+                const imageUrl = image?.thumb || image?.full;
+                const fullImageUrl = image?.full || image?.thumb;
                 
                 if(imageUrl && fullImageUrl) {
                     html += `

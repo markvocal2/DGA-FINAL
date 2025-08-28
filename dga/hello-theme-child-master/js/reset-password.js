@@ -187,7 +187,7 @@ jQuery(document).ready(function($) {
                         
                         if (response && response.success) {
                             // แสดงข้อความสำเร็จ
-                            formMessages.html('<div class="dga-success-message">' + (response.data && response.data.message ? response.data.message : 'ตั้งรหัสผ่านสำเร็จ! กำลังเข้าสู่ระบบ...') + '</div>');
+                            formMessages.html('<div class="dga-success-message">' + (response.data?.message || 'ตั้งรหัสผ่านสำเร็จ! กำลังเข้าสู่ระบบ...') + '</div>');
                             
                             // ปิดฟอร์ม
                             $('#dga-reset-password-form').hide();

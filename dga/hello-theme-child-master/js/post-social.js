@@ -41,8 +41,7 @@
                 if (response.success && response.data) {
                     updateWidgetContent_ps34($widget, response.data);
                 } else {
-                    const errorMessage = response.data && response.data.message ? 
-                        response.data.message : 'Unknown error occurred';
+                    const errorMessage = response.data?.message || 'Unknown error occurred';
                     handleAjaxError_ps34($widget, errorMessage);
                 }
             },
@@ -91,7 +90,7 @@
                 $widget.find('.post-social-views-ps34').hide();
             }
             
-            if (showSocial && data.post_url && data.post_title) {
+            if (showSocial && data?.post_url && data?.post_title) {
                 // Show share section and update URLs
                 const $shareElement = $widget.find('.post-social-share-ps34');
                 

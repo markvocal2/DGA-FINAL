@@ -96,7 +96,6 @@ jQuery(document).ready(function($) {
     $('.egp-file-drop-area').each(function() {
         var $dropArea = $(this);
         var $input = $dropArea.find('.egp-file-input');
-        var $fileNameDisplay = $dropArea.siblings('.egp-file-name-display');
         
         $dropArea.on('dragover', function(e) {
             e.preventDefault();
@@ -115,7 +114,7 @@ jQuery(document).ready(function($) {
             e.stopPropagation();
             $(this).removeClass('dragging');
             
-            if (e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files.length) {
+            if (e.originalEvent.dataTransfer?.files?.length) {
                 $input[0].files = e.originalEvent.dataTransfer.files;
                 $input.trigger('change');
             }
@@ -496,12 +495,10 @@ jQuery(document).ready(function($) {
         
         // หาก container มีช่องค้นหา ให้ตรวจสอบว่าควรแสดงหรือไม่
         var searchBox = container.find('.egp-search-container');
-        if (searchBox.length > 0) {
-            if (files && files.length > 5) {
-                searchBox.show();
-            } else {
-                searchBox.hide();
-            }
+        if (searchBox.length > 0 && files && files.length > 5) {
+            searchBox.show();
+        } else if (searchBox.length > 0) {
+            searchBox.hide();
         } else if (files && files.length > 5) {
             // หากยังไม่มีช่องค้นหา แต่มีข้อมูลมากกว่า 5 รายการ ให้เพิ่มช่องค้นหา
             var newSearchBox = $('<div class="egp-search-container"><div class="egp-search-wrapper"><input type="text" class="egp-search-input" placeholder="ค้นหาเอกสาร..."><span class="egp-search-icon dashicons dashicons-search"></span></div></div>');

@@ -300,7 +300,7 @@
         // ฟังก์ชันอัพเดตข้อความสถานะ
         function updateStatusMessage(data) {
             const $message = $('#at-news-status-message');
-            if (data && data.total_posts > 0) {
+            if (data?.total_posts > 0) {
                 const start = ((data.current_page - 1) * atInactiveNewsList.perPage) + 1;
                 const end = Math.min(start + atInactiveNewsList.perPage - 1, data.total_posts);
                 $message.html(`แสดง ${start}-${end} จากทั้งหมด ${data.total_posts} รายการ`);
