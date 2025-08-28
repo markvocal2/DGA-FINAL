@@ -113,7 +113,7 @@ if (!isset($posts) || !isset($taxonomy)) {
 
                                 <!-- Meta Information -->
                                 <div class="article-meta">
-                                    <span class="author" role="text">
+                                    <span class="author">
                                         By <?php echo esc_html(get_the_author()); ?>
                                     </span>
                                     <time datetime="<?php echo get_the_date('c'); ?>" class="publish-date">

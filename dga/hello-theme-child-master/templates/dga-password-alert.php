@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo get_locale(); ?>">
+<html lang="<?php echo get_locale(); ?>" xml:lang="<?php echo get_locale(); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -67,7 +67,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                         <?php endif; ?>
                         
                         <?php if ($featured_categories && !is_wp_error($featured_categories)) : ?>
-                            <div class="category-badge" role="text">
+                            <div class="category-badge" >
                                 <?php echo esc_html($featured_categories[0]->name); ?>
                             </div>
                         <?php endif; ?>
@@ -83,7 +83,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                         </h2>
 
                         <div class="article-meta">
-                            <span class="author" role="text">
+                            <span class="author" >
                                 By <?php echo esc_html($featured_author); ?>
                             </span>
                             <time datetime="<?php echo get_the_date('c', $featured_post->ID); ?>" class="publish-date">

@@ -39440,7 +39440,7 @@ function std_generate_accessible_badge($type, $value) {
     }
     
     return sprintf(
-        '<span class="doc-number %s" role="text" aria-label="%s">%s</span>',
+        '<span class="doc-number %s" aria-label="%s">%s</span>',
         esc_attr($type),
         esc_attr($aria_label),
         $badge_text
@@ -39817,7 +39817,7 @@ function std_render_accessible_card($post_id) {
             
             <?php if (!empty($mrdh_value)) : ?>
                 <span class="std-looppost-badge mrdh" 
-                      role="text" 
+                       
                       aria-label="<?php echo esc_attr(sprintf(__('หมายเลขเอกสารมาตรฐาน มรด. %s', DGA_TEXT_DOMAIN), $mrdh_value)); ?>">
                     <?php echo esc_html(sprintf(__('มรด. %s', DGA_TEXT_DOMAIN), $mrdh_value)); ?>
                 </span>
@@ -39825,7 +39825,7 @@ function std_render_accessible_card($post_id) {
             
             <?php if (!empty($msprr_value)) : ?>
                 <span class="std-looppost-badge msprr" 
-                      role="text" 
+                       
                       aria-label="<?php echo esc_attr(sprintf(__('หมายเลขเอกสารมาตรฐาน มสพร. %s', DGA_TEXT_DOMAIN), $msprr_value)); ?>">
                     <?php echo esc_html(sprintf(__('มสพร. %s', DGA_TEXT_DOMAIN), $msprr_value)); ?>
                 </span>
