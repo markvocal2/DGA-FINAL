@@ -651,12 +651,10 @@
 /* Prevent layout shift on toggle */
 .dga-password-wrapper-cfz357 input {
     -webkit-text-security: none;
-    text-security: none;
 }
 
 .dga-password-wrapper-cfz357 input[type="password"] {
     -webkit-text-security: disc;
-    text-security: disc;
 }
 
 /* Fix for Safari/iOS */
