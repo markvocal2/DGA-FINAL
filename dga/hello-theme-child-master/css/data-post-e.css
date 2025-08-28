@@ -345,7 +345,7 @@
 }
 
 .wp-editor-container-ab12 .wp-media-buttons .button .wp-media-buttons-icon:before {
-    font: normal 18px/1 dashicons;
+    font: normal 18px/1 dashicons, sans-serif;
     content: "\f104";
     margin-left: -2px;
 }

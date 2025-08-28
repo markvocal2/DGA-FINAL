@@ -378,7 +378,7 @@
 }
 
 /* Prevent body scroll when modal is open */
-body:has(.fpe-modal-vkj785:visible) {
+body:has(.fpe-modal-vkj785:not([style*="display: none"])) {
     overflow: hidden;
 }
 

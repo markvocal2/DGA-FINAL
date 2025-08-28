@@ -120,7 +120,7 @@
 
 .search-icon-dpc734::before {
     content: '\f179';
-    font-family: dashicons;
+    font-family: dashicons, sans-serif;
     position: absolute;
     right: 12px;
     top: 50%;

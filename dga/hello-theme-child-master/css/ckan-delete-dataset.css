@@ -35,7 +35,7 @@
 
 .cpd-delete-post-btn::before {
     content: "\f182";
-    font-family: dashicons;
+    font-family: dashicons, sans-serif;
     margin-right: 8px;
     font-size: 20px;
 }
