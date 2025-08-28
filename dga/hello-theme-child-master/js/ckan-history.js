@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
     };
     
     // Merge with server config if available
-    if (window.ckanReport && window.ckanReport.actionTypes) {
+    if (window.ckanReport?.actionTypes) {
         Object.assign(allActionTypes, window.ckanReport.actionTypes);
     }
     

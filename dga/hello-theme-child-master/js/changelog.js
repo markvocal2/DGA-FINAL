@@ -411,7 +411,7 @@ jQuery(document).ready(function($) {
     // Copy text to clipboard
     function copyToClipboard(text) {
         // Try to use the modern navigator.clipboard API first
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(text)
                 .catch(function() {
                     // Fallback to the old execCommand method

@@ -1015,7 +1015,7 @@ class CKANHarvestManager {
 
     showToast(type, message) {
         // Use the existing toast system from ACF manager
-        if (window.acfManager && window.acfManager.showToast) {
+        if (window.acfManager?.showToast) {
             window.acfManager.showToast(type, message);
         } else {
             // Fallback alert

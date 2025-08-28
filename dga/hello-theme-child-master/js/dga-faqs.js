@@ -343,12 +343,6 @@ jQuery(document).ready(function($) {
             $question.toggleClass('active');
             $item.toggleClass('expanded');
             
-            // ถ้าต้องการให้เปิดได้ครั้งละ 1 คำถาม (แบบ accordion) ให้เอา comment ออก
-            /*
-            $('.dga-faq-answer').not($answer).slideUp(300);
-            $('.dga-faq-question').not($question).removeClass('active');
-            $('.dga-faq-item').not($item).removeClass('expanded');
-            */
         });
         
         // Edit button click

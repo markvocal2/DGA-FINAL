@@ -15,7 +15,6 @@ jQuery(document).ready(function($) {
     // State management
     let searchTimeout;
     let currentRequest;
-    let activeInstance = null;
     
     // Initialize all search instances
     $('.custom-search-container-mxz789').each(function() {
@@ -192,7 +191,6 @@ jQuery(document).ready(function($) {
         
         // Set searching state
         state.isSearching = true;
-        activeInstance = instance;
         
         // Show loader
         showSkeletonLoader(instance);

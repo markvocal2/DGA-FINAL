@@ -9,7 +9,6 @@ jQuery(document).ready(function($) {
     
     // Global variables
     let currentRole = null;
-    let allCapabilities = {};
     let searchTimeout = null;
     
     // Initialize
@@ -192,8 +191,6 @@ jQuery(document).ready(function($) {
      * Render capabilities form
      */
     function renderCapabilitiesForm(data) {
-        allCapabilities = data.capabilities;
-        
         let html = `
             <form id="capabilities-form" data-role="${data.role_name}">
                 <div class="form-header">

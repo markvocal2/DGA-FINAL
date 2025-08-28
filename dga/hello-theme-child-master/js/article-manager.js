@@ -179,7 +179,7 @@ jQuery(document).ready(function($) {
     function restoreArticleContent(draft) {
         if (!draft.articleContent) return;
         
-        if (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) {
+        if (typeof tinyMCE !== 'undefined' && tinyMCE.get?.('article_content_kse749')) {
             tinyMCE.get('article_content_kse749').setContent(draft.articleContent);
         } else {
             $('#article_content_kse749').val(draft.articleContent);

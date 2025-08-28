@@ -10,7 +10,6 @@ jQuery(document).ready(function($) {
     // Global variables
     var editorInstances = {};
     var activeEditorId = '';
-    var editorInitialized = false;
     var bodyScrollPosition = 0; // เก็บตำแหน่ง scroll เดิม
     
     /**
@@ -38,8 +37,6 @@ jQuery(document).ready(function($) {
                     plugin_base_urls: {}
                 });
             }
-            
-            editorInitialized = true;
         } else {
             console.log('WordPress TinyMCE not yet loaded, waiting...');
             setTimeout(checkWordPressTinyMCE, 1000);

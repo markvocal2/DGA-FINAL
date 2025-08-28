@@ -337,7 +337,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Export for potential external use
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== 'undefined' && module?.exports) {
     module.exports = DGAPostList;
 }
 
@@ -525,7 +525,7 @@ class WCAGOverlayTextEnhancer {
         }
         
         // Log for developers
-        if (window.console && window.console.log) {
+        if (window.console?.log) {
             console.log(`WCAG Enhancement Applied: ${technique} technique on`, element);
         }
     }
@@ -572,9 +572,13 @@ class WCAGOverlayTextEnhancer {
         const elements = [];
         
         selectors.forEach(selector => {
-            const found = container.querySelectorAll ? 
-                container.querySelectorAll(selector) : 
-                (container.matches && container.matches(selector) ? [container] : []);
+            let found = [];
+            
+            if (container.querySelectorAll) {
+                found = container.querySelectorAll(selector);
+            } else if (container.matches?.call(container, selector)) {
+                found = [container];
+            }
             
             found.forEach(el => {
                 if (this.isAbsolutelyPositioned(el) || this.hasComplexBackground(el)) {

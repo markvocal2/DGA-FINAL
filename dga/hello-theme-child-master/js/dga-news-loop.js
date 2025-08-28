@@ -59,7 +59,6 @@
     
     // Set up responsive layout
     function setupCarouselLayout($carousel) {
-        const $items = $carousel.find('.dga-news-item');
         const viewportWidth = window.innerWidth;
         
         // Determine number of slides to show based on viewport width
