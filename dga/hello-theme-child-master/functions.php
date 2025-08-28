@@ -48221,3 +48221,28 @@ function dga_mld_count_shortcode_fx47() {
     return absint( $post_count_rk33 );
 }
 add_shortcode( 'dga_mld_count', 'dga_mld_count_shortcode_fx47' );
+
+/*
+ * ACCESSIBILITY NOTE: HTML5 Semantic Elements and ARIA Roles
+ * 
+ * IMPORTANT: Avoid redundant ARIA role attributes on semantic HTML elements
+ * 
+ * ❌ INCORRECT (redundant):
+ * <article role="article">   - article element has implicit role="article"
+ * <main role="main">         - main element has implicit role="main"  
+ * <nav role="navigation">    - nav element has implicit role="navigation"
+ * <section role="region">    - section element has implicit role="region"
+ * 
+ * ✅ CORRECT (implicit roles):
+ * <article>                  - implicit role="article"
+ * <main>                     - implicit role="main"
+ * <nav>                      - implicit role="navigation"  
+ * <section>                  - implicit role="region"
+ * 
+ * Only add explicit ARIA roles when:
+ * 1. The element doesn't have an implicit role
+ * 2. You need to override the implicit role for accessibility
+ * 3. You're using generic elements (div, span) that need semantic meaning
+ * 
+ * This follows WCAG guidelines and prevents accessibility linting warnings.
+ */

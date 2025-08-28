@@ -601,9 +601,20 @@ class CKANHarvestManager {
 
     suggestFieldMapping(jsonFields, acfFields) {
         const mapping = {};
+        const patterns = this.getFieldMappingPatterns();
+
+        jsonFields.forEach(jsonField => {
+            const matchedField = this.findMatchingAcfField(jsonField, acfFields, patterns);
+            if (matchedField) {
+                mapping[jsonField.path] = matchedField;
+            }
+        });
         
-        // Common mapping patterns
-        const patterns = {
+        return mapping;
+    }
+
+    getFieldMappingPatterns() {
+        return {
             'id|identifier|key|รหัส': ['id', 'identifier', 'key', 'code'],
             'title|name|heading|ชื่อ|หัวข้อ': ['title', 'name', 'heading', 'subject'],
             'description|detail|content|notes|รายละเอียด|คำอธิบาย': ['description', 'content', 'detail', 'notes'],
@@ -622,56 +633,72 @@ class CKANHarvestManager {
             'budget|งบประมาณ': ['budget', 'allocation', 'fund'],
             'project|โครงการ': ['project', 'program', 'initiative']
         };
+    }
 
-        jsonFields.forEach(jsonField => {
-            const jsonName = jsonField.path.toLowerCase();
-            const jsonPreview = (jsonField.preview || '').toLowerCase();
-            
-            // Try to find matching ACF field
-            for (const acfField of acfFields) {
-                const acfName = acfField.name.toLowerCase();
-                const acfLabel = acfField.label.toLowerCase();
-                
-                // Check exact match
-                if (jsonName === acfName || jsonName === acfLabel) {
-                    mapping[jsonField.path] = acfField.name;
-                    break;
-                }
-                
-                // Check pattern matching
-                let matched = false;
-                for (const [pattern, keywords] of Object.entries(patterns)) {
-                    const regex = new RegExp(pattern);
-                    
-                    // Check if JSON field matches pattern
-                    if (regex.test(jsonName) || regex.test(jsonPreview)) {
-                        // Check if ACF field contains any keyword
-                        for (const keyword of keywords) {
-                            if (acfName.includes(keyword) || acfLabel.includes(keyword)) {
-                                mapping[jsonField.path] = acfField.name;
-                                matched = true;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if (matched) break;
-                }
-                
-                if (matched) break;
-                
-                // Check similarity (fuzzy matching)
-                if (!mapping[jsonField.path]) {
-                    const similarity = this.calculateSimilarity(jsonName, acfName);
-                    if (similarity > 0.7) {
-                        mapping[jsonField.path] = acfField.name;
-                        break;
-                    }
-                }
-            }
-        });
+    findMatchingAcfField(jsonField, acfFields, patterns) {
+        const jsonName = jsonField.path.toLowerCase();
+        const jsonPreview = (jsonField.preview || '').toLowerCase();
         
-        return mapping;
+        for (const acfField of acfFields) {
+            const matchedField = this.checkFieldMatch(jsonName, jsonPreview, acfField, patterns);
+            if (matchedField) {
+                return matchedField;
+            }
+        }
+        
+        return null;
+    }
+
+    checkFieldMatch(jsonName, jsonPreview, acfField, patterns) {
+        const acfName = acfField.name.toLowerCase();
+        const acfLabel = acfField.label.toLowerCase();
+        
+        // Check exact match
+        if (this.isExactMatch(jsonName, acfName, acfLabel)) {
+            return acfField.name;
+        }
+        
+        // Check pattern matching
+        const patternMatch = this.findPatternMatch(jsonName, jsonPreview, acfName, acfLabel, patterns);
+        if (patternMatch) {
+            return acfField.name;
+        }
+        
+        // Check similarity (fuzzy matching)
+        if (this.calculateSimilarity(jsonName, acfName) > 0.7) {
+            return acfField.name;
+        }
+        
+        return null;
+    }
+
+    isExactMatch(jsonName, acfName, acfLabel) {
+        return jsonName === acfName || jsonName === acfLabel;
+    }
+
+    findPatternMatch(jsonName, jsonPreview, acfName, acfLabel, patterns) {
+        for (const [pattern, keywords] of Object.entries(patterns)) {
+            if (this.matchesPattern(jsonName, jsonPreview, pattern, keywords, acfName, acfLabel)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    matchesPattern(jsonName, jsonPreview, pattern, keywords, acfName, acfLabel) {
+        const regex = new RegExp(pattern);
+        
+        if (regex.test(jsonName) || regex.test(jsonPreview)) {
+            return this.hasKeywordMatch(keywords, acfName, acfLabel);
+        }
+        
+        return false;
+    }
+
+    hasKeywordMatch(keywords, acfName, acfLabel) {
+        return keywords.some(keyword => 
+            acfName.includes(keyword) || acfLabel.includes(keyword)
+        );
     }
 
     calculateSimilarity(str1, str2) {

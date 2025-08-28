@@ -159,6 +159,11 @@
 }
 
 /* API Table */
+.ckan-api-table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
 .ckan-api-table {
     width: 100%;
     border-collapse: collapse;
@@ -168,7 +173,7 @@
 
 .ckan-api-table th,
 .ckan-api-table td {
-    padding: 10px;
+    padding: 10px 15px;
     border: 1px solid #e5e7eb;
     text-align: left;
     vertical-align: top;
@@ -178,6 +183,15 @@
 .ckan-api-table th {
     background-color: #f3f4f6;
     font-weight: 600;
+    color: #374151;
+}
+
+.ckan-api-table td code {
+    background-color: #f3f4f6;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #dc2626;
 }
 
 .ckan-api-table tr:nth-child(even) {
@@ -190,7 +204,7 @@
 
 /* API Examples */
 .ckan-api-example {
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     padding-bottom: 15px;
     border-bottom: 1px solid #e5e7eb;
 }
@@ -201,25 +215,39 @@
 }
 
 .ckan-api-example h3 {
-    font-size: 15px;
-    margin: 0 0 8px 0;
+    background-color: #f3f4f6;
+    padding: 8px 15px;
+    margin: 0;
+    border: 1px solid #e5e7eb;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    font-size: 14px;
     color: #374151;
 }
 
 .ckan-api-code {
     background-color: #f3f4f6;
-    padding: 10px 15px;
-    border-radius: 4px;
-    font-family: monospace;
-    overflow-x: auto;
-    white-space: nowrap;
     border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow-x: auto;
+    font-family: monospace;
+    white-space: nowrap;
+}
+
+.ckan-api-code code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    color: #374151;
+    word-break: break-all;
 }
 
 .ckan-api-code a {
     color: #2563eb;
     text-decoration: none;
     font-size: 13px;
+    word-break: break-all;
 }
 
 .ckan-api-code a:hover {
@@ -291,80 +319,8 @@ pre {
     text-decoration: underline;
 }
 
-/* API Table */
-.ckan-api-table-container {
-    overflow-x: auto;
-    margin-bottom: 20px;
-}
 
-.ckan-api-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-}
 
-.ckan-api-table th,
-.ckan-api-table td {
-    padding: 10px 15px;
-    text-align: left;
-    border: 1px solid #e5e7eb;
-}
-
-.ckan-api-table th {
-    background-color: #f3f4f6;
-    font-weight: 600;
-    color: #374151;
-}
-
-.ckan-api-table td code {
-    background-color: #f3f4f6;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 13px;
-    color: #dc2626;
-}
-
-/* Code blocks */
-.ckan-api-code {
-    background-color: #f3f4f6;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 15px;
-    overflow-x: auto;
-}
-
-.ckan-api-code code {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 13px;
-    color: #374151;
-    word-break: break-all;
-}
-
-.ckan-api-code a {
-    color: #2563eb;
-    text-decoration: none;
-    word-break: break-all;
-}
-
-.ckan-api-code a:hover {
-    text-decoration: underline;
-}
-
-/* Example blocks */
-.ckan-api-example {
-    margin-bottom: 30px;
-}
-
-.ckan-api-example h3 {
-    background-color: #f3f4f6;
-    padding: 8px 15px;
-    margin: 0;
-    border: 1px solid #e5e7eb;
-    border-bottom: none;
-    border-radius: 4px 4px 0 0;
-    font-size: 14px;
-}
 
 .ckan-api-example pre {
     margin: 0;

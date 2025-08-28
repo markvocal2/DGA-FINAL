@@ -4,22 +4,22 @@
 jQuery(document).ready(function($) {
     
     // Get AJAX settings from container data attributes or fallback
-    var $container = $('.ckan-assets-container');
-    var ajaxUrl = $container.data('ajax-url') || 
+    const $container = $('.ckan-assets-container');
+    const ajaxUrl = $container.data('ajax-url') || 
                   (typeof ckan_rp_list_ajax !== 'undefined' ? ckan_rp_list_ajax.ajax_url : null) ||
                   (typeof ajaxurl !== 'undefined' ? ajaxurl : null) ||
                   window.location.origin + '/wp-admin/admin-ajax.php';
     
-    var ajaxNonce = $container.data('nonce') || 
+    const ajaxNonce = $container.data('nonce') || 
                     (typeof ckan_rp_list_ajax !== 'undefined' ? ckan_rp_list_ajax.nonce : '');
     
     // Preview button click handler
     $(document).on('click', '.ckan-preview-btn', function() {
-        var $btn = $(this);
-        var encodedUrl = $btn.data('url');
-        var attachmentId = $btn.data('attachment-id') || 0;
-        var index = $btn.data('index');
-        var fileUrl = atob(encodedUrl); // Decode base64 URL
+        const $btn = $(this);
+        const encodedUrl = $btn.data('url');
+        const attachmentId = $btn.data('attachment-id') || 0;
+        const index = $btn.data('index');
+        const fileUrl = atob(encodedUrl); // Decode base64 URL
         
         // Show preview modal
         $('#ckan-preview-modal').addClass('show');
@@ -30,13 +30,13 @@ jQuery(document).ready(function($) {
         $('#current-file-index').val(index);
         
         // Update API endpoints
-        var postId = $('.ckan-assets-container').data('post-id');
-        var apiFileEndpoint = window.location.origin + '/wp-json/ckan/v1/file/' + postId + '_' + index;
+        const postId = $('.ckan-assets-container').data('post-id');
+        const apiFileEndpoint = window.location.origin + '/wp-json/ckan/v1/file/' + postId + '_' + index;
         $('#ckan-api-file-endpoint').text(apiFileEndpoint);
         $('#ckan-api-file-data-link').attr('href', apiFileEndpoint);
         
         // Prepare AJAX data
-        var ajaxData = {
+        const ajaxData = {
             action: 'ckan_get_file_preview',
             nonce: ajaxNonce
         };
@@ -56,8 +56,8 @@ jQuery(document).ready(function($) {
                 if (response.success) {
                     $('.ckan-preview-loading').hide();
                     
-                    var data = response.data;
-                    var extension = data.extension ? data.extension.toLowerCase() : '';
+                    const data = response.data;
+                    const extension = data.extension ? data.extension.toLowerCase() : '';
                     
                     // Handle different file types
                     if (data.type === 'pdf' || extension === 'pdf') {
@@ -88,7 +88,7 @@ jQuery(document).ready(function($) {
             },
             error: function(xhr, status, error) {
                 $('.ckan-preview-loading').hide();
-                var errorMsg = 'เกิดข้อผิดพลาดในการโหลดไฟล์';
+                let errorMsg = 'เกิดข้อผิดพลาดในการโหลดไฟล์';
                 
                 // Check for specific errors
                 if (xhr.status === 403) {
@@ -128,7 +128,7 @@ jQuery(document).ready(function($) {
     
     // API Tab switching
     $('.ckan-api-tab').on('click', function() {
-        var tabId = $(this).data('tab');
+        const tabId = $(this).data('tab');
         
         // Remove active class from all tabs and content
         $('.ckan-api-tab').removeClass('active');
@@ -154,10 +154,10 @@ jQuery(document).ready(function($) {
     function displayCSVPreview(content) {
         try {
             // Parse CSV
-            var lines = content.split(/\r?\n/);
-            var headers = parseCSVLine(lines[0]);
+            const lines = content.split(/\r?\n/);
+            const headers = parseCSVLine(lines[0]);
             
-            var tableHtml = '<div class="ckan-preview-table-wrapper">';
+            let tableHtml = '<div class="ckan-preview-table-wrapper">';
             tableHtml += '<table class="ckan-preview-table">';
             tableHtml += '<thead><tr>';
             
@@ -168,10 +168,10 @@ jQuery(document).ready(function($) {
             tableHtml += '</tr></thead><tbody>';
             
             // Rows - จำกัดที่ 30 แถว
-            var maxRows = Math.min(lines.length, 31); // 30 + 1 for header
-            for (var i = 1; i < maxRows; i++) {
+            const maxRows = Math.min(lines.length, 31); // 30 + 1 for header
+            for (let i = 1; i < maxRows; i++) {
                 if (lines[i].trim()) {
-                    var cells = parseCSVLine(lines[i]);
+                    const cells = parseCSVLine(lines[i]);
                     tableHtml += '<tr>';
                     cells.forEach(function(cell) {
                         tableHtml += '<td>' + escapeHtml(cell.trim()) + '</td>';
@@ -208,104 +208,118 @@ jQuery(document).ready(function($) {
     
     function displayExcelPreview(base64Content) {
         try {
-            // Check if XLSX is loaded
             if (typeof XLSX === 'undefined') {
-                $('.ckan-preview-data').html(
-                    '<div class="ckan-preview-error">ไม่สามารถโหลด Excel library ได้</div>'
-                ).show();
+                showExcelError('ไม่สามารถโหลด Excel library ได้');
                 return;
             }
             
-            // Convert base64 to ArrayBuffer
-            var data = base64ToArrayBuffer(base64Content);
+            const data = base64ToArrayBuffer(base64Content);
+            const workbook = readExcelWorkbook(data);
+            const { firstSheetName, jsonData } = processFirstSheet(workbook);
             
-            // Read Excel file
-            var workbook = XLSX.read(data, { 
-                type: 'array', 
-                cellDates: true,
-                cellNF: false,
-                cellText: false
-            });
+            const tableHtml = buildExcelTable(firstSheetName, jsonData, workbook.SheetNames.length);
+            const finalHtml = addFilterControls() + tableHtml;
             
-            // Get first sheet
-            var firstSheetName = workbook.SheetNames[0];
-            var worksheet = workbook.Sheets[firstSheetName];
+            $('.ckan-preview-data').html(finalHtml).show();
             
-            // Convert to array of arrays
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, {
-                header: 1,
-                raw: false,
-                dateNF: 'YYYY-MM-DD'
-            });
-            
-            // Build HTML table manually with row limit
-            var tableHtml = '<div class="ckan-preview-excel-wrapper">';
-            tableHtml += '<div class="ckan-preview-sheet-name">Sheet: ' + escapeHtml(firstSheetName) + '</div>';
-            tableHtml += '<table class="ckan-preview-table" id="excel-preview-table">';
-            
-            if (jsonData.length > 0) {
-                // Headers
-                tableHtml += '<thead><tr>';
-                var headers = jsonData[0];
-                if (Array.isArray(headers)) {
-                    headers.forEach(function(header) {
-                        tableHtml += '<th>' + escapeHtml(String(header || '')) + '</th>';
-                    });
-                }
-                tableHtml += '</tr></thead>';
-                
-                // Body - จำกัดที่ 30 แถว
-                tableHtml += '<tbody>';
-                var maxRows = Math.min(jsonData.length, 31); // 30 + 1 for header
-                for (var i = 1; i < maxRows; i++) {
-                    tableHtml += '<tr>';
-                    var row = jsonData[i];
-                    if (Array.isArray(row)) {
-                        // Make sure we have same number of cells as headers
-                        for (var j = 0; j < headers.length; j++) {
-                            var cellValue = row[j] !== undefined ? row[j] : '';
-                            tableHtml += '<td>' + escapeHtml(String(cellValue)) + '</td>';
-                        }
-                    }
-                    tableHtml += '</tr>';
-                }
-                tableHtml += '</tbody>';
-            }
-            
-            tableHtml += '</table>';
-            tableHtml += '</div>';
-            
-            if (jsonData.length > 31) {
-                tableHtml += '<p class="ckan-preview-note">แสดงเพียง 30 แถวแรก จากทั้งหมด ' + 
-                    (jsonData.length - 1) + ' แถว';
-                if (workbook.SheetNames.length > 1) {
-                    tableHtml += ' และแสดงเพียง Sheet แรก จากทั้งหมด ' + workbook.SheetNames.length + ' Sheets';
-                }
-                tableHtml += '</p>';
-            } else if (workbook.SheetNames.length > 1) {
-                tableHtml += '<p class="ckan-preview-note">แสดงเพียง Sheet แรก จากทั้งหมด ' + 
-                    workbook.SheetNames.length + ' Sheets</p>';
-            }
-            
-            // Add filter controls
-            tableHtml = addFilterControls() + tableHtml;
-            
-            $('.ckan-preview-data').html(tableHtml).show();
-            
-            // Initialize filter if available
             if (typeof initializeDataFilter === 'function') {
                 initializeDataFilter();
             }
         } catch (e) {
             console.error('Excel Parse Error:', e);
-            $('.ckan-preview-data').html(
-                '<div class="ckan-preview-error">ไม่สามารถแปลงไฟล์ Excel ได้: ' + e.message + '</div>'
-            ).show();
+            showExcelError('ไม่สามารถแปลงไฟล์ Excel ได้: ' + e.message);
         }
     }
     
+    function readExcelWorkbook(data) {
+        return XLSX.read(data, { 
+            type: 'array', 
+            cellDates: true,
+            cellNF: false,
+            cellText: false
+        });
+    }
+    
+    function processFirstSheet(workbook) {
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+            raw: false,
+            dateNF: 'YYYY-MM-DD'
+        });
+        return { firstSheetName, jsonData };
+    }
+    
+    function buildExcelTable(sheetName, jsonData, totalSheets) {
+        let tableHtml = '<div class="ckan-preview-excel-wrapper">';
+        tableHtml += '<div class="ckan-preview-sheet-name">Sheet: ' + escapeHtml(sheetName) + '</div>';
+        tableHtml += '<table class="ckan-preview-table" id="excel-preview-table">';
+        
+        if (jsonData.length > 0) {
+            tableHtml += buildExcelTableHeaders(jsonData[0]);
+            tableHtml += buildExcelTableBody(jsonData);
+        }
+        
+        tableHtml += '</table></div>';
+        tableHtml += buildExcelNoticeText(jsonData.length, totalSheets);
+        
+        return tableHtml;
+    }
+    
+    function buildExcelTableHeaders(headers) {
+        let headerHtml = '<thead><tr>';
+        if (Array.isArray(headers)) {
+            headers.forEach(function(header) {
+                headerHtml += '<th>' + escapeHtml(String(header || '')) + '</th>';
+            });
+        }
+        return headerHtml + '</tr></thead>';
+    }
+    
+    function buildExcelTableBody(jsonData) {
+        const headers = jsonData[0];
+        const maxRows = Math.min(jsonData.length, 31);
+        let bodyHtml = '<tbody>';
+        
+        for (let i = 1; i < maxRows; i++) {
+            bodyHtml += '<tr>';
+            const row = jsonData[i];
+            if (Array.isArray(row)) {
+                for (let j = 0; j < headers.length; j++) {
+                    const cellValue = row[j] !== undefined ? row[j] : '';
+                    bodyHtml += '<td>' + escapeHtml(String(cellValue)) + '</td>';
+                }
+            }
+            bodyHtml += '</tr>';
+        }
+        
+        return bodyHtml + '</tbody>';
+    }
+    
+    function buildExcelNoticeText(dataLength, totalSheets) {
+        if (dataLength > 31) {
+            let notice = '<p class="ckan-preview-note">แสดงเพียง 30 แถวแรก จากทั้งหมด ' + 
+                (dataLength - 1) + ' แถว';
+            if (totalSheets > 1) {
+                notice += ' และแสดงเพียง Sheet แรก จากทั้งหมด ' + totalSheets + ' Sheets';
+            }
+            return notice + '</p>';
+        } else if (totalSheets > 1) {
+            return '<p class="ckan-preview-note">แสดงเพียง Sheet แรก จากทั้งหมด ' + 
+                totalSheets + ' Sheets</p>';
+        }
+        return '';
+    }
+    
+    function showExcelError(message) {
+        $('.ckan-preview-data').html(
+            '<div class="ckan-preview-error">' + message + '</div>'
+        ).show();
+    }
+    
     function displayPDFPreview(pdfUrl) {
-        var previewHtml = '<div class="ckan-preview-pdf-wrapper">';
+        const previewHtml = '<div class="ckan-preview-pdf-wrapper">';
         previewHtml += '<iframe src="' + escapeHtml(pdfUrl) + '" width="100%" height="600px" frameborder="0" ' +
                        'allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>';
         previewHtml += '</div>';
@@ -319,15 +333,15 @@ jQuery(document).ready(function($) {
     
     function displayTextPreview(content) {
         // Limit text preview to first 5000 characters for performance
-        var displayContent = content;
-        var isTruncated = false;
+        let displayContent = content;
+        let isTruncated = false;
         
         if (content.length > 5000) {
             displayContent = content.substring(0, 5000);
             isTruncated = true;
         }
         
-        var previewHtml = '<div class="ckan-preview-text-wrapper">';
+        let previewHtml = '<div class="ckan-preview-text-wrapper">';
         previewHtml += '<pre>' + escapeHtml(displayContent) + '</pre>';
         
         if (isTruncated) {
@@ -341,19 +355,19 @@ jQuery(document).ready(function($) {
     
     function displayJSONPreview(content) {
         try {
-            var json = JSON.parse(content);
-            var formatted = JSON.stringify(json, null, 2);
+            const json = JSON.parse(content);
+            const formatted = JSON.stringify(json, null, 2);
             
             // Limit JSON preview
-            var displayContent = formatted;
-            var isTruncated = false;
+            let displayContent = formatted;
+            let isTruncated = false;
             
             if (formatted.length > 5000) {
                 displayContent = formatted.substring(0, 5000);
                 isTruncated = true;
             }
             
-            var previewHtml = '<div class="ckan-preview-text-wrapper">';
+            let previewHtml = '<div class="ckan-preview-text-wrapper">';
             previewHtml += '<pre class="json-preview">' + escapeHtml(displayContent) + '</pre>';
             
             if (isTruncated) {
@@ -368,7 +382,7 @@ jQuery(document).ready(function($) {
     }
     
     function displayImagePreview(url) {
-        var previewHtml = '<div class="ckan-preview-image-wrapper">';
+        let previewHtml = '<div class="ckan-preview-image-wrapper">';
         previewHtml += '<img src="' + escapeHtml(url) + '" alt="Preview" style="max-width: 100%; height: auto;" ' +
                       'onerror="this.onerror=null; this.src=\'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMCIgeT0iMTAwIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE5cHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+SW1hZ2UgRXJyb3I8L3RleHQ+PC9zdmc+\';">';
         previewHtml += '</div>';
@@ -377,17 +391,17 @@ jQuery(document).ready(function($) {
     
     // Helper functions
     function escapeHtml(text) {
-        var div = document.createElement('div');
+        const div = document.createElement('div');
         div.textContent = text || '';
         return div.innerHTML;
     }
     
     function base64ToArrayBuffer(base64) {
         try {
-            var binaryString = window.atob(base64);
-            var len = binaryString.length;
-            var bytes = new Uint8Array(len);
-            for (var i = 0; i < len; i++) {
+            const binaryString = window.atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
             }
             return bytes.buffer;
@@ -398,14 +412,14 @@ jQuery(document).ready(function($) {
     }
     
     function parseCSVLine(line) {
-        var result = [];
-        var current = '';
-        var inQuotes = false;
+        const result = [];
+        let current = '';
+        let inQuotes = false;
         
         if (!line) return result;
         
-        for (var i = 0; i < line.length; i++) {
-            var char = line[i];
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
             
             if (char === '"') {
                 if (inQuotes && line[i + 1] === '"') {
@@ -442,6 +456,10 @@ jQuery(document).ready(function($) {
         displayPDFPreview: displayPDFPreview,
         displayTextPreview: displayTextPreview,
         displayJSONPreview: displayJSONPreview,
-        displayImagePreview: displayImagePreview
+        displayImagePreview: displayImagePreview,
+        // Helper functions for testing
+        readExcelWorkbook: readExcelWorkbook,
+        processFirstSheet: processFirstSheet,
+        buildExcelTable: buildExcelTable
     };
 });
