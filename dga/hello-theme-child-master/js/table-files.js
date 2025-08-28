@@ -7,8 +7,8 @@ jQuery(document).ready(function($) {
      * ฟังก์ชันนับและแสดงจำนวนไฟล์ทั้งหมด
      */
     function updateFileCounter() {
-        var visibleFiles = $('.table-files tbody tr:visible').length;
-        var totalFiles = $('.table-files tbody tr').length;
+        const visibleFiles = $('.table-files tbody tr:visible').length;
+        const totalFiles = $('.table-files tbody tr').length;
         
         if (visibleFiles < totalFiles) {
             $('#file-count').text(visibleFiles + ' จาก ' + totalFiles);
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
      */
     $('.external-button').on('click', function(e) {
         // ป้องกันกรณีที่ยังคลิกที่ลิงก์แล้วไม่มีการตอบสนอง
-        var externalUrl = $(this).attr('href');
+        const externalUrl = $(this).attr('href');
         if (!externalUrl || externalUrl === '#') {
             e.preventDefault();
             alert('ไม่สามารถเปิดลิงค์ภายนอกได้ กรุณาลองอีกครั้งในภายหลัง');
@@ -45,8 +45,8 @@ jQuery(document).ready(function($) {
         }
         
         // สร้างแอนิเมชันแจ้งเตือนการเปิดลิงค์ภายนอก
-        var filename = $(this).closest('tr').find('.file-name').text().trim();
-        var notification = $('<div class="download-notification">กำลังเปิด: ' + filename + '</div>');
+        const filename = $(this).closest('tr').find('.file-name').text().trim();
+        const notification = $('<div class="download-notification">กำลังเปิด: ' + filename + '</div>');
         
         $('body').append(notification);
         
@@ -64,31 +64,31 @@ jQuery(document).ready(function($) {
      */
     function highlightNewFiles() {
         $('.table-files tbody tr').each(function() {
-            var fileDate = $(this).find('.column-date').text().trim();
+            const fileDate = $(this).find('.column-date').text().trim();
             
-            if (fileDate) {
-                var today = new Date();
-                var dateParts = fileDate.split('/');
-                
-                // ตรวจสอบรูปแบบวันที่ dd/mm/yyyy
-                if (dateParts.length === 3) {
-                    var fileDateTime = new Date(
-                        parseInt(dateParts[2]), // ปี
-                        parseInt(dateParts[1]) - 1, // เดือน (0-11)
-                        parseInt(dateParts[0]) // วัน
-                    );
-                    
-                    // หากไฟล์เพิ่มเข้ามาไม่เกิน 7 วัน
-                    var diffTime = Math.abs(today - fileDateTime);
-                    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
-                    if (diffDays <= 7) {
-                        $(this).addClass('new-file');
-                        $(this).find('.file-name').append('<span class="new-badge">ใหม่</span>');
-                    }
-                }
+            if (fileDate && isRecentFile(fileDate)) {
+                markAsNewFile($(this));
             }
         });
+    }
+
+    function isRecentFile(fileDate) {
+        const today = new Date();
+        const fileDateTime = parseDateString(fileDate);
+        
+        if (!fileDateTime) {
+            return false;
+        }
+        
+        const diffTime = Math.abs(today - fileDateTime);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        return diffDays <= 7;
+    }
+
+    function markAsNewFile($row) {
+        $row.addClass('new-file');
+        $row.find('.file-name').append('<span class="new-badge">ใหม่</span>');
     }
     
     // เรียกใช้ฟังก์ชันไฮไลท์ไฟล์ใหม่
@@ -99,7 +99,7 @@ jQuery(document).ready(function($) {
      */
     function createSecurePdfPreview(fileUrl, secureUrl) {
         // เตรียม URL สำหรับ iframe (ถ้าเป็น URL ที่เข้ารหัสแล้ว ให้แก้ไข action)
-        var previewUrl = secureUrl;
+        let previewUrl = secureUrl;
         
         // ถ้า URL มีส่วนของ secure_file_download ให้แทนที่ด้วย secure_pdf_preview
         if (secureUrl.indexOf('secure_file_download') > -1) {
@@ -116,11 +116,18 @@ jQuery(document).ready(function($) {
      * ฟังก์ชันค้นหาไฟล์
      */
     $('#file-search-input').on('keyup', function() {
-        var searchText = $(this).val().toLowerCase();
-        var hasResults = false;
+        const searchText = $(this).val().toLowerCase();
+        const hasResults = filterTableRows(searchText);
+        
+        handleSearchResults(hasResults, searchText);
+        updateFileCounter();
+    });
+
+    function filterTableRows(searchText) {
+        let hasResults = false;
         
         $('.table-files tbody tr').each(function() {
-            var fileName = $(this).find('.file-name').text().toLowerCase();
+            const fileName = $(this).find('.file-name').text().toLowerCase();
             
             if (fileName.includes(searchText)) {
                 $(this).show();
@@ -130,90 +137,124 @@ jQuery(document).ready(function($) {
             }
         });
         
-        // แสดงข้อความเมื่อไม่พบผลการค้นหา
+        return hasResults;
+    }
+
+    function handleSearchResults(hasResults, searchText) {
         if (!hasResults) {
-            if ($('.no-results-message').length === 0) {
-                $('.table-files tbody').append(
-                    '<tr class="no-results-message"><td colspan="4">' +
-                    '<div class="no-results-content">' +
-                    '<div class="no-results-icon"></div>' +
-                    '<p>ไม่พบไฟล์ที่ตรงกับคำค้นหา "<span class="search-term">' + searchText + '</span>"</p>' +
-                    '</div></td></tr>'
-                );
-            } else {
-                $('.search-term').text(searchText);
-            }
+            showNoResultsMessage(searchText);
         } else {
-            $('.no-results-message').remove();
+            hideNoResultsMessage();
         }
-        
-        // อัพเดตคาวน์เตอร์จำนวนไฟล์
-        updateFileCounter();
-    });
+    }
+
+    function showNoResultsMessage(searchText) {
+        if ($('.no-results-message').length === 0) {
+            const messageHtml = createNoResultsHtml(searchText);
+            $('.table-files tbody').append(messageHtml);
+        } else {
+            $('.search-term').text(searchText);
+        }
+    }
+
+    function createNoResultsHtml(searchText) {
+        return '<tr class="no-results-message"><td colspan="4">' +
+            '<div class="no-results-content">' +
+            '<div class="no-results-icon"></div>' +
+            '<p>ไม่พบไฟล์ที่ตรงกับคำค้นหา "<span class="search-term">' + searchText + '</span>"</p>' +
+            '</div></td></tr>';
+    }
+
+    function hideNoResultsMessage() {
+        $('.no-results-message').remove();
+    }
     
     /**
      * ฟังก์ชันสำหรับเรียงลำดับตาราง
      */
     $('.table-files th').on('click', function() {
-        var table = $(this).parents('table').eq(0);
-        var rows = table.find('tbody tr:not(.no-results-message)').toArray();
-        var index = $(this).index();
+        const table = $(this).parents('table').eq(0);
+        const rows = table.find('tbody tr:not(.no-results-message)').toArray();
+        const index = $(this).index();
         
-        // ไม่ทำงานสำหรับคอลัมน์ download และ preview
-        if ($(this).hasClass('column-download') || $(this).hasClass('column-preview')) {
+        if (!canSortColumn($(this))) {
             return;
         }
         
-        // สลับทิศทางการเรียงลำดับ
-        this.asc = !this.asc;
+        updateSortDirection($(this));
+        sortTableRows(rows, index, this.asc);
+        appendSortedRows(table, rows);
+    });
+
+    function canSortColumn($column) {
+        return !$column.hasClass('column-download') && !$column.hasClass('column-preview');
+    }
+
+    function updateSortDirection($column) {
+        $column[0].asc = !$column[0].asc;
         $('.table-files th').removeClass('sort-asc sort-desc');
-        $(this).addClass(this.asc ? 'sort-asc' : 'sort-desc');
-        
-        // ฟังก์ชันเรียงลำดับ
+        $column.addClass($column[0].asc ? 'sort-asc' : 'sort-desc');
+    }
+
+    function sortTableRows(rows, index, isAscending) {
         rows.sort(function(a, b) {
-            var A = $(a).children('td').eq(index).text().trim().toLowerCase();
-            var B = $(b).children('td').eq(index).text().trim().toLowerCase();
+            const A = $(a).children('td').eq(index).text().trim().toLowerCase();
+            const B = $(b).children('td').eq(index).text().trim().toLowerCase();
             
-            // หากเป็นคอลัมน์วันที่ แปลงเป็นวันที่เพื่อเรียงลำดับ
-            if (index === 1) { // วันที่อยู่ที่คอลัมน์ 1 (วันที่นำเข้า)
-                var partsA = A.split('/');
-                var partsB = B.split('/');
-                
-                if (partsA.length === 3 && partsB.length === 3) {
-                    // แปลงวันที่ในรูปแบบ dd/mm/yyyy เป็น Date object
-                    var dateA = new Date(
-                        parseInt(partsA[2]), // ปี
-                        parseInt(partsA[1]) - 1, // เดือน (0-11)
-                        parseInt(partsA[0]) // วัน
-                    );
-                    
-                    var dateB = new Date(
-                        parseInt(partsB[2]), // ปี
-                        parseInt(partsB[1]) - 1, // เดือน (0-11)
-                        parseInt(partsB[0]) // วัน
-                    );
-                    
-                    return this.asc ? dateA - dateB : dateB - dateA;
-                }
+            if (index === 1) {
+                return compareDateColumns(A, B, isAscending);
             }
             
-            // เรียงลำดับตัวอักษรทั่วไป
-            if (A < B) return this.asc ? -1 : 1;
-            if (A > B) return this.asc ? 1 : -1;
-            return 0;
-        }.bind(this));
+            return compareTextColumns(A, B, isAscending);
+        });
+    }
+
+    function compareDateColumns(A, B, isAscending) {
+        const dateA = parseDateString(A);
+        const dateB = parseDateString(B);
         
-        // เพิ่มแถวกลับเข้าตาราง
+        if (dateA && dateB) {
+            return isAscending ? dateA - dateB : dateB - dateA;
+        }
+        
+        return compareTextColumns(A, B, isAscending);
+    }
+
+    function parseDateString(dateStr) {
+        const parts = dateStr.split('/');
+        
+        if (parts.length === 3) {
+            return new Date(
+                parseInt(parts[2]), // ปี
+                parseInt(parts[1]) - 1, // เดือน (0-11)
+                parseInt(parts[0]) // วัน
+            );
+        }
+        
+        return null;
+    }
+
+    function compareTextColumns(A, B, isAscending) {
+        if (A < B) {
+            return isAscending ? -1 : 1;
+        }
+        if (A > B) {
+            return isAscending ? 1 : -1;
+        }
+        return 0;
+    }
+
+    function appendSortedRows(table, rows) {
         $.each(rows, function(index, row) {
             table.children('tbody').append(row);
         });
-    });
+    }
     
     /**
      * เพิ่ม tooltip สำหรับชื่อไฟล์ที่ยาวเกินไป
      */
     $('.file-name').each(function() {
-        var fileName = $(this).text().trim();
+        const fileName = $(this).text().trim();
         $(this).attr('title', fileName);
     });
     
@@ -234,7 +275,7 @@ jQuery(document).ready(function($) {
      */
     $('.download-button').on('click', function(e) {
         // ป้องกันกรณีที่ยังคลิกที่ลิงก์ดาวน์โหลดแล้วไม่มีการตอบสนอง
-        var downloadUrl = $(this).attr('href');
+        const downloadUrl = $(this).attr('href');
         if (!downloadUrl || downloadUrl === '#') {
             e.preventDefault();
             alert('ไม่สามารถดาวน์โหลดไฟล์ได้ กรุณาลองอีกครั้งในภายหลัง');
@@ -242,8 +283,8 @@ jQuery(document).ready(function($) {
         }
         
         // สร้างแอนิเมชันแจ้งเตือนการดาวน์โหลด
-        var filename = $(this).closest('tr').find('.file-name').text().trim();
-        var notification = $('<div class="download-notification">กำลังดาวน์โหลด: ' + filename + '</div>');
+        const filename = $(this).closest('tr').find('.file-name').text().trim();
+        const notification = $('<div class="download-notification">กำลังดาวน์โหลด: ' + filename + '</div>');
         
         $('body').append(notification);
         
@@ -260,9 +301,9 @@ jQuery(document).ready(function($) {
      * เพิ่มฟังก์ชัน PDF Preview
      */
     $('.preview-button').on('click', function() {
-        var fileUrl = $(this).data('file');
-        var fileName = $(this).data('filename');
-        var secureUrl = $(this).data('secure');
+        const fileUrl = $(this).data('file');
+        const fileName = $(this).data('filename');
+        const secureUrl = $(this).data('secure');
         
         // ตรวจสอบว่ามีข้อมูลที่จำเป็นหรือไม่
         if (!fileUrl || !secureUrl) {
@@ -271,7 +312,7 @@ jQuery(document).ready(function($) {
         }
         
         // เตรียม URL สำหรับ Preview และดาวน์โหลด
-        var urls = createSecurePdfPreview(fileUrl, secureUrl);
+        const urls = createSecurePdfPreview(fileUrl, secureUrl);
         
         // แสดงส่วน Preview
         $('.pdf-preview-container').slideDown(300);
@@ -321,7 +362,7 @@ jQuery(document).ready(function($) {
     $('#pdf-preview-frame').on('load', function() {
         // ตรวจสอบว่า iframe ถูกโหลดสำเร็จหรือไม่
         try {
-            var frameContent = $(this).contents();
+            const frameContent = $(this).contents();
             // ถ้าสามารถเข้าถึงเนื้อหาได้ แสดงว่าไม่มีปัญหา Cross-Origin
         } catch (e) {
             // หากมีปัญหา Cross-Origin หรืออื่นๆ
@@ -335,7 +376,7 @@ jQuery(document).ready(function($) {
     /**
      * ระบบจัดการสถานะการโหลดของ Preview
      */
-    var previewLoading = false;
+    let previewLoading = false;
     
     $('#pdf-preview-frame').on('load', function() {
         previewLoading = false;
@@ -365,13 +406,13 @@ jQuery(document).ready(function($) {
     });
     
     function adjustPreviewHeight() {
-        var windowHeight = $(window).height();
-        var containerTop = $('.pdf-preview-container').offset().top;
-        var headerHeight = $('.pdf-preview-header').outerHeight();
-        var footerHeight = $('.pdf-preview-actions').outerHeight();
-        var padding = 40; // padding ด้านล่าง
+        const windowHeight = $(window).height();
+        const containerTop = $('.pdf-preview-container').offset().top;
+        const headerHeight = $('.pdf-preview-header').outerHeight();
+        const footerHeight = $('.pdf-preview-actions').outerHeight();
+        const padding = 40; // padding ด้านล่าง
         
-        var availableHeight = windowHeight - containerTop - headerHeight - footerHeight - padding;
+        let availableHeight = windowHeight - containerTop - headerHeight - footerHeight - padding;
         availableHeight = Math.max(300, availableHeight); // ขนาดขั้นต่ำ 300px
         
         $('#pdf-preview-frame').css('height', availableHeight + 'px');
@@ -380,8 +421,8 @@ jQuery(document).ready(function($) {
     /**
      * เพิ่มความสามารถในการลากเพื่อเปลี่ยนขนาด iframe (resize)
      */
-    var isResizing = false;
-    var startY, startHeight;
+    let isResizing = false;
+    let startY, startHeight;
     
     // เพิ่ม handle สำหรับการ resize
     $('.pdf-preview-content').append('<div class="pdf-resize-handle"></div>');
@@ -395,9 +436,11 @@ jQuery(document).ready(function($) {
     });
     
     $(document).on('mousemove', function(e) {
-        if (!isResizing) return;
+        if (!isResizing) {
+            return;
+        }
         
-        var newHeight = startHeight + (e.clientY - startY);
+        let newHeight = startHeight + (e.clientY - startY);
         newHeight = Math.max(300, newHeight); // ขนาดขั้นต่ำ 300px
         
         $('#pdf-preview-frame').css('height', newHeight + 'px');

@@ -153,57 +153,75 @@ jQuery(document).ready(function($) {
     // Display functions for different file types
     function displayCSVPreview(content) {
         try {
-            // Parse CSV
             const lines = content.split(/\r?\n/);
             const headers = parseCSVLine(lines[0]);
+            const tableHtml = buildCSVTable(lines, headers);
+            const finalHtml = addFilterControls() + tableHtml;
             
-            let tableHtml = '<div class="ckan-preview-table-wrapper">';
-            tableHtml += '<table class="ckan-preview-table">';
-            tableHtml += '<thead><tr>';
+            $('.ckan-preview-data').html(finalHtml).show();
             
-            // Headers
-            headers.forEach(function(header) {
-                tableHtml += '<th>' + escapeHtml(header.trim()) + '</th>';
-            });
-            tableHtml += '</tr></thead><tbody>';
-            
-            // Rows - จำกัดที่ 30 แถว
-            const maxRows = Math.min(lines.length, 31); // 30 + 1 for header
-            for (let i = 1; i < maxRows; i++) {
-                if (lines[i].trim()) {
-                    const cells = parseCSVLine(lines[i]);
-                    tableHtml += '<tr>';
-                    cells.forEach(function(cell) {
-                        tableHtml += '<td>' + escapeHtml(cell.trim()) + '</td>';
-                    });
-                    tableHtml += '</tr>';
-                }
-            }
-            
-            tableHtml += '</tbody></table>';
-            
-            if (lines.length > 31) {
-                tableHtml += '<p class="ckan-preview-note">แสดงเพียง 30 แถวแรก จากทั้งหมด ' + 
-                    (lines.length - 1) + ' แถว</p>';
-            }
-            
-            tableHtml += '</div>';
-            
-            // Add filter controls
-            tableHtml = addFilterControls() + tableHtml;
-            
-            $('.ckan-preview-data').html(tableHtml).show();
-            
-            // Initialize filter if script is loaded
             if (typeof initializeDataFilter === 'function') {
                 initializeDataFilter();
             }
         } catch (e) {
             console.error('CSV Parse Error:', e);
-            $('.ckan-preview-data').html(
-                '<div class="ckan-preview-error">ไม่สามารถแปลงไฟล์ CSV ได้: ' + e.message + '</div>'
-            ).show();
+            showCSVError(e.message);
         }
+    }
+    
+    function buildCSVTable(lines, headers) {
+        let tableHtml = '<div class="ckan-preview-table-wrapper">';
+        tableHtml += '<table class="ckan-preview-table">';
+        tableHtml += buildCSVHeaders(headers);
+        tableHtml += buildCSVRows(lines);
+        tableHtml += '</table>';
+        tableHtml += buildCSVNotice(lines.length);
+        tableHtml += '</div>';
+        return tableHtml;
+    }
+    
+    function buildCSVHeaders(headers) {
+        let headerHtml = '<thead><tr>';
+        headers.forEach(function(header) {
+            headerHtml += '<th>' + escapeHtml(header.trim()) + '</th>';
+        });
+        return headerHtml + '</tr></thead>';
+    }
+    
+    function buildCSVRows(lines) {
+        const maxRows = Math.min(lines.length, 31);
+        let rowsHtml = '<tbody>';
+        
+        for (let i = 1; i < maxRows; i++) {
+            if (lines[i].trim()) {
+                rowsHtml += buildCSVRow(lines[i]);
+            }
+        }
+        
+        return rowsHtml + '</tbody>';
+    }
+    
+    function buildCSVRow(line) {
+        const cells = parseCSVLine(line);
+        let rowHtml = '<tr>';
+        cells.forEach(function(cell) {
+            rowHtml += '<td>' + escapeHtml(cell.trim()) + '</td>';
+        });
+        return rowHtml + '</tr>';
+    }
+    
+    function buildCSVNotice(totalLines) {
+        if (totalLines > 31) {
+            return '<p class="ckan-preview-note">แสดงเพียง 30 แถวแรก จากทั้งหมด ' + 
+                (totalLines - 1) + ' แถว</p>';
+        }
+        return '';
+    }
+    
+    function showCSVError(message) {
+        $('.ckan-preview-data').html(
+            '<div class="ckan-preview-error">ไม่สามารถแปลงไฟล์ CSV ได้: ' + message + '</div>'
+        ).show();
     }
     
     function displayExcelPreview(base64Content) {
@@ -460,6 +478,7 @@ jQuery(document).ready(function($) {
         // Helper functions for testing
         readExcelWorkbook: readExcelWorkbook,
         processFirstSheet: processFirstSheet,
-        buildExcelTable: buildExcelTable
+        buildExcelTable: buildExcelTable,
+        buildCSVTable: buildCSVTable
     };
 });
