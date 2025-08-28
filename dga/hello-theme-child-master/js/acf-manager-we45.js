@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showFeedback(result.data.message);
                 const newFieldData = result.data.field;
                 if (action === 'add') {
-                    if (noFieldsMessage) noFieldsMessage.remove();
+                    noFieldsMessage?.remove();
                     fieldsList.insertAdjacentHTML('beforeend', renderFieldItem(newFieldData));
                 } else { // update
                     const itemToUpdate = fieldsList.querySelector(`[data-field-key="${newFieldData.key}"]`);
@@ -89,9 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 resetForm();
             } else {
-                showFeedback(result.data.message, true);
+                showFeedback(result.data?.message || 'Unknown error occurred', true);
             }
         } catch (error) {
+            console.error('Form submission error:', error);
             showFeedback(acfManagerData_we45.strings.error_unexpected, true);
         } finally {
             submitButton.disabled = false;
@@ -146,12 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
                          fieldsList.innerHTML = `<p id="no-fields-message-we45">No fields found in this group.</p>`;
                      }
                 } else {
-                    showFeedback(result.data.message, true);
+                    showFeedback(result.data?.message || 'Unknown error occurred', true);
                     btn.disabled = false;
                 }
             } catch (error) {
-                 showFeedback(acfManagerData_we45.strings.error_unexpected, true);
-                 btn.disabled = false;
+                console.error('Delete operation error:', error);
+                showFeedback(acfManagerData_we45.strings.error_unexpected, true);
+                btn.disabled = false;
             }
         }
     });

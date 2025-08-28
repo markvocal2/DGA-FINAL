@@ -58,6 +58,9 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-height: calc(100vh - 80px);
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #2271b1 #f0f0f1;
+    animation: modalFadeIn 0.3s ease-out;
 }
 
 .tgall-modal-header {
@@ -167,7 +170,7 @@
     border-radius: 4px;
     overflow: hidden;
     cursor: move;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .gallery-item:hover {
@@ -208,6 +211,7 @@
     border: 2px dashed #2271b1;
     background-color: rgba(34, 113, 177, 0.1);
     border-radius: 4px;
+    visibility: visible !important;
 }
 
 .add-images {
@@ -408,6 +412,7 @@
     font-weight: 500;
     text-align: center;
     margin-top: 15px;
+    animation: pulse 2s infinite;
 }
 
 /* Loading Progress */
@@ -635,11 +640,7 @@
     border: 0;
 }
 
-/* Custom Scrollbar */
-.tgall-modal-content {
-    scrollbar-width: thin;
-    scrollbar-color: #2271b1 #f0f0f1;
-}
+/* Scrollbar properties merged into main selector above */
 
 .tgall-modal-content::-webkit-scrollbar {
     width: 8px;
@@ -661,12 +662,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.gallery-placeholder {
-    border: 2px dashed #2271b1;
-    background-color: rgba(34, 113, 177, 0.1);
-    border-radius: 4px;
-    visibility: visible !important;
-}
+/* Properties merged into main selector above */
 
 /* Form Validation Styles */
 .tgall-form-group input:required:invalid,
@@ -702,9 +698,7 @@
     }
 }
 
-.tgall-modal-content {
-    animation: modalFadeIn 0.3s ease-out;
-}
+/* Animation property merged into main selector above */
 
 /* Loading Animation Enhancement */
 @keyframes pulse {
@@ -719,9 +713,7 @@
     }
 }
 
-.tgall-loading-text {
-    animation: pulse 2s infinite;
-}
+/* Animation property merged into main selector above */
 
 /* Print Styles */
 @media print {
@@ -751,10 +743,7 @@
     z-index: 1;
 }
 
-/* ปรับปรุง Gallery Item Styles */
-.gallery-item {
-    transition: all 0.3s ease;
-}
+/* Transition property merged into main selector above */
 
 .gallery-item.is-featured:hover {
     border-color: #135e96;

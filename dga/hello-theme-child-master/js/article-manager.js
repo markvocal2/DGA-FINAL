@@ -790,7 +790,10 @@ jQuery(document).ready(function($) {
             if (response.data) {
                 errorMsg = 'เกิดข้อผิดพลาด: ' + response.data;
             }
-        } catch (e) {}
+        } catch (e) {
+            // JSON parsing failed, use default error message
+            console.warn('Failed to parse error response as JSON:', e.message);
+        }
         
         showToast(errorMsg);
     }

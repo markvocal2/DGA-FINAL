@@ -279,15 +279,7 @@
     padding: 0 4px;
 }
 
-/* Grid Layout Update */
-.pending-posts-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px;
-    max-width: 1600px;
-    margin: 0 auto;
-}
+/* Grid layout properties already defined above */
 
 /* Responsive Pagination */
 @media (max-width: 768px) {
@@ -307,12 +299,7 @@
     }
 }
 
-/* Skeleton Loading Update */
-.skeleton-loader {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
+/* Skeleton loader properties already defined above */
 
 @media (max-width: 1400px) {
     .pending-posts-grid,

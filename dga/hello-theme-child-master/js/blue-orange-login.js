@@ -127,7 +127,6 @@ jQuery(document).ready(function($) {
         
         const form = $(this);
         const submitButton = form.find('.login-button');
-        const loader = submitButton.find('.loader');
         
         // Disable form and show loader
         submitButton.prop('disabled', true).addClass('loading');
