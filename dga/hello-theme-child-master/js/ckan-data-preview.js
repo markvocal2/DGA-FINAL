@@ -337,7 +337,7 @@ jQuery(document).ready(function($) {
     }
     
     function displayPDFPreview(pdfUrl) {
-        const previewHtml = '<div class="ckan-preview-pdf-wrapper">';
+        let previewHtml = '<div class="ckan-preview-pdf-wrapper">';
         previewHtml += '<iframe src="' + escapeHtml(pdfUrl) + '" width="100%" height="600px" frameborder="0" ' +
                        'allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>';
         previewHtml += '</div>';
