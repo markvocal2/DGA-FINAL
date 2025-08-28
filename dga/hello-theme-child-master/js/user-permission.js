@@ -205,7 +205,7 @@ jQuery(document).ready(function($) {
                     nonce: userPermissionAjax.nonce
                 },
                 success: (response) => {
-                    if (response.success && response.data && response.data.allowed) {
+                    if (response.success && response.data?.allowed) {
                         $('.protected-content').fadeIn();
                         $('.user-permission-overlay').remove();
                         $('body').removeClass('no-scroll');

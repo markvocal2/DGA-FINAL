@@ -15,7 +15,6 @@
     
     function initPostSocialWidget_ps34($widget) {
         const postId = $widget.data('post-id');
-        const widgetId = $widget.attr('id');
         
         // Validate post ID
         if (!postId || postId <= 0) {
@@ -38,10 +37,10 @@
             },
             timeout: 10000, // 10 second timeout
             success: function(response) {
-                if (response.success && response.data) {
+                if (response?.success && response?.data) {
                     updateWidgetContent_ps34($widget, response.data);
                 } else {
-                    const errorMessage = response.data?.message || 'Unknown error occurred';
+                    const errorMessage = response?.data?.message || 'Unknown error occurred';
                     handleAjaxError_ps34($widget, errorMessage);
                 }
             },

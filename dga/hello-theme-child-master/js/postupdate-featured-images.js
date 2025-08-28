@@ -474,7 +474,7 @@
                     
                     // รีโหลดหน้าเว็บหลังจาก 1.5 วินาที
                     setTimeout(function() {
-                        if (response.data && response.data.post_url) {
+                        if (response.data?.post_url) {
                             window.location.href = response.data.post_url;
                         } else {
                             window.location.reload();

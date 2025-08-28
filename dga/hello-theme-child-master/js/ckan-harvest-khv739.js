@@ -950,7 +950,7 @@ class CKANHarvestManager {
                 this.updateStats();
                 
                 // Log any errors
-                if (data.data.errors && data.data.errors.length > 0) {
+                if (data.data?.errors?.length > 0) {
                     data.data.errors.forEach(error => {
                         this.addLogEntry('error', error);
                     });

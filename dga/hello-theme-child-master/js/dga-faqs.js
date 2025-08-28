@@ -444,7 +444,7 @@ jQuery(document).ready(function($) {
     // Secure random number generator for non-security purposes
     function getSecureRandom() {
         // For visual effects, we can use crypto.getRandomValues() with fallback to Math.random()
-        if (window.crypto && window.crypto.getRandomValues) {
+        if (window.crypto?.getRandomValues) {
             const array = new Uint32Array(1);
             window.crypto.getRandomValues(array);
             return array[0] / (0xffffffff + 1);

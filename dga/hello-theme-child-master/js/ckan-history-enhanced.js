@@ -264,7 +264,7 @@ jQuery(document).ready(function($) {
                 limit: ckan_report.limit || 10
             },
             success: function(response) {
-                if (response.success && response.data.activities) {
+                if (response.success && response.data?.activities) {
                     renderActivitiesTable(response.data.activities);
                 }
             },

@@ -209,7 +209,7 @@ jQuery(document).ready(function($) {
                             // แสดงข้อความผิดพลาด
                             var errorMessage = 'เกิดข้อผิดพลาดในการตั้งรหัสผ่าน';
                             
-                            if (response && response.data && response.data.message) {
+                            if (response?.data?.message) {
                                 errorMessage = response.data.message;
                             }
                             

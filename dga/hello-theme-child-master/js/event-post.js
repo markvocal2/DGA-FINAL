@@ -132,7 +132,7 @@ jQuery(document).ready(function($) {
                         const firstImageUrl = firstImage?.thumb || firstImage?.full;
                         
                         if(firstImageUrl) {
-                            $slideshow.html(`<img src="${firstImageUrl}" alt="${firstImage.alt || ''}">`);
+                            $slideshow.html(`<img src="${firstImageUrl}" alt="${firstImage?.alt || ''}">`);
                             
                             slideIntervals[$(this).data('id')] = setInterval(function() {
                                 currentIndex = (currentIndex + 1) % imagesData.length;
@@ -140,7 +140,7 @@ jQuery(document).ready(function($) {
                                 const nextImageUrl = nextImage?.thumb || nextImage?.full;
                                 
                                 $slideshow.fadeOut(200, function() {
-                                    $(this).html(`<img src="${nextImageUrl}" alt="${nextImage.alt || ''}">`).fadeIn(200);
+                                    $(this).html(`<img src="${nextImageUrl}" alt="${nextImage?.alt || ''}">`).fadeIn(200);
                                 });
                             }, 2000);
                         }
@@ -183,7 +183,7 @@ jQuery(document).ready(function($) {
                     html += `
                         <div class="modal-gallery-item">
                             <img src="${imageUrl}" 
-                                 alt="${image.alt || ''}" 
+                                 alt="${image?.alt || ''}" 
                                  class="modal-thumbnail"
                                  data-full="${fullImageUrl}"
                                  onerror="this.onerror=null; this.src='${event_post_ajax.placeholder}';">
