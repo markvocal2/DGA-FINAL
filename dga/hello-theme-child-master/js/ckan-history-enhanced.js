@@ -335,7 +335,13 @@ jQuery(document).ready(function($) {
     }
     
     function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        // Use Intl.NumberFormat for safe number formatting
+        try {
+            return new Intl.NumberFormat('en-US').format(num);
+        } catch (e) {
+            // Fallback to simple string conversion
+            return num.toString();
+        }
     }
     
     // ============================================

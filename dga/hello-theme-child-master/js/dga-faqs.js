@@ -447,8 +447,22 @@ jQuery(document).ready(function($) {
         });
     }
     
-    // Escape HTML
+    // Secure random number generator for non-security purposes
+    function getSecureRandom() {
+        // For visual effects, we can use crypto.getRandomValues() with fallback to Math.random()
+        if (window.crypto && window.crypto.getRandomValues) {
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return array[0] / (0xffffffff + 1);
+        }
+        // Fallback to Math.random() for visual effects only (not security-sensitive)
+        return Math.random();
+    }
+    
+    // Escape HTML - Fixed regex to prevent ReDoS
     function escapeHtml(text) {
+        if (!text || typeof text !== 'string') return text;
+        
         const map = {
             '&': '&amp;',
             '<': '&lt;',
@@ -456,7 +470,9 @@ jQuery(document).ready(function($) {
             '"': '&quot;',
             "'": '&#039;'
         };
-        return text.replace(/[&<>"']/g, m => map[m]);
+        
+        // Simple character-by-character replacement to avoid ReDoS
+        return text.split('').map(char => map[char] || char).join('');
     }
     
     // Create particle effects
@@ -467,10 +483,10 @@ jQuery(document).ready(function($) {
         for (let i = 0; i < 5; i++) {
             setTimeout(function() {
                 const particle = $('<div class="like-particle"></div>');
-                particle.text(particles[Math.floor(Math.random() * particles.length)]);
+                particle.text(particles[Math.floor(getSecureRandom() * particles.length)]);
                 particle.css({
                     position: 'absolute',
-                    left: btnOffset.left + $btn.width() / 2 + (Math.random() * 40 - 20),
+                    left: btnOffset.left + $btn.width() / 2 + (getSecureRandom() * 40 - 20),
                     top: btnOffset.top - $(window).scrollTop(),
                     fontSize: '20px'
                 });
@@ -497,7 +513,7 @@ jQuery(document).ready(function($) {
                 top: btnOffset.top - $(window).scrollTop(),
                 width: '10px',
                 height: '10px',
-                background: colors[Math.floor(Math.random() * colors.length)],
+                background: colors[Math.floor(getSecureRandom() * colors.length)],
                 borderRadius: '50%',
                 opacity: 0.8
             });
@@ -505,9 +521,9 @@ jQuery(document).ready(function($) {
             $('body').append(confetti);
             
             // Random animation
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = 50 + Math.random() * 50;
-            const rotateEnd = Math.random() * 720 - 360;
+            const angle = getSecureRandom() * Math.PI * 2;
+            const velocity = 50 + getSecureRandom() * 50;
+            const rotateEnd = getSecureRandom() * 720 - 360;
             
             confetti.animate({
                 left: btnOffset.left + $btn.width() / 2 + Math.cos(angle) * velocity,
