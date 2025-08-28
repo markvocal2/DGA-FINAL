@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cleanupCallback();
             } else {
                 // แสดงข้อผิดพลาด
-                const errorMsg = result.data && result.data.message ? result.data.message : dga_ajax_obj.strings.save_error;
+                const errorMsg = result.data?.message || dga_ajax_obj.strings.save_error;
                 showMessage(errorMsg, 'error');
                 
                 // คืนค่า loading state

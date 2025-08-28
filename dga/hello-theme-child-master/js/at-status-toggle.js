@@ -67,9 +67,7 @@
                         
                     } else {
                         // แสดงข้อความผิดพลาด
-                        const errorMsg = response.data && response.data.message 
-                            ? response.data.message 
-                            : 'เกิดข้อผิดพลาด';
+                        const errorMsg = response.data?.message || 'เกิดข้อผิดพลาด';
                         showMessage($messageBox, errorMsg, 'error');
                     }
                 },

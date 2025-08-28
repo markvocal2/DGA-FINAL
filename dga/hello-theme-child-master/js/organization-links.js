@@ -468,8 +468,7 @@
                     }
                 } else {
                     // Show error message
-                    var errorMsg = response && response.data && response.data.message ? 
-                                 response.data.message : 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
+                    var errorMsg = response?.data?.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
                                  
                     showNotification('error', errorMsg);
                     
@@ -610,8 +609,7 @@
                 if (response && response.success) {
                     showNotification('success', response.data.message || 'บันทึกการเรียงลำดับเรียบร้อยแล้ว');
                 } else {
-                    var errorMsg = response && response.data && response.data.message ? 
-                                 response.data.message : 'เกิดข้อผิดพลาดในการบันทึกลำดับ';
+                    var errorMsg = response?.data?.message || 'เกิดข้อผิดพลาดในการบันทึกลำดับ';
                                  
                     showNotification('error', errorMsg);
                     console.error('Order update error:', response);
