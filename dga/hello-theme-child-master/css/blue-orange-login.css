@@ -54,6 +54,7 @@
 
 .step-content {
     width: 100%;
+    animation: fadeIn 0.3s ease;
 }
 
 /* Inputs */
@@ -321,9 +322,6 @@
 }
 
 /* Animation effects */
-.step-content {
-    animation: fadeIn 0.3s ease;
-}
 
 /* Responsive Design */
 @media (max-width: 480px) {
