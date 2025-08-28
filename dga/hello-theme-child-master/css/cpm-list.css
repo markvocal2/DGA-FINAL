@@ -153,6 +153,10 @@
         flex-direction: column;
         gap: 1rem;
     }
+    
+    .status-summary .card {
+        margin-bottom: 15px;
+    }
 
     .complaint-filters {
         padding: 1rem;
@@ -161,6 +165,8 @@
     .alert-container {
         left: 1rem;
         right: 1rem;
+        width: 100%;
+        padding: 0 10px;
     }
 
     .alert {
@@ -227,12 +233,7 @@
     padding: 1rem;
 }
 
-/* complaint-management/assets/css/cpm-list.css */
-
-.complaint-list-container {
-    padding: 20px;
-}
-
+/* Additional Enhancement Styles */
 .status-summary .card {
     transition: all 0.3s ease;
 }
@@ -259,33 +260,6 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.complaint-actions {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-/* Status badge styles */
-.badge {
-    padding: 8px 12px;
-    font-weight: 500;
-}
-
-/* Alert styles */
-.alert-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1050;
-    min-width: 300px;
-}
-
-.alert {
-    margin-bottom: 10px;
-    animation: slideIn 0.3s ease-out;
-}
-
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -297,19 +271,3 @@
     }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .complaint-list-container {
-        padding: 10px;
-    }
-    
-    .status-summary .card {
-        margin-bottom: 15px;
-    }
-    
-    .alert-container {
-        width: 100%;
-        right: 0;
-        padding: 0 10px;
-    }
-}

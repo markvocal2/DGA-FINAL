@@ -380,6 +380,10 @@ body.pdpa-active-xyz789 .dga-translate-api-abc456 {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     pointer-events: auto !important;
+    animation: 
+        pdpa-pulse-xyz789 2s ease-in-out 1,
+        pdpa-bounce-xyz789 2s ease-in-out;
+    animation-delay: 0.5s, 1s;
 }
 
 /* Icon styling - Emoji Version */
@@ -461,13 +465,7 @@ body.pdpa-active-xyz789 .dga-translate-api-abc456 {
     }
 }
 
-/* Add subtle animations on page load */
-.pdpa-reopen-button-xyz789 {
-    animation: 
-        pdpa-pulse-xyz789 2s ease-in-out 1,
-        pdpa-bounce-xyz789 2s ease-in-out;
-    animation-delay: 0.5s, 1s;
-}
+/* Animation properties merged into main selector above */
 
 /* Notification styles */
 .pdpa-notification-xyz789 {

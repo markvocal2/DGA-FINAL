@@ -232,6 +232,8 @@
 .dga-corg-table-qhx728 tbody tr {
     border-bottom: 1px solid var(--dga-gray-medium);
     transition: all 0.2s ease;
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
 }
 
 .dga-corg-table-qhx728 tbody tr:hover {
@@ -526,8 +528,12 @@
         box-shadow: 0 2px 8px rgba(30, 40, 89, 0.08);
         border: 1px solid var(--dga-border-color);
         border-left: 4px solid var(--dga-primary-color);
+        border-bottom: none;
         overflow: hidden;
         position: relative;
+        transition: all 0.2s ease;
+        animation: fadeInUp 0.4s ease-out;
+        animation-fill-mode: both;
     }
     
     .dga-corg-table-qhx728 tbody tr::before {
@@ -790,10 +796,7 @@
     }
 }
 
-.dga-corg-table-qhx728 tbody tr {
-    animation: fadeInUp 0.4s ease-out;
-    animation-fill-mode: both;
-}
+/* Animation applied in desktop and mobile modes */
 
 .dga-corg-table-qhx728 tbody tr:nth-child(1) { animation-delay: 0.05s; }
 .dga-corg-table-qhx728 tbody tr:nth-child(2) { animation-delay: 0.1s; }

@@ -71,6 +71,7 @@
 .dga-tag-selected {
     background-color: var(--dga-blue-primary);
     color: var(--dga-text-light);
+    animation: tagSelected 0.3s ease-in-out;
 }
 
 .dga-tag-name {
@@ -253,6 +254,3 @@
     100% { transform: scale(1); }
 }
 
-.dga-tag-selected {
-    animation: tagSelected 0.3s ease-in-out;
-}

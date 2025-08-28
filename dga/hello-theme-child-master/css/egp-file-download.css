@@ -3,13 +3,14 @@
     font-family: 'Prompt', 'Sarabun', Arial, sans-serif;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px rgba(26, 75, 139, 0.1), 0 0 0 1px rgba(26, 75, 139, 0.05);
     margin: 30px 0;
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(26, 75, 139, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 /* ==================== ส่วนหัว ==================== */
@@ -795,11 +796,7 @@
     transform: rotate(0deg);
 }
 
-/* เพิ่ม box-shadow เพื่อความรู้สึกลอยตัว */
-.egp-file-container {
-    box-shadow: 0 10px 25px rgba(26, 75, 139, 0.1), 0 0 0 1px rgba(26, 75, 139, 0.05);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
+/* Box-shadow and transition properties merged into main selector above */
 
 .egp-file-container:hover {
     box-shadow: 0 15px 35px rgba(26, 75, 139, 0.15), 0 0 0 1px rgba(26, 75, 139, 0.1);

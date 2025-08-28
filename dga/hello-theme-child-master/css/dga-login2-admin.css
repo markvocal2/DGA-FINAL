@@ -365,10 +365,8 @@ div:has(select[class*="language"]),
 #login-footer-languages-container,
 /* เฉพาะเจาะจงกับส่วนที่เห็นในภาพ */
 .login-footer-languages,
-.login-language-switcher,
 select[aria-label*="language"],
 .login-footer,
-.login-language-switcher-container,
 /* ซ่อนทุกอย่างที่เกี่ยวกับภาษา */
 [id*="language"],
 [class*="language"],

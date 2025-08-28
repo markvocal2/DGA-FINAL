@@ -576,35 +576,13 @@
 }
 
 
-/* Messages */
-.dga-message-xyz789 {
-    margin-top: 20px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    animation: slideInUp 0.3s ease;
-}
-
-.dga-message-xyz789.success {
-    background: #f0fdf4;
-    color: #16a34a;
-    border: 1px solid #bbf7d0;
-}
-
-.dga-message-xyz789.error {
-    background: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-}
-
+/* Message content wrapper - Additional styles */
 .dga-message-xyz789.info {
     background: #eff6ff;
     color: #2563eb;
     border: 1px solid #bfdbfe;
 }
 
-/* Message content wrapper */
 .dga-message-xyz789 .message-content {
     display: flex;
     align-items: center;
