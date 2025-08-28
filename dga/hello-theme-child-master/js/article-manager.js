@@ -114,6 +114,80 @@ jQuery(document).ready(function($) {
         }
     }
     
+    // Helper functions for draft restoration
+    function restorePostTypes(draft) {
+        if (!draft.postTypes || draft.postTypes.length === 0) return Promise.resolve();
+        
+        draft.postTypes.forEach(type => {
+            $(`input[name="post_types[]"][value="${type}"]`).prop('checked', true);
+        });
+        selectedPostTypes = draft.postTypes;
+        hasSelectedNews = selectedPostTypes.includes('news');
+        
+        return loadTaxonomyTerms().then(() => {
+            restoreTaxonomySelections(draft.taxonomyTerms);
+        });
+    }
+    
+    function restoreTaxonomySelections(taxonomyTerms) {
+        setTimeout(() => {
+            Object.keys(taxonomyTerms).forEach(taxonomy => {
+                taxonomyTerms[taxonomy].forEach(termId => {
+                    $(`.at-term-checkbox-kse749[name="tax_input[${taxonomy}][]"][value="${termId}"]`).prop('checked', true);
+                });
+            });
+            checkStandardTerms();
+        }, 500);
+    }
+    
+    function restoreBasicFields(draft) {
+        $('#article_title_kse749').val(draft.articleTitle || '');
+        $('#dga_standard_number_kse749').val(draft.dgaStandardNumber || '');
+        $('#dgth_standard_number_kse749').val(draft.dgthStandardNumber || '');
+    }
+    
+    function restoreFeaturedImage(draft) {
+        if (draft.featuredImageId && draft.featuredImagePreview) {
+            $('#featured_image_id_kse749').val(draft.featuredImageId);
+            $('#image-preview-kse749').html(draft.featuredImagePreview);
+            currentUploadedImageId = parseInt(draft.featuredImageId);
+        }
+    }
+    
+    function restoreArticleContent(draft) {
+        if (!draft.articleContent) return;
+        
+        if (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) {
+            tinyMCE.get('article_content_kse749').setContent(draft.articleContent);
+        } else {
+            $('#article_content_kse749').val(draft.articleContent);
+        }
+    }
+    
+    function restoreDocumentsState(draft) {
+        if (draft.documentsState === 'hide') {
+            $('#toggle-documents-kse749').data('state', 'hide').addClass('at-toggle-btn-active-kse749');
+            $('#documents-section-kse749').hide();
+        }
+    }
+    
+    function restoreFileRows(draft) {
+        if (!draft.fileRows || draft.fileRows.length === 0) return;
+        
+        $('#file-repeater-container-kse749').empty();
+        draft.fileRows.forEach(row => {
+            const newRow = `
+                <div class="file-repeater-row-kse749">
+                    <input type="text" name="file_name[]" placeholder="ชื่อไฟล์" value="${row.name || ''}">
+                    <input type="date" name="file_date[]" value="${row.date || getCurrentDate()}">
+                    <input type="file" name="file_upload[]" accept=".pdf,.doc,.docx">
+                    <button type="button" class="remove-row-kse749">ลบ</button>
+                </div>
+            `;
+            $('#file-repeater-container-kse749').append(newRow);
+        });
+    }
+    
     // Load draft from localStorage
     function loadDraft() {
         try {
@@ -123,70 +197,12 @@ jQuery(document).ready(function($) {
             const draft = JSON.parse(draftStr);
             console.log('Loading draft:', draft);
             
-            // Restore post types
-            if (draft.postTypes && draft.postTypes.length > 0) {
-                draft.postTypes.forEach(type => {
-                    $(`input[name="post_types[]"][value="${type}"]`).prop('checked', true);
-                });
-                selectedPostTypes = draft.postTypes;
-                hasSelectedNews = selectedPostTypes.includes('news');
-                
-                // Trigger taxonomy load
-                loadTaxonomyTerms().then(() => {
-                    // Restore taxonomy selections after load
-                    setTimeout(() => {
-                        Object.keys(draft.taxonomyTerms).forEach(taxonomy => {
-                            draft.taxonomyTerms[taxonomy].forEach(termId => {
-                                $(`.at-term-checkbox-kse749[name="tax_input[${taxonomy}][]"][value="${termId}"]`).prop('checked', true);
-                            });
-                        });
-                        checkStandardTerms();
-                    }, 500);
-                });
-            }
-            
-            // Restore basic fields
-            $('#article_title_kse749').val(draft.articleTitle || '');
-            $('#dga_standard_number_kse749').val(draft.dgaStandardNumber || '');
-            $('#dgth_standard_number_kse749').val(draft.dgthStandardNumber || '');
-            
-            // Restore featured image
-            if (draft.featuredImageId && draft.featuredImagePreview) {
-                $('#featured_image_id_kse749').val(draft.featuredImageId);
-                $('#image-preview-kse749').html(draft.featuredImagePreview);
-                currentUploadedImageId = parseInt(draft.featuredImageId);
-            }
-            
-            // Restore content
-            if (draft.articleContent) {
-                if (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) {
-                    tinyMCE.get('article_content_kse749').setContent(draft.articleContent);
-                } else {
-                    $('#article_content_kse749').val(draft.articleContent);
-                }
-            }
-            
-            // Restore documents state
-            if (draft.documentsState === 'hide') {
-                $('#toggle-documents-kse749').data('state', 'hide').addClass('at-toggle-btn-active-kse749');
-                $('#documents-section-kse749').hide();
-            }
-            
-            // Restore file rows
-            if (draft.fileRows && draft.fileRows.length > 0) {
-                $('#file-repeater-container-kse749').empty();
-                draft.fileRows.forEach(row => {
-                    const newRow = `
-                        <div class="file-repeater-row-kse749">
-                            <input type="text" name="file_name[]" placeholder="ชื่อไฟล์" value="${row.name || ''}">
-                            <input type="date" name="file_date[]" value="${row.date || getCurrentDate()}">
-                            <input type="file" name="file_upload[]" accept=".pdf,.doc,.docx">
-                            <button type="button" class="remove-row-kse749">ลบ</button>
-                        </div>
-                    `;
-                    $('#file-repeater-container-kse749').append(newRow);
-                });
-            }
+            restorePostTypes(draft);
+            restoreBasicFields(draft);
+            restoreFeaturedImage(draft);
+            restoreArticleContent(draft);
+            restoreDocumentsState(draft);
+            restoreFileRows(draft);
             
             showDraftStatus();
             
@@ -395,49 +411,60 @@ jQuery(document).ready(function($) {
             data: formData,
             processData: false,
             contentType: false,
-            xhr: function() {
-                const xhr = $.ajaxSettings.xhr();
-                if (xhr.upload) {
-                    xhr.upload.addEventListener('progress', function(e) {
-                        if (e.lengthComputable) {
-                            const percent = Math.round((e.loaded / e.total) * 100);
-                            $('.upload-progress-bar-kse749').css('width', percent + '%');
-                            $('.upload-message-kse749').text(`กำลังอัพโหลด... ${percent}%`);
-                        }
-                    }, false);
-                }
-                return xhr;
-            },
-            success: function(response) {
-                console.log('Upload response:', response);
-                
-                if (response.success) {
-                    // Save uploaded image ID
-                    currentUploadedImageId = response.data.attachment_id;
-                    $('#featured_image_id_kse749').val(currentUploadedImageId);
-                    
-                    // Show image preview
-                    $('#image-preview-kse749').html(`
-                        <div class="preview-item-kse749">
-                            <img src="${response.data.thumbnail}" alt="ตัวอย่างภาพหน้าปก">
-                            <div class="preview-info-kse749">
-                                <div class="preview-name-kse749">${response.data.filename}</div>
-                                <div class="preview-size-kse749">${response.data.filesize}</div>
-                            </div>
-                            <button type="button" class="remove-image-kse749" title="ลบภาพ">×</button>
-                        </div>
-                    `);
-                    
-                    setupAutoSave();
-                } else {
-                    showImageUploadError(response.data.message || 'เกิดข้อผิดพลาดในการอัพโหลดภาพ');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Upload error:', error);
-                showImageUploadError('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
-            }
+            xhr: createUploadXHR,
+            success: handleUploadSuccess,
+            error: handleUploadError
         });
+    }
+    
+    // Helper functions for image upload
+    function createUploadXHR() {
+        const xhr = $.ajaxSettings.xhr();
+        if (xhr.upload) {
+            xhr.upload.addEventListener('progress', updateUploadProgress, false);
+        }
+        return xhr;
+    }
+    
+    function updateUploadProgress(e) {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            $('.upload-progress-bar-kse749').css('width', percent + '%');
+            $('.upload-message-kse749').text(`กำลังอัพโหลด... ${percent}%`);
+        }
+    }
+    
+    function handleUploadSuccess(response) {
+        console.log('Upload response:', response);
+        
+        if (response.success) {
+            processUploadSuccess(response.data);
+        } else {
+            showImageUploadError(response.data.message || 'เกิดข้อผิดพลาดในการอัพโหลดภาพ');
+        }
+    }
+    
+    function processUploadSuccess(data) {
+        currentUploadedImageId = data.attachment_id;
+        $('#featured_image_id_kse749').val(currentUploadedImageId);
+        
+        $('#image-preview-kse749').html(`
+            <div class="preview-item-kse749">
+                <img src="${data.thumbnail}" alt="ตัวอย่างภาพหน้าปก">
+                <div class="preview-info-kse749">
+                    <div class="preview-name-kse749">${data.filename}</div>
+                    <div class="preview-size-kse749">${data.filesize}</div>
+                </div>
+                <button type="button" class="remove-image-kse749" title="ลบภาพ">×</button>
+            </div>
+        `);
+        
+        setupAutoSave();
+    }
+    
+    function handleUploadError(xhr, status, error) {
+        console.error('Upload error:', error);
+        showImageUploadError('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
     }
     
     // Function to show upload error message
@@ -452,46 +479,55 @@ jQuery(document).ready(function($) {
     }
     
     // Drag and drop functionality
-    const dropArea = document.getElementById('image-upload-area-kse749');
+    function initializeDragAndDrop() {
+        const dropArea = document.getElementById('image-upload-area-kse749');
+        if (!dropArea) return;
+        
+        setupDragEvents(dropArea);
+        setupDropEvents(dropArea);
+        dropArea.addEventListener('drop', handleDrop, false);
+    }
     
-    if (dropArea) {
+    function setupDragEvents(dropArea) {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, preventDefaults, false);
         });
         
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
         ['dragenter', 'dragover'].forEach(eventName => {
-            dropArea.addEventListener(eventName, highlight, false);
+            dropArea.addEventListener(eventName, () => highlight(dropArea), false);
         });
-        
+    }
+    
+    function setupDropEvents(dropArea) {
         ['dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, unhighlight, false);
+            dropArea.addEventListener(eventName, () => unhighlight(dropArea), false);
         });
+    }
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function highlight(dropArea) {
+        dropArea.classList.add('highlight');
+    }
+    
+    function unhighlight(dropArea) {
+        dropArea.classList.remove('highlight');
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
         
-        function highlight() {
-            dropArea.classList.add('highlight');
-        }
-        
-        function unhighlight() {
-            dropArea.classList.remove('highlight');
-        }
-        
-        dropArea.addEventListener('drop', handleDrop, false);
-        
-        function handleDrop(e) {
-            let dt = e.dataTransfer;
-            let files = dt.files;
-            
-            if (files.length > 0) {
-                // Upload first file immediately
-                uploadFeaturedImage(files[0]);
-            }
+        if (files.length > 0) {
+            uploadFeaturedImage(files[0]);
         }
     }
+    
+    // Initialize drag and drop
+    initializeDragAndDrop();
     
     // Handle image removal
     $(document).on('click', '.remove-image-kse749', function() {
@@ -519,22 +555,26 @@ jQuery(document).ready(function($) {
                 post_types: selectedPostTypes,
                 nonce: atAjax.nonce
             },
-            success: function(response) {
-                console.log('Taxonomy response:', response);
-                
-                if (response.success) {
-                    displayTaxonomyTerms(response.data);
-                    // Check terms after loading and displaying
-                    setTimeout(checkStandardTerms, 300);
-                } else {
-                    $('#taxonomy-terms-container-kse749').html('<div class="at-taxonomy-error-kse749">ไม่สามารถโหลดหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง</div>');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Taxonomy load error:', error);
-                $('#taxonomy-terms-container-kse749').html('<div class="at-taxonomy-error-kse749">การเชื่อมต่อล้มเหลว กรุณาลองใหม่อีกครั้ง</div>');
-            }
+            success: handleTaxonomyResponse,
+            error: handleTaxonomyError
         });
+    }
+    
+    // Helper functions for taxonomy loading
+    function handleTaxonomyResponse(response) {
+        console.log('Taxonomy response:', response);
+        
+        if (response.success) {
+            displayTaxonomyTerms(response.data);
+            setTimeout(checkStandardTerms, 300);
+        } else {
+            $('#taxonomy-terms-container-kse749').html('<div class="at-taxonomy-error-kse749">ไม่สามารถโหลดหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง</div>');
+        }
+    }
+    
+    function handleTaxonomyError(xhr, status, error) {
+        console.error('Taxonomy load error:', error);
+        $('#taxonomy-terms-container-kse749').html('<div class="at-taxonomy-error-kse749">การเชื่อมต่อล้มเหลว กรุณาลองใหม่อีกครั้ง</div>');
     }
     
     // Function to display taxonomy terms
@@ -555,37 +595,59 @@ jQuery(document).ready(function($) {
             'pha': 'ประชาพิจารณ์และกิจกรรม'
         };
         
-        // Create HTML for each post type
         Object.keys(taxonomiesData).forEach(postType => {
-            const taxonomies = taxonomiesData[postType];
-            if (!taxonomies || taxonomies.length === 0) return;
-            
-            taxonomies.forEach(taxonomy => {
-                const terms = taxonomy.terms;
-                if (!terms || terms.length === 0) return;
-                
-                const taxonomyHeader = `<div class="at-taxonomy-header-kse749">
-                    <span class="at-taxonomy-post-type-kse749">${postTypeLabels[postType]}</span>
-                    <span class="at-taxonomy-label-kse749">${taxonomy.label}</span>
-                </div>`;
-                
-                const termsList = `<div class="at-terms-list-kse749">
-                    ${terms.map(term => `
-                        <label class="at-term-label-kse749" data-term-name="${term.name}">
-                            <input type="checkbox" name="tax_input[${taxonomy.name}][]" value="${parseInt(term.id)}" class="at-term-checkbox-kse749">
-                            <span class="at-term-name-kse749">${term.name}</span>
-                        </label>
-                    `).join('')}
-                </div>`;
-                
-                $container.append(`
-                    <div class="at-taxonomy-group-kse749" data-post-type="${postType}" data-taxonomy="${taxonomy.name}">
-                        ${taxonomyHeader}
-                        ${termsList}
-                    </div>
-                `);
-            });
+            processPostTypeTaxonomies(postType, taxonomiesData[postType], postTypeLabels, $container);
         });
+    }
+    
+    // Helper functions for taxonomy display
+    function processPostTypeTaxonomies(postType, taxonomies, postTypeLabels, $container) {
+        if (!taxonomies || taxonomies.length === 0) return;
+        
+        taxonomies.forEach(taxonomy => {
+            processTaxonomy(postType, taxonomy, postTypeLabels, $container);
+        });
+    }
+    
+    function processTaxonomy(postType, taxonomy, postTypeLabels, $container) {
+        const terms = taxonomy.terms;
+        if (!terms || terms.length === 0) return;
+        
+        const taxonomyHeader = createTaxonomyHeader(postType, taxonomy.label, postTypeLabels);
+        const termsList = createTermsList(taxonomy.name, terms);
+        
+        $container.append(createTaxonomyGroup(postType, taxonomy.name, taxonomyHeader, termsList));
+    }
+    
+    function createTaxonomyHeader(postType, taxonomyLabel, postTypeLabels) {
+        return `<div class="at-taxonomy-header-kse749">
+            <span class="at-taxonomy-post-type-kse749">${postTypeLabels[postType]}</span>
+            <span class="at-taxonomy-label-kse749">${taxonomyLabel}</span>
+        </div>`;
+    }
+    
+    function createTermsList(taxonomyName, terms) {
+        return `<div class="at-terms-list-kse749">
+            ${terms.map(term => createTermLabel(taxonomyName, term)).join('')}
+        </div>`;
+    }
+    
+    function createTermLabel(taxonomyName, term) {
+        return `
+            <label class="at-term-label-kse749" data-term-name="${term.name}">
+                <input type="checkbox" name="tax_input[${taxonomyName}][]" value="${parseInt(term.id)}" class="at-term-checkbox-kse749">
+                <span class="at-term-name-kse749">${term.name}</span>
+            </label>
+        `;
+    }
+    
+    function createTaxonomyGroup(postType, taxonomyName, header, termsList) {
+        return `
+            <div class="at-taxonomy-group-kse749" data-post-type="${postType}" data-taxonomy="${taxonomyName}">
+                ${header}
+                ${termsList}
+            </div>
+        `;
     }
 
     // Form submission
@@ -639,43 +701,46 @@ jQuery(document).ready(function($) {
             data: formData,
             processData: false,
             contentType: false,
-            success: function(response) {
-                console.log('Submit response:', response);
-                
-                if (response.success) {
-                    // Clear draft after successful submission
-                    clearDraft();
-                    
-                    // Show success message
-                    let message = response.data.message;
-                    showToast(message, response.data.posts);
-                    resetForm();
-                    $('#at-article-modal-kse749').removeClass('show');
-                    $('body').css('overflow', ''); // Restore body scroll
-                } else {
-                    showToast('เกิดข้อผิดพลาด: ' + (response.data || 'กรุณาลองใหม่อีกครั้ง'));
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Submit error:', error);
-                
-                let errorMsg = 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง';
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.data) {
-                        errorMsg = 'เกิดข้อผิดพลาด: ' + response.data;
-                    }
-                } catch (e) {}
-                
-                showToast(errorMsg);
-            },
-            complete: function() {
-                $('.at-submit-btn-kse749')
-                    .prop('disabled', false)
-                    .text('บันทึกข้อมูล');
-            }
+            success: handleFormSubmitSuccess,
+            error: handleFormSubmitError,
+            complete: handleFormSubmitComplete
         });
     });
+    
+    // Helper functions for form submission
+    function handleFormSubmitSuccess(response) {
+        console.log('Submit response:', response);
+        
+        if (response.success) {
+            clearDraft();
+            showToast(response.data.message, response.data.posts);
+            resetForm();
+            $('#at-article-modal-kse749').removeClass('show');
+            $('body').css('overflow', '');
+        } else {
+            showToast('เกิดข้อผิดพลาด: ' + (response.data || 'กรุณาลองใหม่อีกครั้ง'));
+        }
+    }
+    
+    function handleFormSubmitError(xhr, status, error) {
+        console.error('Submit error:', error);
+        
+        let errorMsg = 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง';
+        try {
+            const response = JSON.parse(xhr.responseText);
+            if (response.data) {
+                errorMsg = 'เกิดข้อผิดพลาด: ' + response.data;
+            }
+        } catch (e) {}
+        
+        showToast(errorMsg);
+    }
+    
+    function handleFormSubmitComplete() {
+        $('.at-submit-btn-kse749')
+            .prop('disabled', false)
+            .text('บันทึกข้อมูล');
+    }
 
     // Form reset function
     function resetForm() {
