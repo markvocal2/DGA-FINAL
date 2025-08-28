@@ -75,7 +75,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                         }
                     }
                 ?>
-                    <article class="list-article<?php echo esc_attr($category_classes); ?>" role="article">
+                    <article class="list-article<?php echo esc_attr($category_classes); ?>">
                         <div class="article-inner">
                             <!-- Article Image -->
                             <div class="article-image-wrapper">

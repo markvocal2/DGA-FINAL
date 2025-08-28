@@ -338,7 +338,9 @@ jQuery(document).ready(function($) {
         // Use Intl.NumberFormat for safe number formatting
         try {
             return new Intl.NumberFormat('en-US').format(num);
-        } catch (e) {
+        } catch (error) {
+            // Log the error for debugging purposes
+            console.warn('Number formatting failed:', error.message, 'for value:', num);
             // Fallback to simple string conversion
             return num.toString();
         }

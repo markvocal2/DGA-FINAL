@@ -55,7 +55,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                 $featured_author = get_the_author_meta('display_name', $featured_post->post_author);
                 ?>
 
-                <article class="featured-article" role="article">
+                <article class="featured-article">
                     <div class="featured-image-wrapper">
                         <?php if ($featured_image) : ?>
                             <img src="<?php echo esc_url($featured_image); ?>"
@@ -124,7 +124,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                             $categories = get_the_terms($post->ID, $taxonomy);
                             $date = get_the_date('F j, Y', $post->ID);
                         ?>
-                            <article class="grid-article" role="article">
+                            <article class="grid-article">
                                 <div class="article-image-wrapper">
                                     <?php if ($image) : ?>
                                         <img src="<?php echo esc_url($image); ?>"

@@ -16378,7 +16378,7 @@ function tdep_tem_shortcode($atts) {
                     $excerpt = wp_strip_all_tags(get_the_excerpt());
                     $excerpt = wp_trim_words($excerpt, 20, '...');
                 ?>
-                    <article class="tdep-tem-card" role="article">
+                    <article class="tdep-tem-card">
                         <a href="<?php echo esc_url(get_permalink()); ?>" class="tdep-tem-card-link" aria-labelledby="post-<?php echo get_the_ID(); ?>">
                             <div class="tdep-tem-card-image-wrapper">
                                 <div class="tdep-tem-card-image" 
@@ -39807,7 +39807,6 @@ function std_render_accessible_card($post_id) {
     ?>
     <article class="std-looppost-item" 
              data-post-id="<?php echo esc_attr($post_id); ?>" 
-             role="article"
              aria-labelledby="post-title-<?php echo esc_attr($post_id); ?>">
         
         <div class="std-looppost-image" 

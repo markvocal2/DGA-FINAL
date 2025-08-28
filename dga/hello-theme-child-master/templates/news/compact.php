@@ -74,7 +74,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                         }
                     }
                 ?>
-                    <article class="compact-article<?php echo esc_attr($category_classes); ?>" role="article">
+                    <article class="compact-article<?php echo esc_attr($category_classes); ?>">
                         <!-- Article Link Wrapper -->
                         <a href="<?php echo esc_url(get_permalink()); ?>" 
                            class="article-link"

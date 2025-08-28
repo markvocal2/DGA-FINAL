@@ -73,7 +73,7 @@ if (!isset($posts) || !isset($taxonomy)) {
                         }
                     }
                 ?>
-                    <article class="grid-article<?php echo esc_attr($category_classes); ?>" role="article">
+                    <article class="grid-article<?php echo esc_attr($category_classes); ?>">
                         <div class="article-image-wrapper">
                             <?php if ($image) : ?>
                                 <img src="<?php echo esc_url($image); ?>"
