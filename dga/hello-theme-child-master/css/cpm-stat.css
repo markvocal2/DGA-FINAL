@@ -132,7 +132,7 @@ select:focus,
 input[type="date"]:focus {
     outline: none;
     border-color: #3b82f6;
-    ring: 2px solid rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .button {
@@ -301,12 +301,6 @@ input[type="date"]:focus {
     border-radius: 4px;
 }
 
-.status-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
 
 .status-label {
     flex-grow: 1;
@@ -320,17 +314,8 @@ input[type="date"]:focus {
 }
 
 /* Status Colors */
-.status-pending {
-    background-color: #f59e0b;
-}
 
-.status-progress {
-    background-color: #3b82f6;
-}
 
-.status-completed {
-    background-color: #10b981;
-}
 
 .status-rejected {
     background-color: #ef4444;
