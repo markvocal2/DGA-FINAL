@@ -20,7 +20,7 @@ $request_ip = isset($args['request_ip']) ? $args['request_ip'] : '';
 $request_time = isset($args['request_time']) ? $args['request_time'] : current_time('mysql');
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="th" xml:lang="th">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -139,8 +139,11 @@ $request_time = isset($args['request_time']) ? $args['request_time'] : current_t
                                             <?php echo esc_html(date_i18n('j F Y เวลา H:i น.', strtotime($request_time))); ?>
                                         </td>
                                     </tr>
-                                    
+                                    <?php if (!empty($request_ip)): ?>
                                     <tr>
+                                        <td style="padding: 5px 0; color: #64748b; font-size: 14px;">
+                                            <strong><?php echo esc_html__('IP Address:', DGA_TEXT_DOMAIN); ?></strong>
+                                        </td>
                                         <td style="padding: 5px 0 5px 20px; color: #1e293b; font-size: 14px;">
                                             <?php echo esc_html($request_ip); ?>
                                         </td>
