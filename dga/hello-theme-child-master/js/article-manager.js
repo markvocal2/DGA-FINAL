@@ -259,46 +259,59 @@ jQuery(document).ready(function($) {
         setupAutoSave();
     });
     
-    // Auto-save when TinyMCE content changes
-    if (typeof tinyMCE !== 'undefined') {
-        tinyMCE.on('AddEditor', function(e) {
-            if (e.editor.id === 'article_content_kse749') {
-                e.editor.on('change keyup', function() {
-                    setupAutoSave();
-                });
-            }
+    // Helper function for TinyMCE auto-save setup
+    function setupTinyMCEAutoSave(editor) {
+        editor.on('change keyup', function() {
+            setupAutoSave();
         });
     }
+    
+    function handleTinyMCEEditor(e) {
+        if (e.editor.id === 'article_content_kse749') {
+            setupTinyMCEAutoSave(e.editor);
+        }
+    }
+    
+    // Auto-save when TinyMCE content changes
+    if (typeof tinyMCE !== 'undefined') {
+        tinyMCE.on('AddEditor', handleTinyMCEEditor);
+    }
 
-    // Post type selection handling
-    $(document).on('change', 'input[name="post_types[]"]', function() {
+    // Helper functions for post type selection
+    function updateSelectedPostTypes() {
         selectedPostTypes = $('input[name="post_types[]"]:checked').map(function() {
             return $(this).val();
         }).get();
         
         console.log('Selected post types:', selectedPostTypes);
-        
-        // Check if "news" is selected
         hasSelectedNews = selectedPostTypes.includes('news');
-        
-        // Show/hide standard fields container
+    }
+    
+    function handleStandardFieldsVisibility() {
         if (hasSelectedNews) {
             $('#standards-fields-container-kse749').slideDown(300);
         } else {
             $('#standards-fields-container-kse749').slideUp(300);
-            // Reset field values when not selecting news
             $('#dga_standard_number_kse749, #dgth_standard_number_kse749').val('');
             $('#dga-standard-field-kse749, #dgth-standard-field-kse749').hide();
         }
-        
+    }
+    
+    function handleTaxonomyDisplay() {
         if (selectedPostTypes.length > 0) {
             $('.at-post-type-error-kse749').hide();
-            loadTaxonomyTerms(); // Load taxonomies
+            loadTaxonomyTerms();
         } else {
             $('.at-post-type-error-kse749').show().text('กรุณาเลือกอย่างน้อย 1 ประเภทเนื้อหา');
             $('#taxonomy-terms-container-kse749').html('<div class="at-taxonomy-placeholder-kse749">กรุณาเลือกประเภทเนื้อหาก่อน เพื่อแสดงหมวดหมู่ที่เกี่ยวข้อง</div>');
         }
-        
+    }
+    
+    // Post type selection handling
+    $(document).on('change', 'input[name="post_types[]"]', function() {
+        updateSelectedPostTypes();
+        handleStandardFieldsVisibility();
+        handleTaxonomyDisplay();
         setupAutoSave();
     });
     
@@ -650,13 +663,8 @@ jQuery(document).ready(function($) {
         `;
     }
 
-    // Form submission
-    $(document).on('submit', '#at-article-form-kse749', function(e) {
-        e.preventDefault();
-        
-        console.log('Form submitted');
-        
-        // Validate post type selection
+    // Helper functions for form validation
+    function validatePostTypes() {
         selectedPostTypes = $('input[name="post_types[]"]:checked').map(function() {
             return $(this).val();
         }).get();
@@ -665,35 +673,55 @@ jQuery(document).ready(function($) {
             $('.at-post-type-error-kse749')
                 .text('กรุณาเลือกอย่างน้อย 1 ประเภทเนื้อหา')
                 .show();
-            return;
+            return false;
         }
-        
-        // Validate article title
+        return true;
+    }
+    
+    function validateArticleTitle() {
         if (!$('#article_title_kse749').val().trim()) {
             alert('กรุณาระบุชื่อบทความ');
             $('#article_title_kse749').focus();
-            return;
+            return false;
         }
-        
-        // Set featured_image_id from upload
+        return true;
+    }
+    
+    function prepareFormData(form) {
         if (currentUploadedImageId > 0) {
             $('#featured_image_id_kse749').val(currentUploadedImageId);
         }
         
-        const formData = new FormData(this);
+        const formData = new FormData(form);
         formData.append('action', 'submit_article_kse749');
         
-        // Remove empty file uploads if documents section is hidden
         if ($('#toggle-documents-kse749').data('state') === 'hide') {
             formData.delete('file_name[]');
             formData.delete('file_date[]');
             formData.delete('file_upload[]');
         }
         
-        // Disable submit button and show loading state
+        return formData;
+    }
+    
+    function setSubmitButtonLoading() {
         $('.at-submit-btn-kse749')
             .prop('disabled', true)
             .html('<span class="spinner-kse749"></span> กำลังบันทึก...');
+    }
+    
+    // Form submission
+    $(document).on('submit', '#at-article-form-kse749', function(e) {
+        e.preventDefault();
+        
+        console.log('Form submitted');
+        
+        if (!validatePostTypes() || !validateArticleTitle()) {
+            return;
+        }
+        
+        const formData = prepareFormData(this);
+        setSubmitButtonLoading();
 
         $.ajax({
             url: atAjax.ajaxurl,
@@ -790,33 +818,48 @@ jQuery(document).ready(function($) {
         $('#at-draft-status-kse749').hide();
     }
 
+    // Helper functions for toast notification
+    function createPostLinks(posts) {
+        if (Array.isArray(posts)) {
+            return createMultiplePostLinks(posts);
+        } else if (posts && posts.post_url) {
+            return createSinglePostLink(posts.post_url);
+        }
+        return '';
+    }
+    
+    function createMultiplePostLinks(posts) {
+        const postTypeLabels = {
+            'article': 'บทความ',
+            'mpeople': 'คู่มือประชาชน',
+            'news': 'ข้อมูลทั่วไป',
+            'pha': 'ประชาพิจารณ์และกิจกรรม'
+        };
+        
+        return posts.map(post => 
+            `<a href="${post.url}" class="at-toast-link-kse749" target="_blank">
+                ดู${postTypeLabels[post.type]}
+            </a>`
+        ).join('');
+    }
+    
+    function createSinglePostLink(postUrl) {
+        return `<a href="${postUrl}" class="at-toast-link-kse749" target="_blank">ดูบทความ</a>`;
+    }
+    
+    function removeToastAfterDelay() {
+        $('.at-toast-kse749').fadeOut(300, function() {
+            $(this).remove();
+        });
+    }
+    
     // Toast notification with support for multiple post links
     function showToast(message, posts = null) {
-        // Remove existing toast
         $('.at-toast-kse749').remove();
         
-        // Create post links if available
-        let linksHTML = '';
-        if (Array.isArray(posts)) {
-            const postTypeLabels = {
-                'article': 'บทความ',
-                'mpeople': 'คู่มือประชาชน',
-                'news': 'ข้อมูลทั่วไป',
-                'pha': 'ประชาพิจารณ์และกิจกรรม'
-            };
-            
-            linksHTML = posts.map(post => 
-                `<a href="${post.url}" class="at-toast-link-kse749" target="_blank">
-                    ดู${postTypeLabels[post.type]}
-                </a>`
-            ).join('');
-        } else if (posts && posts.post_url) {
-            // Backward compatibility for single post URL
-            linksHTML = `<a href="${posts.post_url}" class="at-toast-link-kse749" target="_blank">ดูบทความ</a>`;
-        }
+        const linksHTML = createPostLinks(posts);
         
-        // Create toast HTML
-        let toastHTML = `
+        const toastHTML = `
             <div class="at-toast-kse749">
                 <div class="at-toast-message-kse749">${message}</div>
                 ${linksHTML ? '<div class="at-toast-links-kse749">' + linksHTML + '</div>' : ''}
@@ -825,12 +868,7 @@ jQuery(document).ready(function($) {
         
         $('body').append(toastHTML);
         
-        // Auto remove toast after 5 seconds
-        setTimeout(function() {
-            $('.at-toast-kse749').fadeOut(300, function() {
-                $(this).remove();
-            });
-        }, 5000);
+        setTimeout(removeToastAfterDelay, 5000);
     }
 
     // Helper function to get current date in YYYY-MM-DD format
