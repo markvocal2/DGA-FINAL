@@ -63,48 +63,62 @@ jQuery(document).ready(function($) {
 
     // ============ DRAFT FUNCTIONALITY ============
     
-    // Save draft to localStorage
-    function saveDraft() {
-        const draftData = {
-            postTypes: $('input[name="post_types[]"]:checked').map(function() {
-                return $(this).val();
-            }).get(),
-            articleTitle: $('#article_title_kse749').val(),
-            dgaStandardNumber: $('#dga_standard_number_kse749').val(),
-            dgthStandardNumber: $('#dgth_standard_number_kse749').val(),
-            taxonomyTerms: {},
-            featuredImageId: $('#featured_image_id_kse749').val(),
-            featuredImagePreview: $('#image-preview-kse749').html(),
-            articleContent: (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) 
-                ? tinyMCE.get('article_content_kse749').getContent() 
-                : $('#article_content_kse749').val(),
-            documentsState: $('#toggle-documents-kse749').data('state'),
-            fileRows: [],
-            savedAt: new Date().toISOString()
-        };
-        
-        // Save taxonomy selections
+    // Helper functions for draft saving
+    function collectSelectedPostTypes() {
+        return $('input[name="post_types[]"]:checked').map(function() {
+            return $(this).val();
+        }).get();
+    }
+    
+    function collectTaxonomyTerms() {
+        const taxonomyTerms = {};
         $('.at-term-checkbox-kse749:checked').each(function() {
             const taxonomy = $(this).attr('name').match(/tax_input\[([^\]]+)\]/)[1];
-            if (!draftData.taxonomyTerms[taxonomy]) {
-                draftData.taxonomyTerms[taxonomy] = [];
+            if (!taxonomyTerms[taxonomy]) {
+                taxonomyTerms[taxonomy] = [];
             }
-            draftData.taxonomyTerms[taxonomy].push($(this).val());
+            taxonomyTerms[taxonomy].push($(this).val());
         });
-        
-        // Save file rows data (excluding actual files)
+        return taxonomyTerms;
+    }
+    
+    function collectFileRows() {
+        const fileRows = [];
         $('.file-repeater-row-kse749').each(function() {
             const fileName = $(this).find('input[name="file_name[]"]').val();
             const fileDate = $(this).find('input[name="file_date[]"]').val();
             if (fileName || fileDate) {
-                draftData.fileRows.push({
+                fileRows.push({
                     name: fileName,
                     date: fileDate
                 });
             }
         });
+        return fileRows;
+    }
+    
+    function getArticleContent() {
+        return (typeof tinyMCE !== 'undefined' && tinyMCE.get('article_content_kse749')) 
+            ? tinyMCE.get('article_content_kse749').getContent() 
+            : $('#article_content_kse749').val();
+    }
+    
+    // Save draft to localStorage
+    function saveDraft() {
+        const draftData = {
+            postTypes: collectSelectedPostTypes(),
+            articleTitle: $('#article_title_kse749').val(),
+            dgaStandardNumber: $('#dga_standard_number_kse749').val(),
+            dgthStandardNumber: $('#dgth_standard_number_kse749').val(),
+            taxonomyTerms: collectTaxonomyTerms(),
+            featuredImageId: $('#featured_image_id_kse749').val(),
+            featuredImagePreview: $('#image-preview-kse749').html(),
+            articleContent: getArticleContent(),
+            documentsState: $('#toggle-documents-kse749').data('state'),
+            fileRows: collectFileRows(),
+            savedAt: new Date().toISOString()
+        };
         
-        // Save to localStorage
         try {
             localStorage.setItem(DRAFT_KEY, JSON.stringify(draftData));
             console.log('Draft saved:', draftData);
@@ -129,12 +143,20 @@ jQuery(document).ready(function($) {
         });
     }
     
+    function restoreTaxonomySelection(taxonomy, termId) {
+        $(`.at-term-checkbox-kse749[name="tax_input[${taxonomy}][]"][value="${termId}"]`).prop('checked', true);
+    }
+    
+    function restoreTaxonomyForType(taxonomy, termIds) {
+        termIds.forEach(termId => {
+            restoreTaxonomySelection(taxonomy, termId);
+        });
+    }
+    
     function restoreTaxonomySelections(taxonomyTerms) {
         setTimeout(() => {
             Object.keys(taxonomyTerms).forEach(taxonomy => {
-                taxonomyTerms[taxonomy].forEach(termId => {
-                    $(`.at-term-checkbox-kse749[name="tax_input[${taxonomy}][]"][value="${termId}"]`).prop('checked', true);
-                });
+                restoreTaxonomyForType(taxonomy, taxonomyTerms[taxonomy]);
             });
             checkStandardTerms();
         }, 500);
@@ -315,24 +337,27 @@ jQuery(document).ready(function($) {
         setupAutoSave();
     });
     
+    // Helper functions for standard terms checking
+    function checkTermForStandardField($checkbox) {
+        const termName = $checkbox.next('.at-term-name-kse749').text().trim();
+        
+        if (termName === 'มาตรฐานสำนักงานพัฒนารัฐบาลดิจิทัล (มสพร.)') {
+            $('#dga-standard-field-kse749').slideDown(300);
+        }
+        
+        if (termName === 'มาตรฐานรัฐบาลดิจิทัล (มรด.)') {
+            $('#dgth-standard-field-kse749').slideDown(300);
+        }
+    }
+    
     // Function to check and show standard fields based on selected terms
     function checkStandardTerms() {
-        // Initially hide both fields
         $('#dga-standard-field-kse749, #dgth-standard-field-kse749').hide();
         
         if (!hasSelectedNews) return;
         
-        // Check if standard terms are selected
         $('.at-term-checkbox-kse749:checked').each(function() {
-            const termName = $(this).next('.at-term-name-kse749').text().trim();
-            
-            if (termName === 'มาตรฐานสำนักงานพัฒนารัฐบาลดิจิทัล (มสพร.)') {
-                $('#dga-standard-field-kse749').slideDown(300);
-            }
-            
-            if (termName === 'มาตรฐานรัฐบาลดิจิทัล (มรด.)') {
-                $('#dgth-standard-field-kse749').slideDown(300);
-            }
+            checkTermForStandardField($(this));
         });
     }
     
@@ -375,11 +400,17 @@ jQuery(document).ready(function($) {
         setupAutoSave();
     });
 
+    // Helper function for removing file row
+    function removeFileRowElement($element) {
+        $element.remove();
+        setupAutoSave();
+    }
+    
     // Remove file row
     $(document).on('click', '.remove-row-kse749', function() {
-        $(this).closest('.file-repeater-row-kse749').fadeOut(300, function() {
-            $(this).remove();
-            setupAutoSave();
+        const $row = $(this).closest('.file-repeater-row-kse749');
+        $row.fadeOut(300, function() {
+            removeFileRowElement($(this));
         });
     });
 
