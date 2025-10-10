@@ -1,4 +1,4 @@
-# DGA
+# DGA 3.0
 
 ไฟล์ใน Folder Github นี้ใช้สำหรับแยกในการตรวจสอบ VA SCAN โดย SONARQUBE เท่านั้น สำหรับลิงค์ใน GoogleDrive ต่อไปนี้จะมี Wordpress core basic ประกอบด้วยท่านสามารถอัพเดต Wordpress code ได้ตามปกติ
 ระบบทำงานใน Hello ChildTheme จะไม่ได้รับผลกระทบใด ๆ สำหรับการอัพเดต
